@@ -1,0 +1,22 @@
+shp2tile CHANGES
+-------------------------------
+version 1.14, 2006-05-30 woodbri
+- merged changes by Daniel Morissette to add the --maxdepth option to the
+  --quadtree option.
+
+version 1.13, 2005-12-05 woodbri
+- added -v and --version command line switches to print the cvs version
+  string so people can identify what version it is. Hence the change in
+  version number from 1.4 to 1.13.
+
+version 1.4, 2005-07-19 woodbri
+- Fixed a bug where we deleted files that we abort tiling on.
+
+version 1.3, 2005-07-19 woodbri
+- Added CHANGES file to distribution
+- Fixed a quadtree bug that was caused by points being stacked
+  up at a single location that exceeded the quadtree count. This
+  cause the software to do a divide by zero and generally fail
+  in other horrible ways. This and a related cases are now 
+  detected and further division of the file or subfile is halted
+  while the rest of the files are still processed.
