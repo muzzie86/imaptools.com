@@ -1,0 +1,1258 @@
+############################################################################################
+# author:   Jeff McKenna, jmckenna@gatewaygeomatics.com
+# purpose:  to test MapServer's vector drawing capabilities for FOSS4G 2010
+#           more info: http://wiki.osgeo.org/wiki/Benchmarking_2010
+# requires: Spain sample dataset from the Spanish National Mapping Agency
+#           (http://centrodedescargas.cnig.es/CentroDescargas/index.jsp)
+# license:
+#
+# Copyright (c) 2010, Gateway Geomatics
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of 
+# this software and associated documentation files (the "Software"), to deal in the 
+# Software without restriction, including without limitation the rights to use, copy, 
+# modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+# and to permit persons to whom the Software is furnished to do so, subject to the 
+# following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies 
+# or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+# FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+############################################################################################
+
+# MapServer benchmark map file - Vectors
+MAP
+
+  NAME 	"vector_benchmarking_2010"
+  STATUS ON
+  SIZE 	950 600
+  #EXTENT 400637.456357 4576080.998882 456535.105266 4594947.942275 #EPSG: 25831  Barcelona
+  EXTENT 1.8 41 2.4 42 #EPSG:4326 Barcelona
+  UNITS DD
+  SHAPEPATH "../data/vector"
+  IMAGECOLOR 255 255 255
+  FONTSET "./etc/fonts.txt"
+  SYMBOLSET "./etc/symbols.txt"  
+  #IMAGETYPE PNG
+
+  #
+  # Outputformat of map image
+  #
+  
+  OUTPUTFORMAT
+    NAME aggpng24
+    DRIVER AGG/PNG
+    MIMETYPE "image/png"
+    IMAGEMODE RGB
+    EXTENSION "png"
+  END
+  
+  #
+  # Start of web interface definition
+  #
+  WEB
+    # metadata for WMS service
+    METADATA
+      "ows_title"   		"MapServer Vector benchmarking with Spanish National Mapping Agency dataset"
+      "ows_onlineresource" 	"http://12.189.158.78:8081/cgi-bin/mapserv?MAP=/benchmarking/mapserver/spain-shapefiles.map"
+      "ows_srs"   		"EPSG:4326 EPSG:4269 EPSG:3857 EPSG:25831"
+      "ows_abstract"            "This WMS is run with MapServer 5.7-dev on Windows Server 64bit, accessing shapefiles from the Spanish National Mapping Agency dataset.  This was setup for the Web server benchmarking presentation at FOSS4G2010.  More info at: http://wiki.osgeo.org/wiki/Benchmarking_2010"
+      "ows_contactperson"       "Jeff McKenna"
+      "ows_contactorganization" "Gateway Geomatics" 
+      "ows_contactposition"     "Director"
+      "ows_contactelectronicmailaddress" "info@gatewaygeomatics.com"
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"
+    END    
+    # not necessary for benchmarking scripts
+    # Windows
+    IMAGEPATH "/ms4w/tmp/ms_tmp/" 
+    IMAGEURL "/ms_tmp/"
+    # Unix
+    #IMAGEPATH "/home/httpd/htdocs/ms_tmp/"
+    #IMAGEURL "http://labs.gatewaygeomatics.com/ms_tmp/"
+    TEMPLATE "./htdocs/viewer-template.html"          
+  END  
+  
+  #
+  # Projection of output image
+  #
+  PROJECTION
+    "init=epsg:4326"
+  END
+  
+  #
+  # Start of legend (not necessary for benchmarking scripts)
+  #
+  LEGEND
+    KEYSIZE 18 12
+    LABEL
+      TYPE BITMAP
+      SIZE MEDIUM
+      COLOR 0 0 89
+    END
+    STATUS ON
+    TEMPLATE "./htdocs/html-legend.html"  
+  END  
+  
+  #
+  # Start of scalebar (not necessary for benchmarking scripts)
+  #
+  SCALEBAR
+    IMAGECOLOR 255 255 255
+    LABEL
+      COLOR 0 0 0 
+      SIZE SMALL
+    END
+    SIZE 150 5
+    COLOR 255 255 255
+    BACKGROUNDCOLOR 0 0 0
+    OUTLINECOLOR 0 0 0
+    UNITS miles
+    INTERVALS 3
+    STATUS ON
+  END  
+
+  # Set default resolution to 90, as the OGC standard DPI is 90
+  RESOLUTION 90
+  DEFRESOLUTION 90
+  
+  #
+  # Start of layer definitions
+  # 
+  
+  #######################################
+  # settlement
+  #######################################
+  
+  LAYER
+    NAME "settlement"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"settlement features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain settlement features"
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"        
+    END
+    TYPE POLYGON
+    STATUS ON
+    DATA "settlement.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASS
+      NAME "Settlement"  
+      STYLE
+  	COLOR 192 192 192
+      END     
+    END        
+  END # layer    
+  
+  #######################################
+  # Contour lines 0
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_0"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours"      
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-0.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255  
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO
+        BUFFER 3      
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO   
+        BUFFER 3         
+      END       
+    END      
+  END # Layer    
+  
+  #######################################
+  # Contour lines 1
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_1"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-1.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3  
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255  
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO  
+        BUFFER 3    
+      END       
+    END      
+  END # Layer  
+  
+  #######################################
+  # Contour lines 2
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_2"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-2.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO
+        BUFFER 3  
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255  
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO  
+        BUFFER 3   
+      END       
+    END      
+  END # Layer   
+  
+  #######################################
+  # Contour lines 3
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_3"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-3.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3  
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3   
+      END       
+    END      
+  END # Layer  
+  
+  #######################################
+  # Contour lines 4
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_4"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-4.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255  
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3   
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO     
+        BUFFER 3  
+      END       
+    END      
+  END # Layer 
+  
+  #######################################
+  # Contour lines 5
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_5"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-5.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3   
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO  
+        BUFFER 3    
+      END       
+    END      
+  END # Layer   
+  
+  #######################################
+  # Contour lines 6
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_6"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-6.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255  
+        OUTLINEWIDTH 5
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO  
+        BUFFER 3     
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255 
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3    
+      END       
+    END      
+  END # Layer   
+  
+  #######################################
+  # Contour lines 7
+  #######################################
+  
+  LAYER
+    NAME "contour_lines_7"
+    GROUP "Contours"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"contour lines"
+      "ows_group_title"         "Contours" 
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain contour lines."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "contour-7.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "CATEG_0201"
+    LABELITEM "COTA_0201"
+    MAXSCALEDENOM 30000   
+    CLASS
+      ###############
+      # normal contour lines
+      ###############
+      NAME "Contour Lines (normal)" 
+      EXPRESSION "01"
+      STYLE
+	WIDTH 1
+  	COLOR 230 183 119
+      END 
+      LABEL
+        COLOR  230 183 119
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255  
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3 
+      END       
+    END 
+    CLASS
+      ###############
+      # master contour lines
+      ###############
+      NAME "Contour Lines (master)" 
+      EXPRESSION "02"
+      STYLE
+	WIDTH 1
+  	COLOR 191 143 46
+      END 
+      LABEL
+        COLOR  191 143 46
+        FONT sans
+        TYPE truetype
+        SIZE 12
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255
+        OUTLINEWIDTH 5        
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO 
+        BUFFER 3  
+      END       
+    END      
+  END # Layer   
+  
+  #######################################
+  # building
+  #######################################
+  
+  LAYER
+    NAME "building"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"building features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain building features"
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"        
+    END
+    TYPE POLYGON
+    STATUS ON
+    DATA "building.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "SINGU_0507"
+    MAXSCALEDENOM 30000    
+    CLASS
+      NAME "Normal Building"  
+      EXPRESSION "01"
+      STYLE
+  	COLOR 255 172 172
+      END     
+    END  
+    CLASS
+      NAME "Singular Building"  
+      EXPRESSION "02"
+      STYLE
+  	COLOR 255 120 120
+      END     
+    END      
+  END # layer    
+  
+  #######################################
+  # industry
+  #######################################
+  
+  LAYER
+    NAME "industry"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"industry features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain industry features"
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"        
+    END
+    TYPE POLYGON
+    STATUS ON
+    DATA "industry.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    MAXSCALEDENOM 30000    
+    CLASS
+      NAME "Industry"      
+      STYLE
+  	COLOR 219 113 255
+      END     
+    END   
+  END # layer    
+  
+  #######################################
+  # Track
+  #######################################
+  
+  LAYER
+    NAME "track"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"track road features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain tracks."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "track.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASS
+      ###############
+      # tracks
+      ###############
+      NAME "Tracks"      
+      STYLE
+	WIDTH 4
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 2
+  	COLOR 128 128 128
+      END      
+    END            
+  END # Layer    
+  
+  #######################################
+  # Ramp
+  #######################################
+  
+  LAYER
+    NAME "ramp"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Ramp features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain ramps."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "ramp.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "TIPO_0607"
+    CLASS
+      ###############
+      # roundabout
+      ###############
+      NAME "Roundabout"      
+      EXPRESSION "07"
+      STYLE
+	WIDTH 2
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 1
+  	COLOR 128 128 128
+      END      
+    END      
+    CLASS
+      ###############
+      # tertiary road ramp
+      ###############
+      NAME "Tertiary Road Ramp"      
+      EXPRESSION "06"
+      STYLE
+	WIDTH 2
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 1.5
+  	COLOR 255 255 0
+      END      
+    END    
+    CLASS
+      ###############
+      # secondary road ramp
+      ###############
+      NAME "Secondary Road Ramp"      
+      EXPRESSION "05"
+      STYLE
+	WIDTH 2
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 1.5
+  	COLOR 0 215 0
+      END    
+    END     
+    CLASS
+      ###############
+      # primary road ramp
+      ###############
+      NAME "Primary Road Ramp"      
+      EXPRESSION "04"
+      STYLE
+	WIDTH 2
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 1.5
+  	COLOR 255 181 1
+      END    
+    END     
+    CLASS
+      ###############
+      # trunk road ramp
+      ###############
+      NAME "Trunk Road Ramp"      
+      EXPRESSION "03"
+      STYLE
+        WIDTH 2
+        COLOR 0 0 0
+      END
+      STYLE
+  	WIDTH 1.5
+  	COLOR 255 0 0
+      END      
+    END       
+    CLASS
+      ###############
+      # motorraod ramp
+      ###############
+      NAME "Motorroad Ramp"      
+      EXPRESSION "02"
+      STYLE
+	WIDTH 4
+  	COLOR 255 0 0
+      END
+      STYLE
+	WIDTH 2
+  	COLOR 255 255 255
+      END  
+      STYLE
+	WIDTH 0.5
+  	COLOR 255 0 0
+      END       
+    END       
+    CLASS
+      ###############
+      # motorway ramp
+      ###############
+      NAME "Motorway Ramp"      
+      EXPRESSION "01"
+      STYLE
+	WIDTH 4
+  	COLOR 255 0 0
+      END
+      STYLE
+	WIDTH 2
+  	COLOR 255 255 0
+      END  
+      STYLE
+	WIDTH 0.5
+  	COLOR 255 0 0
+      END       
+    END         
+  END # Layer  
+  
+  #######################################
+  # Road
+  #######################################
+  
+  LAYER
+    NAME "road"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Road features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain roads."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "road.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "COMPE_0604"
+    CLASS
+      ###############
+      # tertiary road
+      ###############
+      NAME "Tertiary Road"      
+      EXPRESSION ("[COMPE_0604]" != "01" AND "[CFUN_0604]" = "03")
+      STYLE
+	WIDTH 4
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 3
+  	COLOR 255 255 0
+      END      
+    END      
+    CLASS
+      ###############
+      # secondary road
+      ###############
+      NAME "Secondary Road"      
+      EXPRESSION ("[COMPE_0604]" != "01" AND "[CFUN_0604]" = "02")
+      STYLE
+	WIDTH 4
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 3
+  	COLOR 0 215 0
+      END      
+    END   
+    CLASS
+      ###############
+      # primary road
+      ###############
+      NAME "Primary Road"      
+      EXPRESSION ("[COMPE_0604]" != "01" AND "[CFUN_0604]" = "01")
+      STYLE
+	WIDTH 4
+  	COLOR 0 0 0
+      END
+      STYLE
+	WIDTH 3
+  	COLOR 255 181 1
+      END
+    END  
+    CLASS
+      ###############
+      # trunk
+      ###############
+      NAME "Trunk"      
+      EXPRESSION "01"
+      STYLE
+        WIDTH 4
+        COLOR 0 0 0
+      END
+      STYLE
+  	WIDTH 3
+  	COLOR 255 0 0
+      END
+    END    
+  END # Layer  
+  
+  #######################################
+  # Motorway
+  #######################################
+  
+  LAYER
+    NAME "motorway"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Motorway features"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain motorways."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"     
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "motorway.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    CLASSITEM "TIPO_0601"
+    CLASS
+      ###############
+      # motorroad
+      ###############
+      NAME "Motorroad"      
+      EXPRESSION "03"
+      STYLE
+	WIDTH 8
+  	COLOR 255 0 0
+      END
+      STYLE
+	WIDTH 4
+  	COLOR 255 255 255
+      END  
+      STYLE
+	WIDTH 1
+  	COLOR 255 0 0
+      END     
+    END      
+    CLASS
+      ###############
+      # motorway
+      ###############
+      NAME "Motorway"      
+      EXPRESSION "01"
+      STYLE
+	WIDTH 8
+  	COLOR 255 0 0
+      END
+      STYLE
+	WIDTH 4
+  	COLOR 255 255 0
+      END  
+      STYLE
+	WIDTH 1
+  	COLOR 255 0 0
+      END       
+    END      
+  END # Layer   
+  
+  #######################################
+  # Point Features with Geometry
+  #######################################
+  
+  LAYER
+    NAME "point_geometry"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Point labels for geometry"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain point labels, for geometry."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"      
+    END
+    TYPE ANNOTATION
+    STATUS ON
+    DATA "point-labels-for-geometry.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    LABELITEM "ETIQUETA"  
+    MAXSCALEDENOM 50000                
+    CLASS
+      NAME "Point labels for geometry"
+      LABEL
+        COLOR  0 0 0
+        FONT sans-italic
+        TYPE truetype
+        SIZE 8
+        POSITION AUTO     
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255      
+      END 
+#      STYLE
+#        SYMBOL 2
+#        SIZE 8
+#        COLOR 0 0 0
+#      END
+    END  
+  END # layer  
+  
+  #######################################
+  # Point Features without Geometry
+  #######################################
+  
+  LAYER
+    NAME "point_nogeom"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Point labels, without"
+      "ows_srs"   		"EPSG:4326"
+      "ows_abstract"            "Spain point labels, without geometry."
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"      
+    END
+    TYPE ANNOTATION
+    STATUS ON
+    DATA "point-labels-no-geometry.shp"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "init=epsg:4326"
+    END
+    LABELITEM "ETIQUETA"  
+    MAXSCALEDENOM 50000            
+    CLASS
+      NAME "Point labels, no geometry"
+      LABEL
+        COLOR  0 0 0
+        FONT sans
+        TYPE truetype
+        SIZE 8
+        POSITION AUTO     
+        PARTIALS FALSE
+        OUTLINECOLOR 255 255 255      
+      END 
+#      STYLE
+#        SYMBOL 2
+#        SIZE 8
+#        COLOR 0 0 0
+#      END
+    END  
+  END # layer    
+  
+# End of map file
+END 

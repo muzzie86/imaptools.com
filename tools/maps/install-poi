@@ -1,0 +1,55 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+use File::Basename;
+use File::Path;
+use File::Copy;
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: install-poi srcdata mapdata\n";
+}
+
+my @files = ();
+
+my $src = shift @ARGV || Usage();
+my $dst = shift @ARGV || Usage();
+
+die "ERROR: Can not access directory: $src\n" if ! -d $src;
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+my @qix = ();
+
+for my $x (@files) {
+    $x =~ s/^$src//;
+    my $to = "$dst/$x";
+    my $path = dirname($to);
+    mkpath($path);
+    copy("$src$x", $to) || die "ERROR: copy failed : $!\n";
+    push @qix, $to if $to =~ /\.shp$/;
+}
+
+for my $x (@qix) {
+    system("shptree $x");
+}
+
+exit;
+
+
+sub wanted {
+    /^(AutoSvc|BordCross|Business|CommSvc|EduInsts|Entertn|FinInsts|Golf|Hospital|MiscCategories|ParkRec|Parking|Restrnts|Shopping|TransHubs|TravDest)\..*\z/s &&
+    push @files, $name;
+}
+

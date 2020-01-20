@@ -1,0 +1,25 @@
+  # map-AREAWATER-L.inc
+  MAXSCALEDENOM 7000000
+  MINSCALEDENOM  500000
+  LABELITEM "FULLNAME"
+  CLASS # water
+    STYLE
+      COLOR "#a5bfdd"
+    END
+#    LABEL
+#      MAXSCALEDENOM 200000
+#      TYPE TRUETYPE
+#      FONT "sans-italic"
+#      SIZE 8
+#      COLOR "#627A9D"
+#      OUTLINECOLOR "#B3C9E2"
+#      PARTIALS FALSE
+#      MINDISTANCE 250
+#      MINFEATURESIZE 10
+#      BUFFER 4
+#      POSITION CC
+#      PRIORITY 4
+#      WRAP " "
+#      ALIGN CENTER
+#    END
+  END

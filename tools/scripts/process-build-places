@@ -1,0 +1,115 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+use File::Basename;
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+my $DRYRUN = 0;
+my $VERBOSE = 1;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: process-build-places dbname src-for-zips\n";
+}
+
+my $dbname = shift @ARGV || Usage();
+my $src = shift @ARGV || Usage();
+my @files = ();
+my $tmp = "tmp-$$";
+
+mysystem("mkdir $tmp");
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+my $x;
+my $c;
+my $table;
+
+$c = '-c';
+$table = 'cousub';
+for $x (sort grep /cousub/, @files) {
+    print "# Loading: $x\n";
+    mysystem("unzip -q -d $tmp $x");
+    my $y = basename($x, '.zip');
+    mysystem("build-tiger-places $c $dbname $table $tmp/$y.dbf");
+    mysystem("rm $tmp/*");
+    $c = '-a';
+}
+
+$c = '-c';
+$table = 'place';
+for $x (sort grep /place/, @files) {
+    print "# Loading: $x\n";
+    mysystem("unzip -q -d $tmp $x");
+    my $y = basename($x, '.zip');
+    mysystem("build-tiger-places $c $dbname $table $tmp/$y.dbf");
+    mysystem("rm $tmp/*");
+    $c = '-a';
+}
+
+$c = '-c';
+$table = 'concity';
+for $x (sort grep /concity/, @files) {
+    print "# Loading: $x\n";
+    mysystem("unzip -q -d $tmp $x");
+    my $y = basename($x, '.zip');
+    mysystem("build-tiger-places $c $dbname $table $tmp/$y.dbf");
+    mysystem("rm $tmp/*");
+    $c = '-a';
+}
+
+$c = '-c';
+$table = 'faces';
+for $x (sort grep /faces/, @files) {
+    print "# Loading: $x\n";
+    mysystem("unzip -q -d $tmp $x");
+    my $y = basename($x, '.zip');
+    mysystem("build-tiger-places $c $dbname $table $tmp/$y.dbf");
+    mysystem("rm $tmp/*");
+    $c = '-a';
+}
+
+mysystem("rm -rf $tmp");
+
+# add the indexes to the tables
+mysystem("build-tiger-places -i $dbname ");
+
+exit;
+
+
+sub wanted {
+    /^.*_(faces|cousub|place|concity)\.zip\z/s &&
+    push @files, $name;
+}
+
+sub mysystem {
+    print join(" ", @_), "\n" if $DRYRUN || $VERBOSE;
+    if ( ! $DRYRUN ) {
+        my $rc = 0xffff & system(@_);
+        if ($rc == 0xff00) {
+            die "Command Failed: '" .  join(" ", @_) . "'\n";
+        }
+        elsif (($rc & 0xff) == 0) {
+            $rc >>= 8;
+            die "Command '" .  join(" ", @_) . "' Returned ($rc)\n"
+                unless $rc == 0;
+        }
+        else {
+            die "Command Failed: '" .  join(" ", @_) . "' with signal $rc\n";
+        }
+    }
+}
+

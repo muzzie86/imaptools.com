@@ -1,0 +1,75 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: load-nt-other dbname encoding src-dir\n" .
+        "Assumes DBUSER=postgres, DBHOST=localhost\n";
+}
+
+my $DBUSER = "postgres";
+my $DBHOST = "localhost";
+
+my @files = ();
+
+my $DBNAME   = shift @ARGV || Usage();
+my $ENCODING = shift @ARGV || Usage();
+my $src      = shift @ARGV || Usage();
+
+## '' for inserts, -D for dump format
+## -D is faster, but does not always work with UTF-8 data
+my $DFMT = '';
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+die "NO files to process! No Changes made!\n" unless @files;
+
+for my $s qw(Islands LandUseA LandUseB Landmark Hamlet WaterSeg WaterPoly Oceans) {
+
+    my $TABLE = lc($s);
+    my @f = sort grep(/$s/, @files);
+    if (! @f) {
+        print "NO $s files to process! No Changes made!\n";
+        next;
+    }
+
+    ## DROP the table before we load it
+    system("psql -U $DBUSER -h $DBHOST $DBNAME -c \"drop table $TABLE cascade\"");
+    my $c = "-c";
+
+    ## create and load the new data
+    for my $x (@f) {
+        system("shp2pgsql -s 4326 $c $DFMT -W $ENCODING -N skip $x $TABLE | psql -U $DBUSER -h $DBHOST $DBNAME | grep -v INSERT ");
+        $c = '-a' if $c eq '-c';
+    }
+
+    ## create indexes we wil need
+    system("psql -U $DBUSER -h $DBHOST $DBNAME -c \"CREATE INDEX ${TABLE}_the_geom_gist ON ${TABLE} USING gist (the_geom)\"");
+
+    ## clean the table now that we are done
+    system("psql -U $DBUSER -h $DBHOST $DBNAME -c \"vacuum analyse $TABLE\"");
+}
+
+exit;
+
+
+sub wanted {
+    /^(Islands|LandUseA|LandUseB|Landmark|Hamlet|WaterSeg|WaterPoly|Oceans)\.shp\z/s &&
+    push @files, $name;
+}
+

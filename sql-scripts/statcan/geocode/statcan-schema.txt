@@ -1,0 +1,139 @@
+statcan=# \d nrn_yt_14_0_roadseg
+                                          Table "rawdata.nrn_yt_14_0_roadseg"
+   Column   |              Type              | Collation | Nullable |                     Default
+------------+--------------------------------+-----------+----------+--------------------------------------------------
+ gid        | integer                        |           | not null | nextval('nrn_yt_14_0_roadseg_gid_seq'::regclass)
+ nid        | character varying(32)          |           |          |
+ roadsegid  | integer                        |           |          |
+ adrangenid | character varying(32)          |           |          |
+ datasetnam | character varying(25)          |           |          |
+ specvers   | character varying(100)         |           |          |
+ accuracy   | smallint                       |           |          |
+ acqtech    | character varying(23)          |           |          |
+ provider   | character varying(24)          |           |          |
+ credate    | character varying(8)           |           |          |
+ revdate    | character varying(8)           |           |          |
+ metacover  | character varying(8)           |           |          |
+ roadclass  | character varying(21)          |           |          |
+ rtnumber1  | character varying(10)          |           |          |
+ rtnumber2  | character varying(10)          |           |          |
+ rtnumber3  | character varying(10)          |           |          |
+ rtnumber4  | character varying(10)          |           |          |
+ rtnumber5  | character varying(10)          |           |          |
+ rtename1fr | character varying(100)         |           |          |
+ rtename2fr | character varying(100)         |           |          |
+ rtename3fr | character varying(100)         |           |          |
+ rtename4fr | character varying(100)         |           |          |
+ rtename1en | character varying(100)         |           |          |
+ rtename2en | character varying(100)         |           |          |
+ rtename3en | character varying(100)         |           |          |
+ rtename4en | character varying(100)         |           |          |
+ exitnbr    | character varying(10)          |           |          |
+ nbrlanes   | smallint                       |           |          |
+ pavstatus  | character varying(7)           |           |          |
+ pavsurf    | character varying(8)           |           |          |
+ unpavsurf  | character varying(7)           |           |          |
+ structid   | character varying(32)          |           |          |
+ structtype | character varying(15)          |           |          |
+ strunameen | character varying(100)         |           |          |
+ strunamefr | character varying(100)         |           |          |
+ l_adddirfg | character varying(18)          |           |          |
+ l_hnumf    | integer                        |           |          |
+ l_hnuml    | integer                        |           |          |
+ l_stname_c | character varying(100)         |           |          |
+ l_placenam | character varying(100)         |           |          |
+ r_adddirfg | character varying(18)          |           |          |
+ r_hnumf    | integer                        |           |          |
+ r_hnuml    | integer                        |           |          |
+ r_stname_c | character varying(100)         |           |          |
+ r_placenam | character varying(100)         |           |          |
+ closing    | character varying(7)           |           |          |
+ roadjuris  | character varying(100)         |           |          |
+ speed      | smallint                       |           |          |
+ trafficdir | character varying(18)          |           |          |
+ geom       | geometry(MultiLineString,4617) |           |          |
+Indexes:
+    "nrn_yt_14_0_roadseg_pkey" PRIMARY KEY, btree (gid)
+
+
+statcan=# \d nrn_yt_14_0_addrange
+                                      Table "rawdata.nrn_yt_14_0_addrange"
+   Column   |          Type          | Collation | Nullable |                      Default
+------------+------------------------+-----------+----------+---------------------------------------------------
+ gid        | integer                |           | not null | nextval('nrn_yt_14_0_addrange_gid_seq'::regclass)
+ nid        | character varying(32)  |           |          |
+ datasetnam | character varying(25)  |           |          |
+ specvers   | character varying(100) |           |          |
+ accuracy   | smallint               |           |          |
+ acqtech    | character varying(23)  |           |          |
+ provider   | character varying(24)  |           |          |
+ credate    | character varying(8)   |           |          |
+ revdate    | character varying(8)   |           |          |
+ metacover  | character varying(8)   |           |          |
+ l_digdirfg | character varying(18)  |           |          |
+ l_hnumstr  | character varying(9)   |           |          |
+ l_rfsysind | character varying(18)  |           |          |
+ l_hnumtypf | character varying(16)  |           |          |
+ l_hnumf    | integer                |           |          |
+ l_hnumsuff | character varying(20)  |           |          |
+ l_hnumtypl | character varying(16)  |           |          |
+ l_hnuml    | integer                |           |          |
+ l_hnumsufl | character varying(20)  |           |          |
+ l_offnanid | character varying(32)  |           |          |
+ l_altnanid | character varying(32)  |           |          |
+ r_digdirfg | character varying(18)  |           |          |
+ r_hnumstr  | character varying(9)   |           |          |
+ r_rfsysind | character varying(18)  |           |          |
+ r_hnumtypf | character varying(16)  |           |          |
+ r_hnumf    | integer                |           |          |
+ r_hnumsuff | character varying(20)  |           |          |
+ r_hnumtypl | character varying(16)  |           |          |
+ r_hnuml    | integer                |           |          |
+ r_hnumsufl | character varying(20)  |           |          |
+ r_offnanid | character varying(32)  |           |          |
+ r_altnanid | character varying(32)  |           |          |
+Indexes:
+    "nrn_yt_14_0_addrange_pkey" PRIMARY KEY, btree (gid)
+
+statcan=# \d nrn_yt_14_0_strplaname
+                                      Table "rawdata.nrn_yt_14_0_strplaname"
+   Column   |          Type          | Collation | Nullable |                       Default
+------------+------------------------+-----------+----------+-----------------------------------------------------
+ gid        | integer                |           | not null | nextval('nrn_yt_14_0_strplaname_gid_seq'::regclass)
+ nid        | character varying(32)  |           |          |
+ datasetnam | character varying(25)  |           |          |
+ specvers   | character varying(100) |           |          |
+ accuracy   | smallint               |           |          |
+ acqtech    | character varying(23)  |           |          |
+ provider   | character varying(24)  |           |          |
+ credate    | character varying(8)   |           |          |
+ revdate    | character varying(8)   |           |          |
+ metacover  | character varying(8)   |           |          |
+ dirprefix  | character varying(10)  |           |          |
+ strtypre   | character varying(30)  |           |          |
+ starticle  | character varying(20)  |           |          |
+ namebody   | character varying(50)  |           |          |
+ strtysuf   | character varying(30)  |           |          |
+ dirsuffix  | character varying(10)  |           |          |
+ muniquad   | character varying(10)  |           |          |
+ placename  | character varying(100) |           |          |
+ province   | character varying(25)  |           |          |
+ placetype  | character varying(100) |           |          |
+Indexes:
+    "nrn_yt_14_0_strplaname_pkey" PRIMARY KEY, btree (gid)
+
+statcan=# \d nrn_on_12_0_altnamlink
+                                      Table "rawdata.nrn_on_12_0_altnamlink"
+   Column   |          Type          | Collation | Nullable |                       Default
+------------+------------------------+-----------+----------+-----------------------------------------------------
+ gid        | integer                |           | not null | nextval('nrn_on_12_0_altnamlink_gid_seq'::regclass)
+ datasetnam | character varying(25)  |           |          |
+ specvers   | character varying(100) |           |          |
+ credate    | character varying(8)   |           |          |
+ revdate    | character varying(8)   |           |          |
+ nid        | character varying(32)  |           |          |
+ strnamenid | character varying(32)  |           |          |
+Indexes:
+    "nrn_on_12_0_altnamlink_pkey" PRIMARY KEY, btree (gid)
+
+

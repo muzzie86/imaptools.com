@@ -1,0 +1,51 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: dd2prj <dir> <prj>\n" .
+        "   This command overwrites the files, work on a copy!\n" .
+        "   <dir> - directory to search for *.shp files and project them.\n" .
+        "   <prj> - 'init=epsg:900913'\n";
+}
+
+my @files = ();
+
+#my $prj = 'proj=lcc,lat_1=32.5,lat_2=34.83333333333334,lat_0=31.83333333333333,lon_0=-81,x_0=609600.0000000001,y_0=0,ellps=GRS80,datum=NAD83,to_meter=0.3048006096012192 no_defs';
+
+my $dir = shift @ARGV || Usage();
+my $prj = shift @ARGV || Usage();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $dir);
+
+foreach my $file (@files) {
+    $file =~ s/\.shp\s*$//;
+    print "project.pl \"init=epsg:4326\" \"$prj\" $file $file-$$\n";
+    print "mv $file-$$.shp $file.shp\n";
+    print "mv $file-$$.shx $file.shx\n";
+    print "mv $file-$$.dbf $file.dbf\n";
+}
+
+exit;
+
+
+sub wanted {
+    /^.*\.shp\z/s &&
+    push @files, $name;
+}
+

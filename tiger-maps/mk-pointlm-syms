@@ -1,0 +1,51 @@
+#!/usr/bin/perl -w
+use strict;
+
+my $f = "mtfcc-pointlm.txt";
+open(IN, $f) || die "Failed to open '$f' : $!\n";
+
+# -1 label with a circle symbol
+# -2 label with no symbol
+# -3 do not label
+#
+#C3022,   63490,   -1, Mountain Peak or Summit
+
+my %k = ();
+my %s = ();
+
+while (my $x = <IN>) {
+    next if $x =~ /^\s*#/;
+    my @a = split(/\s*,\s*/, $x);
+    push @{$k{"$a[2]"}}, $a[0];
+    $s{"$a[2]"} += $a[1];
+}
+close(IN);
+
+my @keys = sort { $s{$b} <=> $s{$a} } keys %s;
+
+for my $x (@keys) {
+    my $exp = join("|", @{$k{$x}});
+    print <<EOF;
+    CLASS # $s{$x}
+      EXPRESSION /$exp/
+      STYLE
+        SYMBOL "etc/icons2/poi/$x.png"
+      END
+      LABEL
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+EOF
+}
+
+#print "# cp ".join(' ', map { "$_.png" } @keys)." data/etc/icons2/poi/.\n";

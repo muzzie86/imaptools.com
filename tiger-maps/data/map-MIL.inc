@@ -1,0 +1,26 @@
+  # map-MIL.inc
+  MAXSCALEDENOM 5000000
+  CLASS # Military
+    STYLE
+      COLOR "#E7E5E3"
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      STYLE
+        SYMBOL "military"
+        SIZE 16
+      END
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      COLOR "#655949"
+      OUTLINECOLOR "#F3F3F0"
+      PARTIALS FALSE
+      MINDISTANCE 100
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE AUTO
+      ALIGN AUTO
+      PRIORITY 4
+    END
+  END

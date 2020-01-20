@@ -1,0 +1,32 @@
+#!/bin/bash
+
+DBNAME=nt_geo
+
+if false ; then
+dropdb -h localhost -U postgres $DBNAME
+createdb -E LATIN1 -T template_postgis_15 -h localhost -U postgres $DBNAME
+psql -h localhost -U postgres $DBNAME -f ~/work/pagc/pagc/branches/sew-refactor/pagclib/api/psql/standardize_address.sql
+psql -h localhost -U postgres $DBNAME -f /usr/share/postgresql/8.3/contrib/fuzzystrmatch.sql
+psql -h localhost -U postgres $DBNAME <<EOF
+create schema data;
+create schema rawdata;
+alter database $DBNAME set search_path to data, public;
+EOF
+
+
+shp2pgsql -s 4326 -c -D -W UTF-8 -N skip /u/srcdata/navteq-reis/11AM12400N11000AABD9/Streets.shp rawdata.streets | psql -h localhost -U postgres $DBNAME
+
+shp2pgsql -s 4326 -c -D -W UTF-8 -N skip /u/srcdata/navteq-reis/11AM12400N11000AABD9/PointAddress.shp rawdata.pointaddress | psql -h localhost -U postgres $DBNAME
+
+shp2pgsql -s 4326 -c -D -W UTF-8 -n /u/srcdata/navteq-reis/11AM12400N11000AABD9/AltStreets.shp rawdata.altstreets | psql -h localhost -U postgres $DBNAME
+
+shp2pgsql -s 4326 -c -D -W UTF-8 -n /u/srcdata/navteq-reis/11AM12400N11000AABD9/Zones.shp rawdata.zones | psql -h localhost -U postgres $DBNAME
+fi
+
+shp2pgsql -s 4326 -c -D -W UTF-8 -n /u/srcdata/navteq-reis/11AM12400N11000AABD9/MtdZoneRec.dbf rawdata.mtdzonerec | psql -h localhost -U postgres $DBNAME
+
+# shp2pgsql -s 4326 -c -D -W UTF-8 -n /u/srcdata/navteq-reis/11AM12400N11000AABD9/MtdArea.dbf rawdata.mtdarea | psql -h localhost -U postgres $DBNAME
+
+ogr2ogr -f "PostgreSQL" PG:"host=localhost user=postgres dbname=$DBNAME" -where "lang_code='ENG'" /u/srcdata/navteq-reis/11AM12400N11000AABD9/MtdArea.dbf -nln rawdata.mtdarea
+
+

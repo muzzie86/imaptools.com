@@ -1,0 +1,19 @@
+#!/bin/bash
+if [[ a$1 == a ]] ; then
+    echo "Usage: process-state yyyy"
+    exit
+fi
+
+cd STATE
+dropdb -U postgres -h localhost junk
+createdb -U postgres -h localhost  junk
+psql -U postgres -h localhost  junk -c "create extension postgis"
+shp2pgsql -W LATIN1 -s 4326 -c -D -g the_geom -N skip tl_${1}_us_state.shp tl_${1}_us_state | psql -U postgres -h localhost junk
+pgsql2shp -f tl_${1}_us_state_pt.shp -g the_geom -u postgres -h localhost junk "select gid, region, division, statefp, statens, geoid, stusps, name, lsad, mtfcc, funcstat, aland, awater, intptlat, intptlon, st_centroid(the_geom) as the_geom from tl_${1}_us_state"
+psql -U postgres -h localhost junk -c "drop table tl_${1}_us_state cascade"
+psql -U postgres -h localhost junk -c "vacuum full"
+sortshp tl_${1}_us_state_pt a ALAND ascending
+mv a.shp tl_${1}_us_state_pt.shp
+mv a.shx tl_${1}_us_state_pt.shx
+mv a.dbf tl_${1}_us_state_pt.dbf
+shptree tl_${1}_us_state_pt.shp

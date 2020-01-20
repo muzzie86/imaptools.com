@@ -1,0 +1,78 @@
+SYMBOLSET
+
+# Symbols for Tiger 2011 Maps using mapserver 6.02+
+
+SYMBOL
+NAME 'circle'
+TYPE ELLIPSE
+POINTS 1 1 END
+END
+
+SYMBOL
+NAME 'circle-filled'
+TYPE ELLIPSE
+FILLED TRUE
+POINTS 1 1 END
+END
+
+SYMBOL
+NAME "Country_Border_Patern"
+TYPE PIXMAP
+IMAGE "icons2/city/Country_Border_Patern.png"
+END
+
+SYMBOL
+NAME "city_1"
+TYPE PIXMAP
+IMAGE "icons2/city/city_1.png"
+END
+
+SYMBOL
+NAME "city_2"
+TYPE PIXMAP
+IMAGE "icons2/city/city_2.png"
+END
+
+SYMBOL
+NAME "city_3"
+TYPE PIXMAP
+IMAGE "icons2/city/city_3.png"
+END
+
+SYMBOL
+NAME "city_4"
+TYPE PIXMAP
+IMAGE "icons2/city/city_4.png"
+END
+
+SYMBOL
+NAME "city_5"
+TYPE PIXMAP
+IMAGE "icons2/city/city_5.png"
+END
+
+SYMBOL
+NAME "city_6"
+TYPE PIXMAP
+IMAGE "icons2/city/city_6.png"
+END
+
+SYMBOL
+NAME "I"
+TYPE PIXMAP
+IMAGE "icons2/hwy/interstate.png"
+END
+
+SYMBOL
+NAME "U"
+TYPE PIXMAP
+IMAGE "icons2/hwy/ushwy.png"
+END
+
+SYMBOL
+NAME "S"
+TYPE PIXMAP
+IMAGE "icons2/hwy/ctyhwy.png"
+END
+
+END #Symbolset

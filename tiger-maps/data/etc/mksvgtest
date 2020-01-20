@@ -1,0 +1,122 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+use File::Basename;
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+my @f = ();
+
+my $size = 64;
+my $buf  =  4;
+my $wid =   5;
+my $esize = $size + $buf;
+
+my @html = ();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, 'svg/poi');
+
+my $cnt = int( scalar @f / $wid ) + 2;
+my $w = ($wid + 1) * $esize;
+my $h = $cnt * $esize;
+
+print <<EOF;
+map
+    NAME "SVG Test"
+    STATUS ON
+    SIZE $w $h
+    EXTENT 0 0 $w $h
+    IMAGECOLOR "#888888"
+    IMAGETYPE agg_qn
+
+    CONFIG ON_MISSING_DATA "IGNORE"
+    CONFIG MS_ERRORFILE "stderr"
+    #DEBUG 10
+
+    OUTPUTFORMAT
+        NAME "agg_qn"
+        DRIVER "AGG/PNG"
+        EXTENSION "png"
+        MIMETYPE "image/png"
+        IMAGEMODE RGB
+        FORMATOPTION "INTERLACE=false"
+        FORMATOPTION "QUANTIZE_NEW=ON"
+        FORMATOPTION "QUANTIZE_FORCE=ON"
+        FORMATOPTION "QUANTIZE_DITHER=OFF"
+        FORMATOPTION "QUANTIZE_COLORS=256"
+        #TRANSPARENT ON
+        #FORMATOPTION "TRANSPARENT=ON"
+    END
+
+EOF
+
+my $x = $esize;
+my $y = $esize;
+my $i = 0;
+my $row = "<tr>\n";
+for my $s (sort @f) {
+    my $n = basename $s, '.svg';
+    $row .= "<td><img height=$size width=$size src=\"$s\"</td>\n";
+    print <<EOF;
+    symbol
+      name "$n"
+      type svg
+      image "etc/$s"
+    end
+    layer
+      name "$n"
+      type point
+      status default
+      feature points $x $y end end
+      class
+        style
+          symbol "$n"
+          size $size
+        end
+      end
+    end
+
+EOF
+
+    $x += $esize;
+    if ($x % ($esize * ($wid + 1)) == 0) {
+        $x = $esize;
+        $y += $esize;
+        $row .= "</tr>\n";
+        unshift @html, $row;
+        $row = "<tr>\n";
+    }
+}
+
+$row .= "</tr>\n";
+unshift @html, $row;
+
+print "end\n";
+
+open(H, ">index-svg.html") || die "Failed to create index-svg.html : $!\n";
+print H "<html><head><title>SVG Images</title></head>\n";
+print H "<body><table ncols=$wid cellspacing=0 cellpadding=$buf border=1 bgcolor=\"#888888\">\n";
+print H join("", @html);
+print H "</table>\n<hr /><img src=\"http://imaptools.com:8080/cgi-bin/mapserv-6.1-dev?mode=map&map=/u/data/tiger2011-maps/svg-test.map\">\n</body></html>\n";
+close(H);
+
+exit;
+
+
+sub wanted {
+    /^.*\.svg\z/s
+    && push @f, $name;
+}
+

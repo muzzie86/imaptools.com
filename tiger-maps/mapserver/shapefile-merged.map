@@ -1,0 +1,563 @@
+############################################################################################
+# author:   Jeff McKenna, jmckenna@gatewaygeomatics.com
+# purpose:  to test MapServer's vector drawing capabilities for FOSS4G 2009
+#           more info: http://wiki.osgeo.org/wiki/Benchmarking_2009
+# requires: associated processed TIGER/Line 2008 shapefiles for Texas
+# license:
+#
+# Copyright (c) 2009, Gateway Geomatics
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of 
+# this software and associated documentation files (the "Software"), to deal in the 
+# Software without restriction, including without limitation the rights to use, copy, 
+# modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+# and to permit persons to whom the Software is furnished to do so, subject to the 
+# following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies 
+# or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+# FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+############################################################################################
+
+# MapServer benchmark map file - Vectors
+MAP
+
+  NAME 	"vector_benchmarking_shp"
+  STATUS ON
+  SIZE 	950 600
+  #EXTENT -180 -90 180 90 #globe
+  #EXTENT -96.980629943844 29.854114257812 -96.79038641357 29.974268066406 #La Grange
+  #EXTENT -97.038385 32.545214 -96.516866 32.989369 #Dallas
+  #EXTENT -97.0286 32.5511 -96.8724 32.6925 #Duncanville/Dallas
+  #EXTENT -96.79662860321045 32.79950446557617 -96.76638915924073 32.81860306176758 #Dallas 1:13K
+  EXTENT -96.79344550384396 32.76888304968294 -96.78588564285151 32.77365769873079 #Dallas 1:2500 (curved labels)  
+  UNITS DD
+  SHAPEPATH "../../data"
+  #SHAPEPATH "../data"
+  IMAGECOLOR 255 255 255
+  FONTSET "./etc/fonts.txt"
+  SYMBOLSET "./etc/symbols.txt"  
+  #IMAGETYPE PNG
+
+  #
+  # Outputformat of map image
+  #
+  
+  OUTPUTFORMAT
+    NAME aggpng24
+    DRIVER AGG/PNG
+    MIMETYPE "image/png"
+    IMAGEMODE RGB
+    EXTENSION "png"
+  END
+  
+  #
+  # Start of web interface definition
+  #
+  WEB
+    # metadata for WMS service
+    METADATA
+      "ows_title"   		"MapServer Vector benchmarking with TIGER/Line 2008 shapefiles"
+      "ows_onlineresource" 	"http://64.222.187.168/cgi-bin/mapserv560beta3?MAP=/opt/benchmarking/mapserver/shapefile-merged.map"
+      "ows_srs"   		"EPSG:4269 EPSG:4326"
+      "ows_abstract"            "This WMS is run with MapServer 5.5.0 (development), accessing TIGER/Line 2008 shapefiles for the US state of Texas.  This was setup for the Web server benchmarking presentation at FOSS4G2009.  More info at: http://wiki.osgeo.org/wiki/Benchmarking_2009"
+      "ows_contactperson"       "Jeff McKenna"
+      "ows_contactorganization" "Gateway Geomatics" 
+      "ows_contactposition"     "Director"
+      "ows_contactelectronicmailaddress" "info@gatewaygeomatics.com"
+      "ows_attribution_title"   "U.S. Census Bureau 2008 TIGER/Line® Shapefiles"
+      "ows_attribution_onlineresource" "http://www.census.gov/geo/www/tiger/tgrshp2008/tgrshp2008.html"
+    END    
+    # not necessary for benchmarking scripts
+    # Windows
+    IMAGEPATH "/ms4w/tmp/ms_tmp/" 
+    IMAGEURL "/ms_tmp/"
+    # Unix
+    #IMAGEPATH "/home/httpd/htdocs/ms_tmp/"
+    #IMAGEURL "http://labs.gatewaygeomatics.com/ms_tmp/"
+    TEMPLATE "./htdocs/viewer-template.html"          
+  END  
+  
+  #
+  # Projection of output image
+  #
+  PROJECTION
+    "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+  END
+  
+  #
+  # Start of legend (not necessary for benchmarking scripts)
+  #
+  LEGEND
+    KEYSIZE 18 12
+    LABEL
+      TYPE BITMAP
+      SIZE MEDIUM
+      COLOR 0 0 89
+    END
+    STATUS ON
+    TEMPLATE "./htdocs/html-legend.html"  
+  END  
+  
+  #
+  # Start of scalebar (not necessary for benchmarking scripts)
+  #
+  SCALEBAR
+    IMAGECOLOR 255 255 255
+    LABEL
+      COLOR 0 0 0 
+      SIZE SMALL
+    END
+    SIZE 150 5
+    COLOR 255 255 255
+    BACKGROUNDCOLOR 0 0 0
+    OUTLINECOLOR 0 0 0
+    UNITS miles
+    INTERVALS 3
+    STATUS ON
+  END  
+
+  #
+  # Start of layer definitions
+  # 
+  
+  #######################################
+  # Areawater
+  #######################################
+  
+  LAYER
+    NAME "areawater-merged"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Area Water (lakes)"
+      "ows_srs"   		"EPSG:4269 EPSG:4326"
+      "ows_abstract"            "Area water (i.e. lakes) according to 2008 TIGER/Line® classifications."
+      "ows_attribution_title"   "U.S. Census Bureau 2008 TIGER/Line® Shapefiles"
+      "ows_attribution_onlineresource" "http://www.census.gov/geo/www/tiger/tgrshp2008/tgrshp2008.html"      
+    END
+    TYPE POLYGON
+    STATUS ON
+    DATA "TIGER-2008/48_TEXAS/areawater_merge"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+    END
+    CLASS
+      NAME "Lakes"      
+      STYLE
+  	COLOR 178 206 226
+      END     
+    END   
+  END # layer  
+
+  #######################################
+  # Roads
+  #######################################
+  
+  LAYER
+    NAME "roads-merged"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Road features"
+      "ows_srs"   		"EPSG:4269 EPSG:4326"
+      "ows_abstract"            "Roads according to 2008 TIGER/Line® classifications."
+      "ows_attribution_title"   "U.S. Census Bureau 2008 TIGER/Line® Shapefiles"
+      "ows_attribution_onlineresource" "http://www.census.gov/geo/www/tiger/tgrshp2008/tgrshp2008.html"      
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "TIGER-2008/48_TEXAS/edges_merge"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+    END
+    CLASSITEM "MTFCC"
+    CLASS
+      ###############
+      # Private Road
+      ###############
+      NAME "Private Roads"      
+      EXPRESSION "S1740"
+      STYLE
+        SYMBOL 'dash'
+        WIDTH 1
+  	COLOR 115 106 89
+      END
+    END      
+    CLASS
+      ###############
+      # local roads
+      ###############
+      NAME "Local Roads"      
+      EXPRESSION "S1400"
+      STYLE
+        WIDTH 1
+  	COLOR 115 106 89
+      END       
+    END   
+    CLASS
+      ###############
+      # highways
+      ###############
+      NAME "Highways"      
+      EXPRESSION "S1200"
+      STYLE
+	WIDTH 5
+  	COLOR 115 106 89
+      END
+      STYLE
+	WIDTH 3
+  	COLOR 244 224 0
+      END
+    END  
+    CLASS
+      ###############
+      # interstate
+      ###############
+      NAME "Interstate Highways"      
+      EXPRESSION "S1100"
+      STYLE
+        WIDTH 8
+        SIZE 5
+        COLOR 115 106 89
+      END
+      STYLE
+  	WIDTH 6
+  	COLOR 243 162 0
+      END
+    END    
+  END # Layer   
+
+  #######################################
+  # Roads (labelled)
+  #######################################
+  
+  LAYER
+    NAME "roads-merged-labelled"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Road features (labelled)"
+      "ows_srs"   		"EPSG:4269 EPSG:4326"
+      "ows_abstract"            "Roads according to 2008 TIGER/Line® classifications."
+      "ows_attribution_title"   "U.S. Census Bureau 2008 TIGER/Line® Shapefiles"
+      "ows_attribution_onlineresource" "http://www.census.gov/geo/www/tiger/tgrshp2008/tgrshp2008.html"      
+    END
+    TYPE LINE
+    STATUS ON
+    DATA "TIGER-2008/48_TEXAS/edges_merge"
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+    END
+    CLASSITEM "MTFCC"
+    LABELITEM "FULLNAME"
+    CLASS
+      ###############
+      # Private Road
+      ###############
+      NAME "Private Roads"      
+      EXPRESSION "S1740"
+      STYLE
+        SYMBOL 'dash'
+        WIDTH 1
+  	COLOR 115 106 89
+      END
+    END      
+    CLASS
+      ###############
+      # local roads
+      ###############
+      NAME "Local Roads"      
+      EXPRESSION "S1400"
+      STYLE
+        WIDTH 1
+  	COLOR 115 106 89
+      END
+      LABEL
+        COLOR  0 0 0
+        OUTLINECOLOR 255 255 255
+        OUTLINEWIDTH 5 
+        FONT sans 
+        TYPE truetype
+        SIZE 8
+        PARTIALS FALSE
+        ANGLE FOLLOW
+        MINFEATURESIZE AUTO
+      END       
+    END   
+    CLASS
+      ###############
+      # highways
+      ###############
+      NAME "Highways"      
+      EXPRESSION "S1200"
+      STYLE
+	WIDTH 5
+  	COLOR 115 106 89
+      END
+      STYLE
+	WIDTH 3
+  	COLOR 244 224 0
+      END
+    END  
+    CLASS
+      ###############
+      # interstate
+      ###############
+      NAME "Interstate Highways"      
+      EXPRESSION "S1100"
+      STYLE
+        WIDTH 8
+        SIZE 5
+        COLOR 115 106 89
+      END
+      STYLE
+  	WIDTH 6
+  	COLOR 243 162 0
+      END
+    END    
+  END # Layer   
+  
+  #######################################
+  # Named Point Features
+  #######################################
+  
+  LAYER
+    NAME "gnis_names"
+    # metadata for WMS service
+    METADATA
+      "ows_title"  		"Named Point Features"
+      "ows_srs"   		"EPSG:4269 EPSG:4326"
+      "ows_abstract"            "Named point features, according to the USGS"
+      "ows_attribution_title"   "USGS Geographic Names"
+      "ows_attribution_onlineresource" "http://geonames.usgs.gov/domestic/download_data.htm"      
+    END
+    TYPE POINT
+    STATUS ON
+    DATA "GNIS-2009/gnis_names09"
+    MAXSCALEDENOM 200000
+    #
+    # Projection of data
+    #
+    PROJECTION
+      "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+    END
+    CLASSITEM "CLASS"    
+    CLASS
+      NAME "Airport"   
+      EXPRESSION 'Airport' 
+      STYLE
+  	SYMBOL 'airport'
+      END     
+    END   
+    CLASS
+      NAME "Bay"   
+      EXPRESSION 'Bay' 
+      STYLE
+  	SYMBOL 'bay'
+      END     
+    END   
+    CLASS
+      NAME "Building"   
+      EXPRESSION 'Building' 
+      STYLE
+  	SYMBOL 'building'
+      END     
+    END  
+    CLASS
+      NAME "Canal"   
+      EXPRESSION 'Canal' 
+      STYLE
+  	SYMBOL 'canal'
+      END     
+    END  
+    CLASS
+      NAME "Cape"   
+      EXPRESSION 'Cape' 
+      STYLE
+  	SYMBOL 'cape'
+      END     
+    END   
+    CLASS
+      NAME "Cemetery"   
+      EXPRESSION 'Cemetery' 
+      STYLE
+  	SYMBOL 'cemetery'
+      END     
+    END   
+    CLASS
+      NAME "Church"   
+      EXPRESSION 'Church' 
+      STYLE
+  	SYMBOL 'church'
+      END     
+    END     
+    CLASS
+      NAME "Civil"   
+      EXPRESSION 'Civil' 
+      STYLE
+  	SYMBOL 'civil'
+      END     
+    END  
+    CLASS
+      NAME "Crossing"   
+      EXPRESSION 'Crossing' 
+      STYLE
+  	SYMBOL 'crossing'
+      END     
+    END  
+    CLASS
+      NAME "Dam"   
+      EXPRESSION 'Dam' 
+      STYLE
+  	SYMBOL 'dam'
+      END     
+    END    
+    CLASS
+      NAME "Flat"   
+      EXPRESSION 'Flat' 
+      STYLE
+  	SYMBOL 'flat'
+      END     
+    END   
+    CLASS
+      NAME "Hospital"   
+      EXPRESSION 'Hospital' 
+      STYLE
+  	SYMBOL 'hospital'
+      END     
+    END 
+    CLASS
+      NAME "Island"   
+      EXPRESSION 'Island' 
+      STYLE
+  	SYMBOL 'island'
+      END     
+    END   
+    CLASS
+      NAME "Lake"   
+      EXPRESSION 'Lake' 
+      STYLE
+  	SYMBOL 'lake'
+      END     
+    END 
+    CLASS
+      NAME "Locale"   
+      EXPRESSION 'Locale' 
+      STYLE
+  	SYMBOL 'locale'
+      END     
+    END   
+    CLASS
+      NAME "Mine"   
+      EXPRESSION 'Mine' 
+      STYLE
+  	SYMBOL 'mine'
+      END     
+    END   
+    CLASS
+      NAME "Park"   
+      EXPRESSION 'Park' 
+      STYLE
+  	SYMBOL 'park'
+      END     
+    END  
+    CLASS
+      NAME "Populated Place"   
+      EXPRESSION 'Populated Place' 
+      STYLE
+  	SYMBOL 'populated place'
+      END     
+    END  
+    CLASS
+      NAME "Post Office"   
+      EXPRESSION 'Post Office' 
+      STYLE
+  	SYMBOL 'post office'
+      END     
+    END      
+    CLASS
+      NAME "Reservoir"   
+      EXPRESSION 'Reservoir' 
+      STYLE
+  	SYMBOL 'reservoir'
+      END     
+    END   
+    CLASS
+      NAME "Ridge"   
+      EXPRESSION 'Ridge' 
+      STYLE
+  	SYMBOL 'ridge'
+      END     
+    END   
+    CLASS
+      NAME "School"   
+      EXPRESSION 'School' 
+      STYLE
+  	SYMBOL 'School'
+      END     
+    END   
+    CLASS
+      NAME "Spring"   
+      EXPRESSION 'Spring' 
+      STYLE
+  	SYMBOL 'Spring'
+      END     
+    END     
+    CLASS
+      NAME "Stream"   
+      EXPRESSION 'Stream' 
+      STYLE
+  	SYMBOL 'Stream'
+      END     
+    END    
+    CLASS
+      NAME "Summit"   
+      EXPRESSION 'Summit' 
+      STYLE
+  	SYMBOL 'Summit'
+      END     
+    END   
+    CLASS
+      NAME "Tower"   
+      EXPRESSION 'Tower' 
+      STYLE
+  	SYMBOL 'Tower'
+      END     
+    END    
+    CLASS
+      NAME "Trail"   
+      EXPRESSION 'Trail' 
+      STYLE
+  	SYMBOL 'Trail'
+      END     
+    END  
+    CLASS
+      NAME "Valley"   
+      EXPRESSION 'Valley' 
+      STYLE
+  	SYMBOL 'Valley'
+      END     
+    END    
+    CLASS
+      NAME "Well"   
+      EXPRESSION 'Well' 
+      STYLE
+  	SYMBOL 'Well'
+      END     
+    END     
+  END # layer    
+  
+# End of map file
+END 

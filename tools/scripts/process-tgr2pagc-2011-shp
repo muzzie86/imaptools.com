@@ -1,0 +1,152 @@
+#!/bin/sh
+ulimit -c unlimited
+exec /usr/bin/perl -x -w -S $0 ${1+"$@"}
+#!/usr/bin/perl -w
+#line 6
+
+use strict;
+use File::chdir;
+use File::Find ();
+
+my $DRYRUN  = 0;
+my $VERBOSE = 1;
+
+my $YEAR = "2017";
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: process-tgr2pagc-2011-shp [-D] [-f regex] [-r ssccc] dest-dir source-dir data-dir\n" .
+        "       where dest-dir is where to build the pagc instance\n" .
+        "             src-dir  is where the tiger zipfile can be found\n" .
+        "             data-dir is where usps-actual.db and pagc/*.csv are.\n" .
+        "             -D dryrun\n" .
+        "             -f regex_filter for selecting edge files\n" .
+        "             -r ssccc restart on county ssccc\n" .
+        "";
+}
+
+my $filter = '.';
+if (@ARGV && $ARGV[0] =~ /^-D$/) {
+    $DRYRUN = 1;
+    shift @ARGV;
+}
+
+if (@ARGV && $ARGV[0] =~ /^-f$/) {
+    shift @ARGV;
+    $filter = shift @ARGV;
+}
+
+my $append = 0;
+if (@ARGV && $ARGV[0] =~ /^-a(ppend)?$/i) {
+    $append = 1;
+    shift @ARGV;
+}
+my $ssccc;
+my $skipping = 0;
+if (@ARGV && $ARGV[0] eq '-r') {
+    $append = 1;
+    $skipping = 1;
+    shift @ARGV;
+    $ssccc = shift @ARGV || Usage();
+}
+my $indest = shift @ARGV || Usage();
+my $insrc  = shift @ARGV || Usage();
+my $indata = shift @ARGV || Usage();
+
+my @files = ();
+
+# find the absolute paths to the dirs we are concerned about
+my $dirstart = $CWD;
+$CWD = $indest;
+my $dest  = $CWD;
+$CWD = $dirstart;
+$CWD = $insrc;
+my $src = $CWD;
+$CWD = $dirstart;
+$CWD = $indata;
+my $data = $CWD;
+$CWD = $dirstart;
+
+my $tmpdir = "$dirstart/tmp-$$";
+
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+die "Error: No files found to process!\n" unless scalar @files;
+
+mysystem( "mkdir -p $dest" );
+mysystem( "mkdir -p $tmpdir" );
+
+my $first = $append?0:1;
+for my $x (sort @files) {
+    next if $skipping && $x !~ m/_${ssccc}_/;
+    $skipping = 0;
+    mysystem( "rm -f $tmpdir/*" );
+    my $z = $x;
+    $z =~ s/[^\/]+$//;
+    $x =~ m/\/tl_20(..)_(..)(\d\d\d)_edges\./ || die "File names have changed!\n";
+    my $yr = $1;
+    my $st = $2;
+    my $ccc = $3;
+    my $YR = "20$yr";
+    my $fplace = 0;
+
+    my $yopt = '';
+    $yopt = "-y $yr" if $yr >= 10;
+
+#    for my $y (qw( edges addr addrfn faces featnames concity )) {
+    for my $y (qw( edges addr addrfn featnames )) {
+        my $yy = uc($y);
+        my $f = "$src/$yy/tl_${YR}_${st}${ccc}_$y.zip";
+        if (-f $f) {
+            mysystem( "unzip -j -d $tmpdir $f" );
+        }
+        else {
+            warn "# Can't find file $f!\n";
+        }
+    }
+    my $pssccc = "$st/$ccc";
+    mysystem( "mkdir -p \"$dest/$pssccc\" " );
+
+#####################################################
+print "$data/tgr2pagc-sqlite $tmpdir/*_edges.dbf \"$dest/$pssccc\" $data/tiger$YEAR-places.db $data/usps-actual.db\n";
+
+
+#exit;
+
+
+mysystem( "$data/tgr2pagc-sqlite $tmpdir/*_edges.dbf \"$dest/$pssccc\" $data/tiger$YEAR-places.db $data/usps-actual.db" );
+}
+#mysystem( "rm -rf $tmpdir  tgr2pagc-sqlite.db" );
+
+sub wanted {
+    /^.*_edges\.zip\z/s &&
+    /$filter/ &&
+    push @files, $name;
+}
+
+sub mysystem {
+    print join(" ", @_), "\n" if $DRYRUN || $VERBOSE;
+    if ( ! $DRYRUN ) {
+        my $rc = 0xffff & system(@_);
+        if ($rc == 0xff00) {
+            die "Command Failed: '" .  join(" ", @_) . "'\n";
+        }
+        elsif (($rc & 0xff) == 0) {
+            $rc >>= 8;
+            die "Command '" .  join(" ", @_) . "' Returned ($rc)\n"
+                unless $rc == 0;
+        }
+        else {
+            die "Command Failed: '" .  join(" ", @_) . "' with signal $rc\n";
+        }
+    }
+}

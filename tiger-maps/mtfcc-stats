@@ -1,0 +1,51 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: mtfcc-stats dir\n";
+}
+
+my $dir = shift @ARGV || Usage();
+
+my @f = ();
+
+my %s = ();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $dir);
+
+for my $x (sort @f) {
+    open(IN, "dbfdump -fields=MTFCC '$x' |") || die "Failed to open '$x' : $!\n";
+    while (my $y = <IN>) {
+        chomp($y);
+        $s{$y}++;
+    }
+    close(IN);
+}
+
+for my $x (sort keys %s) {
+    printf("%s, %7d\n", $x, $s{$x});
+}
+exit;
+
+
+sub wanted {
+    /^.*\.dbf\z/s &&
+    push @f, $name;
+}
+

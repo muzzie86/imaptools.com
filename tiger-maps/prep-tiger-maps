@@ -1,0 +1,320 @@
+#!/usr/bin/perl -w
+use strict;
+use File::Find ();
+use Data::Dumper;
+
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+my $VERBOSE = 0;
+my $DRYRUN  = 0;
+
+my $YEAR = shift @ARGV || die "Usage: prep-tiger-maps YEAR\n";
+
+my @shpt = ();
+sub wanted {
+    /^.*\.shp\z/s && push @shpt, $name;
+}
+
+my $tdir = "/u/data/tiger$YEAR-maps";
+my $sdir = "/u/srcdata/TIGER$YEAR";
+my $tmpd = "tmp-$$";
+
+my @lyrs = qw( STATE COUNTY COUSUB PLACE AREALM MIL AREAWATER LINEARWATER PRIMARYROADS PRISECROADS RAILS ROADS POINTLM );
+
+my %ATTR = (
+    PROJECTION => '"+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269',
+    STATE => {
+        NAME => '"state"',
+        ows_title => '"State polygons"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"State polygon features from the U.S. Census STATE data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    COUNTY => {
+        NAME => '"county"',
+        ows_title => '"County polygons"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"County polygon features from the U.S. Census COUNTY data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    COUSUB => {
+        NAME => '"cousub"',
+        ows_title => '"County Subdivision polygons"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"County Subdivision polygon features from the U.S. Census COUSUB data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    PLACE => {
+        NAME => '"place"',
+        ows_title => '"Place polygons"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Place polygon features from the U.S. Census PLACE data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    AREALM => {
+        NAME => '"area_landmarks"',
+        ows_title => '"Landmark polygons"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Landmark polygon features from the U.S. Census AREALM data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    MIL => {
+        NAME => '"military"',
+        ows_title => '"Military polygons"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Military polygon features from the U.S. Census MIL data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    AREAWATER => {
+        NAME => '"area_water"',
+        ows_title => '"Area Water"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Area Water features from the U.S. Census AREAWATER data layer."',
+        TYPE => 'POLYGON',
+        STYLE => '',
+        },
+    LINEARWATER => {
+        NAME => '"linear_water"',
+        ows_title => '"Streams and Rivers"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Streams and Rivers from the U.S. Census LINEARWATER data layer."',
+        TYPE => 'LINE',
+        STYLE => '',
+        },
+    PRIMARYROADS => {
+        NAME => '"primary_roads"',
+        ows_title => '"Primary Road features"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Primary Road features from the U.S. Census PRIMARYROADS data layer."',
+        TYPE => 'LINE',
+        STYLE => '',
+        },
+    PRISECROADS => {
+        NAME => '"pri_sec_roads"',
+        ows_title => '"Primary and Secondary Roadway features"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Primary and Secondary Roadway features from the U.S. Census PRISECROADS data layer."',
+        TYPE => 'LINE',
+        STYLE => '',
+        },
+    RAILS => {
+        NAME => '"rails"',
+        ows_title => '"Railway features"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Railway features from the U.S. Census RAILS data layer."',
+        TYPE => 'LINE',
+        STYLE => '',
+        },
+    ROADS => {
+        NAME => '"roads"',
+        ows_title => '"Roadway features"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Road way features from the U.S. Census ROADS data layer."',
+        TYPE => 'LINE',
+        STYLE => '',
+        },
+    POINTLM => {
+        NAME => '"point_landmarks"',
+        ows_title => '"Landmark Points"',
+        ows_srs => '"EPSG:4269 EPSG:4326"',
+        ows_abstract => '"Point landmarks from the U.S. Census POINTLM data layer."',
+        TYPE => 'ANNOTATION',
+        STYLE => '',
+        },
+);
+
+my @map = ();
+
+#mkdir($tmpd, 0700) || die "Failed to create working directory '$tmpd' : $!\n";
+
+for (my $i=0; $i<@lyrs; $i++) {
+    my $x = $lyrs[$i];
+    $map[$i] = {LAY => $x};
+    my @zips = split(/\s+/, `ls $sdir/$x/*.zip`);
+    my $cnt = scalar @zips;
+    mysystem("mkdir -p $tdir/$x");
+    my @shp = ();
+    for my $y (@zips) {
+        my $z = $y;
+        $z =~ s/$sdir\///;
+        $z =~ s/\.zip/.shp/;
+        if ($cnt < 100) {
+            mysystem("unzip -o -d $tdir/$x -q $y");
+            push @shp, $z;
+        }
+        else {
+            my ($tl, $yr, $r, $lay) = split(/_/, $z);
+            if ($r =~ /^(\d\d)\d\d\d$/) {
+                mysystem("mkdir -p $tdir/$x/$1") unless -d "$tdir/$x/$1";
+                mysystem("unzip -o -d $tdir/$x/$1 -q $y");
+                my $u = "$x/$1/tl_".$yr.'_'.$r.'_'.$lay;
+                $u =~ s/\.zip$/.shp/;
+                push @shp, $u;
+            }
+            else {
+                die "Parse file name error: '$z'\n";
+            }
+        }
+    }
+    if (scalar @shp == 1) {
+        $map[$i]{DATA} = $shp[0];
+    }
+    else {
+        $map[$i]{TILEINDEX} = "tidx-$x";
+        do {
+            open(TIDX, ">$tdir/tidx-$x.in") || die "Filed to create '$tdir/tidx-$x.in : $!\n";
+            print TIDX join("\n", sort @shp) . "\n";
+            close(TIDX);
+            mysystem("(cd $tdir; tile4ms tidx-$x.in tidx-$x )");
+        }
+        unless $DRYRUN;
+    }
+}
+
+#unlink <$tmpd/*>;
+#rmdir $tmpd;
+
+File::Find::find({wanted => \&wanted}, $tdir);
+for my $x (@shpt) {
+    mysystem("shptree \"$x\" &> /dev/null");
+}
+#print Data::Dumper->Dump([\@map],['map']);
+
+my $mf;
+open($mf, ">tiger$YEAR-tmp.map") || die "Failed to create 'tiger$YEAR-tmp.map' : $!\n";
+mf_head($mf);
+
+for (my $i=0; $i<@map; $i++) {
+    my $x = $map[$i];
+    my $lay = $x->{LAY};
+    mf_layer($mf, $lay, $x);
+}
+print $mf "  INCLUDE \"map-HWYSHIELDS.inc\"\n\n";
+print $mf "END\n";
+close($mf);
+
+
+sub mysystem {
+    my $cmd = shift;
+
+    my $ret = 0;
+    print "$cmd\n" if $VERBOSE || $DRYRUN;
+    $ret = system($cmd) unless $DRYRUN;
+    return $ret;
+}
+
+sub mf_head {
+    my $fh = shift;
+    print $fh <<EOF;
+MAP
+    NAME "Tiger_$YEAR"
+    STATUS ON
+    SIZE 950 600
+    EXTENT -180 -90 180 90 # the globe
+    UNITS DD
+    SHAPEPATH "$tdir"
+    IMAGECOLOR "#a5bfdd"
+    FONTSET "etc/fonts.txt"
+    SYMBOLSET "etc/symbols.txt"
+    IMAGETYPE agg_qn
+
+    CONFIG ON_MISSING_DATA "IGNORE"
+    CONFIG MS_ERRORFILE "stderr"
+    #DEBUG 10
+
+    OUTPUTFORMAT
+        NAME "agg_qn"
+        DRIVER "AGG/PNG"
+        EXTENSION "png"
+        MIMETYPE "image/png"
+        IMAGEMODE RGB
+        FORMATOPTION "INTERLACE=false"
+        FORMATOPTION "QUANTIZE_NEW=ON"
+        FORMATOPTION "QUANTIZE_FORCE=ON"
+        FORMATOPTION "QUANTIZE_DITHER=OFF"
+        FORMATOPTION "QUANTIZE_COLORS=256"
+        #TRANSPARENT ON
+        #FORMATOPTION "TRANSPARENT=ON"
+    END
+
+    OUTPUTFORMAT
+        NAME aggpng24
+        DRIVER AGG/PNG
+        MIMETYPE "image/png"
+        IMAGEMODE RGB
+        EXTENSION "png"
+    END
+
+    WEB
+        METADATA
+            labelcache_map_edge_buffer "-10"
+            "ows_title"     "iMaptools Tiger $YEAR Mapping"
+            "ows_onlineresource"    "http://imaptools.com:8080/cgi-bin/mapserv?MAP=/u/data/maps/tiger$YEAR.map"
+            "ows_srs"       "EPSG:4269 EPSG:4326 EPSG:900913"
+            "ows_abstract"  "This WMS is iMaptools Tiger $YEAR Mapping demo service. It is using Tiger $YEAR shapefile data."
+            "ows_contactperson"     "Stephen Woodbridge"
+            "ows_contactorganization" "iMaptools.com"
+            "ows_contactposition"   "Owner"
+            "ows_contactelectronicmailaddress" "info\@imaptools.com"
+            "ows_attribution_title"   "U.S. Census Bureau $YEAR TIGER/Line® Shapefiles"
+            "ows_attribution_onlineresource" "http://www.census.gov/geo/www/tiger/tgrshp$YEAR/tgrshp$YEAR.html"
+            "ows_enable_request" "GetMap"
+        END
+    END
+
+    PROJECTION
+        $ATTR{PROJECTION}
+    END
+
+    INCLUDE "map-WORLD.inc"
+
+    INCLUDE "map-WORLDNAMES.inc"
+
+    INCLUDE "map-EQUATOR.inc"
+
+EOF
+}
+
+
+sub mf_layer {
+    my $mf  = shift;
+    my $lyr = shift;
+    my $map = shift;
+
+    my $data;
+    if ($map->{DATA}) {
+        $data = "DATA \"$map->{DATA}\"";
+        $data =~ s/\.shp$//;
+    }
+    else {
+        $data = "TILEINDEX \"$map->{TILEINDEX}\"";
+        $data =~ s/\.shp$//;
+    }
+
+    print $mf <<EOF;
+    LAYER
+        NAME $ATTR{$lyr}{NAME}
+        METADATA
+            "ows_title"     $ATTR{$lyr}{ows_title}
+            "ows_srs"       $ATTR{$lyr}{ows_srs}
+            "ows_abstract"  $ATTR{$lyr}{ows_abstract}
+        END
+        TYPE $ATTR{$lyr}{TYPE}
+        $data
+        PROJECTION
+            $ATTR{PROJECTION}
+        END
+        INCLUDE "map-$lyr.inc"
+    END
+
+EOF
+}

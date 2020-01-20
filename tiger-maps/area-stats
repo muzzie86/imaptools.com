@@ -1,0 +1,65 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: area-stats dir\n";
+}
+
+sub log10 {
+    my $n = shift;
+    return 0 if $n == 0;
+    return log($n)/log(10);
+}
+
+my $dir = shift @ARGV || Usage();
+
+my @f = ();
+
+my %sl = ();
+my %sw = ();
+my %s  = ();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $dir);
+
+for my $x (sort @f) {
+    open(IN, "dbfdump -fields=AWATER,ALAND '$x' |") || die "Failed to open '$x' : $!\n";
+    while (my $y = <IN>) {
+        chomp($y);
+        my ($w, $l) = split(/:/, $y);
+        $sw{int(log10($w))}++;
+        $sl{int(log10($l))}++;
+        $s{int(log10($w))} = 1;
+        $s{int(log10($l))} = 1;
+    }
+    close(IN);
+}
+
+printf("log10, water,     land\n");
+printf("----------------------\n");
+for my $x (sort {$b <=> $a} keys %s) {
+    printf("%2s, %8d, %8d\n", $x, $sw{$x}||'0E0', $sl{$x}||'0E0');
+}
+exit;
+
+
+sub wanted {
+    /^.*\.dbf\z/s &&
+    push @f, $name;
+}
+

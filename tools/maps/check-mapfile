@@ -1,0 +1,64 @@
+#!/usr/bin/perl -w
+use strict;
+
+my $tags = qr/^(MAP|PROJECTION|OUTPUTFORMAT|WEB|METADATA|LAYER|CLASS|STYLE|LABEL|SYMBOL|PATTERN|FEATURE|POINTS)$/i;
+
+open(IN, $ARGV[0]) || die "Usage: check-mapfile mapfile.map\n";
+
+my @stack = ();
+
+my $line = 0;
+my @tokens = ();
+
+sub getToken {
+    return shift @tokens if @tokens;
+
+    while (my $x = <IN>) {
+        $line++;
+        next if $x =~ /^\s*#|^\s*$/;
+        $x =~ s/^\s+|\s+$//g;
+        $x =~ s/\s#.*$//;
+        push @tokens, split(/\s+/, $x);
+        return shift @tokens if @tokens;
+    }
+
+    return undef;
+}
+
+my $t = getToken();
+while (defined $t) {
+    print "$t\n";
+    if ($t =~ m/$tags/) {
+        my $item = $1;
+        my $d = scalar @stack;
+        if (uc($item) eq 'SYMBOL' && $d != 1) {
+            print "################################## $item ($d)\n";
+            # noop
+        }
+        else {
+            push @stack, "$item($d):$line";
+            print "<<<<<<<<<<<<<<<<< $item($d):$line\n";
+        }
+        if ($t =~ m/^LAYER$/i && $d != 1) {
+            die ">>>>>>>>>>>>>>>> STACK ERROR\n";
+        }
+    }
+    elsif ($t =~ m/^END$/i) {
+        my $d = (scalar @stack) - 1;
+        my $item = pop @stack;
+        print ">>>>>>>>>>>>>>>>> $item:$line($d)\n";
+        if ($d < 0) {
+            print ">>>>>>>>>>>>>>>>> STACK UNDERFLOW\n";
+            last;
+        }
+    }
+    $t = getToken();
+}
+
+close(IN);
+
+if (@stack) {
+    print "STACK NOT CLEAN:\n";
+    print join("\n", @stack) . "\n";
+}
+

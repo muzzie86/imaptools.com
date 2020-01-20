@@ -1,0 +1,61 @@
+Filename: a.dbf
+Version: 0x03 (ver. 3)
+Num of records: 1
+Header length: 801
+Record length: 188
+Last change:   1995/7/26
+Num fields:    24
+Field info:
+Num     Name    Type    Len Decimal
+1.      LINK_ID         N       10      0
+2.      NAME            C       80      0
+3.      RTYPE           C       2       0
+4.      RTE1_P          C       3       0
+5.      RTE1_N          C       8       0
+6.      RTE1_T          C       1       0
+7.      RTE2_P          C       3       0
+8.      RTE2_N          C       8       0
+9.      RTE2_T          C       1       0
+10.     RTE3_P          C       3       0
+11.     RTE3_N          C       8       0
+12.     RTE3_T          C       1       0
+13.     FCLASS          C       1       0
+14.     DIRECTION       C       1       0
+15.     STYLE           C       2       0
+16.     EXTRA           C       1       0
+17.     SPD_LABEL       C       5       0
+18.     FR_SPD_LIM      N       5       0
+19.     TO_SPD_LIM      N       3       0
+20.     SPEED_CAT       C       1       0
+21.     L_REFADDR       C       10      0
+22.     L_NREFADDR      C       10      0
+23.     R_REFADDR       C       10      0
+24.     R_NREFADDR      C       10      0
+
+STYLE
+----------------------
+* 21 fclass 1
+* 22 fclass 2
+* 23 fclass 3
+* 24 fclass 4
+* 31 fclass 1 with extra
+* 32 fclass 2 with extra
+* 33 fclass 3 with extra
+* 34 fclass 4 with extra
+*  9 tolls
+* 99 ramps
+
+RTE1_T, RTE2_T, RTE3_T = shield styles for EURO styling
+RTE1_N, RTE2_N, RTE3_N = text for labeling
+----------------------
+*  0 unknown
+* 21 rtype 1
+* 22 rtype 2
+* 23 rtype 3
+* 25 E-
+* 30 unknown exit
+* 31 rtpye 1 exit
+* 32 rtype 2 exit
+* 33 rtype 3 exit
+* 35 E- exit
+

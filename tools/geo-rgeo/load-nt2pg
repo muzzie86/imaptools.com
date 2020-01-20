@@ -1,0 +1,124 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+my $dbuser = 'postgres';
+my $dbhost = 'localhost';
+
+my $DRYRUN  = 0;
+my $VERBOSE = 1;
+
+my $dfmt = '-D'; ## use '' for inserts -D for dump format
+
+my @files = ();
+
+sub wanted;
+sub Usage {
+    die "Usage: load-nt2pg [-c] [-e encoding] [-t timezone.shp] dbname dir ...\n";
+}
+
+sub mysystem {
+    my $cmd = join(" ", @_);
+    print "$cmd\n" if $VERBOSE;
+    system($cmd) unless $DRYRUN;
+}
+
+sub pgprint {
+    print @_ if $VERBOSE;
+    print PG @_ unless $DRYRUN;
+}
+
+
+my $create = 0;
+if (@ARGV && $ARGV[0] && $ARGV[0] eq '-c') {
+    $create = shift @ARGV;
+}
+my $encoding = 'LATIN1';
+if (@ARGV && $ARGV[0] && $ARGV[0] eq '-e') {
+    shift @ARGV;
+    $encoding = shift @ARGV;
+}
+my $tz;
+if (@ARGV && $ARGV[0] && $ARGV[0] eq '-t') {
+    shift @ARGV;
+    $tz = shift @ARGV || Usage();
+}
+my $dbname = shift @ARGV || Usage();
+
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, @ARGV);
+
+die "No files found to load!\n"
+    unless @files;
+
+if ($create) {
+    mysystem("echo 'drop database $dbname' | psql -U $dbuser -h $dbhost template1");
+    mysystem("createdb -E UTF-8 -T template_postgis_15 -U $dbuser -h $dbhost $dbname");
+}
+
+if (!$DRYRUN) {
+    open(PG, "| psql -U $dbuser -h $dbhost $dbname")
+        || die "Failed open connection to postgres\n";
+}
+
+pgprint("begin;\n");
+pgprint("create schema data;\n");
+pgprint("alter database $dbname set search_path to data, public, pg_catalog;\n");
+pgprint("set search_path to data, public, pg_catalog;\n");
+pgprint("commit;\n");
+
+my $first = 1;
+
+foreach my $x (@files) {
+    if ($first) {
+        print "Processing $x\n";
+        mysystem("shp2pgsql -s 4326 -W $encoding -i $dfmt -N skip -c $x data.streets | psql -U $dbuser -h $dbhost $dbname | grep -v INSERT ");
+        $first = 0;
+    }
+    else {
+        print "Processing $x\n";
+        mysystem("shp2pgsql -s 4326 -W $encoding -i $dfmt -N skip -a $x data.streets | psql -U $dbuser -h $dbhost $dbname | grep -v INSERT ");
+    }
+}
+
+print "Creating indexes on streets\n";
+pgprint("ALTER TABLE streets ALTER COLUMN the_geom SET STORAGE MAIN;\n");
+pgprint("ALTER TABLE streets ALTER COLUMN the_geom SET NOT NULL;\n");
+pgprint("create index streets_gidx on streets using gist (the_geom);\n");
+pgprint("alter table streets cluster on streets_gidx;\n");
+pgprint("create index streets_linkid_idx on streets using btree (link_id);\n");
+pgprint("vacuum analyze data.streets;\n");
+
+if ($tz) {
+    print "Processing tz\n";
+    mysystem("shp2pgsql -s 4326 -W LATIN1 -i -D -c $tz data.timezones | psql -U $dbuser -h $dbhost $dbname");
+    pgprint("ALTER TABLE timezones ALTER COLUMN the_geom SET STORAGE MAIN;\n");
+    pgprint("ALTER TABLE timezones ALTER COLUMN the_geom SET NOT NULL;\n");
+    pgprint("create index timezones_gidx on timezones using gist (the_geom);\n");
+    pgprint("alter table timezones cluster on timezones_gidx;\n");
+    pgprint("vacuum analyze data.timezones;\n");
+}
+
+close(PG) unless $DRYRUN;
+exit;
+
+
+sub wanted {
+    ! /Streets-tidx\.shp\z/s &&
+    /^Streets(-\d+)?\.shp\z/s &&
+    push(@files, $name);
+}
+

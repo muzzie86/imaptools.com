@@ -1,0 +1,142 @@
+#!/usr/bin/perl -w
+use strict;
+use DBI;
+use XBase;
+use Term::ReadLine;
+
+my $term = new Term::ReadLine 'dbfsql';
+my $OUT = $term->OUT || \*STDOUT;
+
+
+sub Usage {
+    print <<EOF;
+Usage: dbfsql [-e "sql"] [<directory>]
+    With no <directory> it becomes a shell and you can use sql pseudo commands:
+        open <directory>
+        quit
+    With -e "sql" <file>, it will execute the sql on the file and exit.
+EOF
+}
+
+sub opendb {
+    my $dbh  = shift;
+    my $db = shift;
+
+
+    $dbh->disconnect() if $dbh;
+    $dbh = undef;
+
+    return $dbh if !$db;
+
+    if ( $dbh = DBI->connect("DBI:XBase:$db") ) {
+        print $OUT "Opened connection to $db\n";
+    } else {
+        print $OUT "Open directory $db failed: $DBI::errstr \n";
+    }
+
+    return $dbh;
+}
+
+# -------- main -------------
+
+my ($sql, $dbname);
+while (my $x = shift @ARGV) {
+    if ($x eq '-e') {
+        $sql = shift @ARGV || Usage();
+    }
+    elsif (! $dbname) {
+        $dbname = $x;
+    }
+}
+Usage() if @ARGV;
+
+my ($dbh);
+$dbh = opendb($dbh, $dbname) if $dbname;
+
+
+my $prompt = "cmd> ";
+while ( defined (my $cmd = $term->readline($prompt)) ) {
+    if ($cmd =~ /^\s+open /i) {
+        my @args = split(/\s+/, $cmd);
+        shift @args;
+        eval {
+            $dbh = opendb($dbh, @args);
+        };
+        print $OUT $@ if $@;
+    }
+    elsif ($cmd =~ /\s*!!(.*)$/) {
+        eval( $1 );
+        print $OUT $@, "\n" if $@;
+    }
+    elsif ($cmd =~ /\s*!(.*)$/) {
+        system($1);
+    }
+    elsif ($cmd =~ /^(q(uit)?|exit)$/i) {
+        last;
+    }
+    elsif ($dbh) {
+        my $limit = 0;
+        if ($cmd =~ s/\slimit (\d+)//i) {
+            $limit = $1;
+        }
+        if ($cmd =~ /^\s*describe\s+(\w+)/) {
+            my $tn = "$dbh->{Name}/$1.dbf";
+            if ( my $table = new XBase $tn ) {
+                for my $fn ($table->field_names()) {
+                    my @flds = (
+                        $fn,
+                        $table->field_type($fn),
+                        $table->field_length($fn),
+                        $table->field_decimal($fn),
+                    );
+                    print $OUT join(':', @flds), "\n";
+                }
+                $table = undef;
+            } else {
+                print $OUT XBase->errstr, "\n";
+            }
+        }
+        elsif ( $cmd =~ /^\s*show tables\s*$/i ) {
+            print $OUT join("\n", $dbh->tables()), "\n";
+        }
+        elsif ( my $sth = $dbh->prepare($cmd) ) {
+            if ($cmd =~ m/^\s*(select)\s/i) {
+                if ( my $rows = $sth->execute() ) {
+                    my $cnt = 0;
+                    while ( my @row = $sth->fetchrow_array() ) {
+                        $cnt++;
+                        print $OUT join(':', @row), "\n";
+                        last if $limit>0 && $cnt >= $limit;
+                    }
+                    $sth->finish();
+                }
+                else {
+                    print $OUT $dbh->errstr, "\n";
+                }
+            }
+            else {
+                if ( my $rows = $sth->execute() ) {
+                    if (!$rows) {
+                        print $OUT $dbh->errstr, "\n";
+                    }
+                    else {
+                        print $OUT $rows+0, " rows affected.\n";
+                    }
+                }
+                else {
+                    print $OUT $dbh->errstr, "\n";
+                }
+            }
+        }
+        else {
+            print $OUT $dbh->errstr, "\n";
+        }
+    }
+    else {
+        print $OUT "ERROR: no file open. Enter: open <file> [<outfile>]\n";
+    }
+    $term->addhistory($cmd) if $cmd =~ /\S/;
+}
+$dbh->disconnect() if $dbh;
+
+exit;

@@ -1,0 +1,47 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+my @ files = ();
+sub wanted;
+
+sub Usage {
+    die "Usage: mk-symbolset /absolute/path/to/symbol/files\n";
+}
+
+my $dir = shift @ARGV || Usage();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $dir);
+
+print "SYMBOLSET\n\n";
+
+for my $x (sort @files) {
+    $x =~ m/\/([^\/]+)\.(gif|jpg|png)$/;
+    print "  SYMBOL\n";
+    print "    NAME \"$1\"\n";
+    print "    TYPE PIXMAP\n";
+    print "    IMAGE \"$x\"\n";
+    print "  END\n\n";
+}
+
+exit;
+
+
+sub wanted {
+    /^.*\.(gif|jpg|png)\z/s &&
+    push @files, $name;
+}
+

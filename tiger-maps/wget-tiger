@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ "$1" = "" ]] ; then
+    echo "Usage: wget-tiger YYYY"
+    exit
+fi
+
+YEAR=$1
+
+mkdir -p /u/srcdata/TIGER$YEAR
+cd /u/srcdata/TIGER$YEAR
+
+wget -r -N -np -nH --cut-dirs=3 -a tiger$YEAR.log ftp://ftp2.census.gov/geo/tiger/TIGER$YEAR/

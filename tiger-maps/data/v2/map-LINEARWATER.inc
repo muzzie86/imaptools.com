@@ -1,0 +1,22 @@
+  # map-LINEARWATER.inc
+  MAXSCALEDENOM 15000
+  CLASS  # water
+    STYLE
+      COLOR "#a5bfdd"
+      WIDTH 1.0
+    END
+    LABEL
+      MAXSCALEDENOM 10000
+      TYPE TRUETYPE
+      FONT "sans-italic"
+      SIZE 8
+      COLOR "#627A9D"
+      OUTLINECOLOR "#B3C9E2"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END

@@ -1,0 +1,59 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "do-nt2rgeo navteq-src-dir rgeo-dest-dir [num-split]\n";
+}
+
+
+my $src = shift @ARGV || Usage();
+my $dst = shift @ARGV || Usage();
+my $numsplit = shift @ARGV || '';
+
+my @files = ();
+
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+die "No files found to process\n" unless @files;
+
+system("mkdir -p $dst");
+die "Directory $dst does not exist and/or could not be made!\n" unless -d $dst;
+
+for my $x (@files) {
+    $x =~ s/Streets\.shp$//;
+    my $y = $x;
+    $y =~ s/^$src\/?//;
+    system("mkdir -p $dst/$y");
+    print "nt2rgeo-sqlite $x $dst/$y $numsplit\n";
+    system("nt2rgeo-sqlite $x $dst/$y $numsplit");
+}
+system("find $dst -name \\*.shp -exec shptree {} \\;");
+system("(cd $dst; find . -name Streets.shp -print > nt-rgeo-tidx.in; tile4ms nt-rgeo-tidx.in nt-rgeo-tidx; shptree nt-rgeo-tidx)");
+
+unlink "nt2rgeo-DB.db" if -f "nt2rgeo-DB.db";
+
+exit;
+
+
+sub wanted {
+    /^Streets\.shp\z/s &&
+    push @files, $name;
+}
+

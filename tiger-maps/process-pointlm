@@ -1,0 +1,133 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+use File::Basename;
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: process-pointlm dir\n";
+}
+
+my $dd = shift @ARGV || Usage();
+my $tmp = "tmp-$$";
+my $mtfccRegex = 'regex-mtfcc2symbol.txt';
+my $namesRegex = 'regex-names2symbol.txt';
+
+my @files = ();
+
+mysystem("mkdir $tmp");
+die "Failed to create tmp dir '$tmp'!\n" unless -d $tmp;
+
+writeRegex($tmp);
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $dd);
+
+for my $x (sort @files) {
+    unlink("$tmp/a.dbf") if -f "$tmp/a.dbf";
+    mysystem("dbf_add_col $x $tmp/a.dbf SYMBOL C 30 0");
+    mysystem("dbfxlate -s SYMBOL -r '$tmp/$namesRegex' $tmp/a.dbf FULLNAME ");
+    mysystem("dbfxlate -s SYMBOL -r '$tmp/$mtfccRegex' $tmp/a.dbf MTFCC ");
+    mysystem("mv $tmp/a.dbf $x");
+}
+
+exit;
+
+sub mysystem {
+    system(@_);
+}
+
+sub wanted {
+    /^.*\.dbf\z/s &&
+    push @files, $name;
+}
+
+sub writeRegex {
+    my $d = shift;
+    open(OUT, ">$d/$namesRegex") || die "Failed to create '$d/$namesRegex' : $!\n";
+    print OUT <<EOF;
+ Mine\$	mine
+ Golf (Course|Club)\$	golf
+Country Club\$	golf
+ Cabins?\$	cabin
+ House\$	guesthouse
+ Lodge\$	guesthouse
+ Camp\$	camping
+ Ski	skiing
+ Trailhead\$	hiking
+ (Roadhouse|Road House)\$	guesthouse
+ Shelter\$	shelter
+ Windmill\$	windmill
+ Scenic Area\$	scenic-area
+ Recreation (Area|Site)\$	ranger-station
+ Picnic (Area|Grounds)\$	picnic
+ Ranger (Station|Office)	ranger-station
+ (Penal|Prison|Jail) Farm\$	prison
+Correctional	prison
+Visitor	information
+ (Fair|Show)grounds\$	circus
+Lighthouse	lighthouse
+Vista	vista
+Overlook|Viewpoint|Observation Point	vista
+Hatchery	fish
+ Community (Center|Hall)\$	public-building
+ Forest Service	ranger-station
+Fire Control	ranger-station
+Fire Tower	tower-lookout
+Lookout	vista
+Historical Site	ruin
+Monument	monument
+(Winery|Vineyards)\$	winery
+ Parking\$	parking
+Shopping	shopping
+ Mall\$	shopping
+ Campground\$	camping
+ Pool\$	swimming
+ Industrial (Park|Complex)\$	industrial
+ Playground\$	school
+ ((Office|Executive) Park|Business Center)\$	building
+.*	default
+EOF
+    close(OUT);
+    open(OUT, ">$d/$mtfccRegex") || die "Failed to create '$d/$mtfccRegex' : $!\n";
+    print OUT <<EOF;
+^C3022	peak2
+^C3066	gate
+^C307[01]	tower-lookout
+^C3073	tower
+^C3073	tower-water
+^C3074	lighthouse
+^K(1225|2454)	port
+^K1231	hospital
+^K123[67]	prison
+^K(1239|3544)	church
+^K2110	military
+^K21(46|6[57]|96)	government
+^K21(8[1256789]|90)	park
+^K2191	postoffice
+^K219[34]	fire-station
+^K2195	library
+^K245[156]	airport
+^K2452	rail-station
+^K2453	bus-station
+^K254[03]	college
+^K2545	museum
+^K2561	golf
+^K2582	cemetery
+^K2586	zoo
+EOF
+    close(OUT);
+}

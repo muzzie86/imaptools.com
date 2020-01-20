@@ -1,0 +1,133 @@
+#!/usr/bin/perl -w
+use strict;
+
+sub Usage {
+    die "Usage: rules2xxx infile outfile\n";
+}
+
+my $in  = shift @ARGV || Usage();
+my $out = shift @ARGV;
+
+=pod
+Sample rules.txt input
+
+16 16 1 15 17 -1 16 16 17 17 17 -1 4 8
+16 16 1 17 17 -1 16 16 17 17 17 -1 4 8
+12 -1 12 -1 0 3
+12 23 23 13 13 -1 12 -1 0 3
+-1
+=cut
+
+my @T = qw(NUMBER WORD TYPE QUALIF PRETYP STREET ROAD STOPWORD RR DASH CITY PROV NATION AMPERS BOXH ORD UNITH UNITT SINGLE BUILDH MILE DOUBLE DIRECT MIXED BUILDT FRACT PCT PCH QUINT QUAD MAXINSYM);
+
+my @C = qw(MACRO_C MICRO_C ARC_C CIVIC_C EXTRA_C);
+
+open(IN, $in) || die "Failed to open '$in' for read : $!\n";
+
+my $OUT = *stdout;
+if ($out) {
+    open($OUT, ">$out") || die "Failed to create '$out' : $!\n";
+}
+
+write_defs();
+
+while (my $x = <IN>) {
+    chomp($x);
+    my $s = 0;
+    my @terms = split(/\s+/, $x);
+    my $p = pop @terms;
+    for (my $i=0; $i<@terms; $i++) {
+        if ($terms[$i] == 13 && $s == 1) {
+            print $OUT "POSTAL ";
+        }
+        elsif ($terms[$i] == -1) {
+            print $OUT "STOP ";
+            $s++;
+        }
+        else {
+            if ($s < 2) {
+                print $OUT $T[$terms[$i]] . ' ';
+            }
+            else {
+                print $OUT $C[$terms[$i]] . ' ';
+            }
+        }
+    }
+    if ($p == -1 ) {
+        print $OUT "STOP\n";
+        last;
+    }
+    else {
+        print $OUT "$p\n";
+    }
+}
+close(IN);
+close($OUT);
+exit;
+
+
+sub write_defs {
+
+print $OUT <<EOF;
+#define STOP -1
+
+/* -- clause/class numbers -- */
+#define MACRO_C 0
+#define MICRO_C 1
+#define ARC_C 2
+#define CIVIC_C 3
+#define EXTRA_C 4
+#define MAX_CL 5
+
+/* -- input symbols -- */
+#define NUMBER 0
+#define WORD 1
+#define TYPE 2
+
+#define ROAD 6
+#define STOPWORD 7
+
+#define DASH 9
+
+#define AMPERS 13
+
+#define ORD 15
+
+#define SINGLE 18
+#define BUILDH 19
+#define MILE 20
+#define DOUBLE 21
+#define DIRECT 22
+#define MIXED 23
+#define BUILDT 24
+#define FRACT 25
+#define PCT 26
+#define PCH 27
+#define QUINT 28
+#define QUAD 29
+#define MAXINSYM QUAD + 1
+
+/* -- output symbols -- */
+#define BLDNG 0
+#define HOUSE 1
+#define PREDIR 2
+#define QUALIF 3
+#define PRETYP 4
+#define STREET 5
+#define SUFTYP 6
+#define SUFDIR 7
+#define RR 8
+#define UNKNWN 9
+#define CITY 10
+#define PROV 11
+#define NATION 12
+#define POSTAL 13
+#define BOXH 14
+#define BOXT 15
+#define UNITH 16
+#define UNITT 17
+#define MAXOUTSYM UNITT + 1
+#define NEEDHEAD BOXH
+
+EOF
+}

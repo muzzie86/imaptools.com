@@ -1,0 +1,156 @@
+  # map-WORLD.inc
+  LAYER
+    NAME "World Z0"
+    GROUP "cb"
+    STATUS DEFAULT
+    TYPE POLYGON
+    DATA "not-nt2/110m-admin-0-countries"
+    PROJECTION "init=epsg:4326" END
+    MINSCALEDENOM 100000000
+    LABELITEM "NAME1"
+    CLASS
+      MINSCALEDENOM 200000000
+      STYLE
+        COLOR "#f2efe9"
+        #OUTLINECOLOR "#d5d1cc"
+      END
+    END
+    CLASS
+      MAXSCALEDENOM 200000000
+      STYLE
+        COLOR "#f2efe9"
+        #OUTLINECOLOR "#d5d1cc"
+        WIDTH 2.0
+      END
+      LABEL
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION AUTO PRIORITY 3 # MINDISTANCE 250
+        MINFEATURESIZE 30
+      END
+    END
+  END
+  LAYER
+    NAME "World Z1"
+    GROUP "cb"
+    STATUS DEFAULT
+    TYPE POLYGON
+    DATA "not-nt2/50m-admin-0-countries"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  50000000
+    LABELITEM "COUNTRY"
+    CLASS
+      STYLE
+        COLOR "#f2efe9"
+      END
+      LABEL
+        MINSCALEDENOM 10000000
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION AUTO PRIORITY 5 MINDISTANCE 250
+        MINFEATURESIZE 40
+      END
+    END
+  END
+  LAYER
+    NAME "World Z2"
+    GROUP "cb"
+    STATUS DEFAULT
+    TYPE POLYGON
+    DATA "not-nt2/10m-admin-0-countries"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM  50000000
+    #MINSCALEDENOM    200000
+    LABELITEM "COUNTRY"
+    LABELMINSCALEDENOM 60000
+    CLASS
+      STYLE
+        COLOR "#f2efe9"
+        #OUTLINECOLOR "#d5d1cc"
+      END
+      LABEL
+        MINSCALEDENOM 10000000
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 10 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION AUTO PRIORITY 5 MINDISTANCE 250
+        MINFEATURESIZE 10
+      END
+    END
+  END
+
+  INCLUDE "map-FOREST.inc"
+
+  INCLUDE "map-LAKES.inc"
+
+  SYMBOL
+    NAME "dots1"
+    TYPE SIMPLE
+    PATTERN 1 3 END
+  END
+  LAYER
+    NAME "World Boundaries Z1"
+    GROUP "cb"
+    STATUS DEFAULT
+    TYPE LINE
+    DATA "not-nt2/50m-admin-0-boundary-lines-land"
+    PROJECTION "init=epsg:4326" END
+    FILTERITEM 'FEATURECLA'
+    FILTER 'Treaty'
+    MAXSCALEDENOM 120000000
+    #MINSCALEDENOM  50000000
+    CLASS
+      STYLE
+        SYMBOL "Country_Border_Patern"
+        WIDTH 1.5
+      END
+    END
+  END
+  SYMBOL
+    NAME "dots"
+    TYPE SIMPLE
+    PATTERN 5 3 END
+  END
+  SYMBOL
+    NAME "dots2"
+    TYPE SIMPLE
+    PATTERN 10 3 END
+  END
+  LAYER
+    NAME "World Admin-1 Z1"
+    GROUP "cb"
+    STATUS DEFAULT
+    TYPE LINE
+    DATA "not-nt2/10m-admin-1-states-provinces-lines-shp"
+    PROJECTION "init=epsg:4326" END
+    FILTER ([LEN] > 60000)
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  20000000
+    CLASS
+      STYLE
+        COLOR "#bbbbbb"
+        SYMBOL "dots"
+        WIDTH 0.75
+      END
+    END
+  END
+  LAYER
+    NAME "World Admin-1 Z2"
+    GROUP "cb"
+    STATUS DEFAULT
+    TYPE LINE
+    DATA "not-nt2/10m-admin-1-states-provinces-lines-shp"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM  20000000
+    MINSCALEDENOM   5000000
+    CLASS
+      STYLE
+        COLOR "#999999"
+        SYMBOL "dots2"
+        WIDTH 1.0
+      END
+    END
+  END

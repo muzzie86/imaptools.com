@@ -1,0 +1,169 @@
+############################################################################################
+# author:   Jeff McKenna, jmckenna@gatewaygeomatics.com
+# purpose:  to test MapServer's vector drawing capabilities for FOSS4G 2010
+#           more info: http://wiki.osgeo.org/wiki/Benchmarking_2010
+# requires: Spain sample dataset from the Spanish National Mapping Agency
+#           (http://centrodedescargas.cnig.es/CentroDescargas/index.jsp)
+# license:
+#
+# Copyright (c) 2010, Gateway Geomatics
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of 
+# this software and associated documentation files (the "Software"), to deal in the 
+# Software without restriction, including without limitation the rights to use, copy, 
+# modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+# and to permit persons to whom the Software is furnished to do so, subject to the 
+# following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies 
+# or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+# FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+############################################################################################
+
+# MapServer benchmark map file - Vectors
+MAP
+
+  NAME 	"raster_benchmarking_2010"
+  STATUS ON
+  SIZE 	950 600
+  #EXTENT 400637.456357 4576080.998882 456535.105266 4594947.942275 #EPSG: 25831  Barcelona
+  EXTENT 1.8 41 2.4 42 #EPSG:4326 Barcelona
+  UNITS DD
+#  SHAPEPATH "../data/vector"
+  IMAGECOLOR 255 255 255
+  FONTSET "./etc/fonts.txt"
+  SYMBOLSET "./etc/symbols.txt"  
+  #IMAGETYPE PNG
+
+  #
+  # Outputformat of map image
+  #
+  
+  OUTPUTFORMAT
+    NAME aggpng24
+    DRIVER AGG/PNG
+    MIMETYPE "image/png"
+    IMAGEMODE RGB
+    EXTENSION "png"
+  END
+
+OUTPUTFORMAT
+  NAME jpeg
+  DRIVER "GD/JPEG"
+  MIMETYPE "image/jpeg"
+  IMAGEMODE RGB
+  EXTENSION "jpg"
+  FORMATOPTION "QUALITY=90"
+END
+
+
+  
+  #
+  # Start of web interface definition
+  #
+  WEB
+    # metadata for WMS service
+    METADATA
+      "ows_title"   		"MapServer Raster benchmarking with Spanish National Mapping Agency dataset"
+      "ows_onlineresource" 	"http://12.189.158.75:8081/cgi-bin/mapserv?MAP=C:/benchmarking/mapserver/spain-shapefiles.map"
+      "ows_srs"   		"EPSG:4326 EPSG:4269 EPSG:3857 EPSG:25831"
+      "ows_abstract"            "This WMS is run with MapServer 5.7-dev on Windows Server 64bit, accessing raster images from the Spanish National Mapping Agency dataset.  This was setup for the Web server benchmarking presentation at FOSS4G2010.  More info at: http://wiki.osgeo.org/wiki/Benchmarking_2010"
+      "ows_contactperson"       "Jeff McKenna"
+      "ows_contactorganization" "Gateway Geomatics" 
+      "ows_contactposition"     "Director"
+      "ows_contactelectronicmailaddress" "info@gatewaygeomatics.com"
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"
+    END    
+    # not necessary for benchmarking scripts
+    # Windows
+    IMAGEPATH "/ms4w/tmp/ms_tmp/" 
+    IMAGEURL "/ms_tmp/"
+    # Unix
+    #IMAGEPATH "/home/httpd/htdocs/ms_tmp/"
+    #IMAGEURL "http://labs.gatewaygeomatics.com/ms_tmp/"
+    TEMPLATE "./htdocs/viewer-template.html"          
+  END  
+  
+  #
+  # Projection of output image
+  #
+  PROJECTION
+    "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" #EPSG:4326
+  END
+  
+  #
+  # Start of legend (not necessary for benchmarking scripts)
+  #
+  LEGEND
+    KEYSIZE 18 12
+    LABEL
+      TYPE BITMAP
+      SIZE MEDIUM
+      COLOR 0 0 89
+    END
+    STATUS ON
+    TEMPLATE "./htdocs/html-legend.html"  
+  END  
+  
+  #
+  # Start of scalebar (not necessary for benchmarking scripts)
+  #
+  SCALEBAR
+    IMAGECOLOR 255 255 255
+    LABEL
+      COLOR 0 0 0 
+      SIZE SMALL
+    END
+    SIZE 150 5
+    COLOR 255 255 255
+    BACKGROUNDCOLOR 0 0 0
+    OUTLINECOLOR 0 0 0
+    UNITS miles
+    INTERVALS 3
+    STATUS ON
+  END  
+
+  # Set default resolution to 90, as the OGC standard DPI is 90
+  RESOLUTION 90
+  DEFRESOLUTION 90
+  
+  #
+  # Start of layer definitions
+  # 
+
+   #######################################
+
+  LAYER
+    NAME "raster"
+    # metadata for WMS service
+    METADATA
+      "ows_title"               "raster tileinex"
+      "ows_srs"                 "EPSG:25831"
+      "ows_abstract"            "Spain settlement features"
+      "ows_attribution_title"   "Spanish National Mapping Agency dataset"
+      "ows_attribution_onlineresource" "http://centrodedescargas.cnig.es/CentroDescargas/index.jsp"
+    END
+    TYPE RASTER
+    STATUS ON
+    TILEINDEX "/benchmarking/data/raster/benchmark_rasters.shp"
+   # TILEINDEX "/benchmarking/data/raster/ecw_tile.shp"
+   # DATA "/benchmarking/data/raster/tifraster.vrt"
+   # DATA "/benchmarking/data/raster/ecwraster.vrt"
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+#    PROCESSING "OVERSAMPLE_RATIO=1"
+
+    #
+    # Projection of data
+    #
+    PROJECTION
+	"init=epsg:25831"
+    END
+  END # layer    
+
+END  

@@ -1,0 +1,95 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub Usage {
+    die "Usage: load-tiger-geo dbname dbport tiger_year path/to/Streets.shp\n";
+}
+
+sub wanted;
+
+my @files = ();
+
+my $DRYRUN  = 0;
+my $VERBOSE = 1;
+
+my $DBHOST = "localhost";
+my $DBUSER = "postgres";
+
+my $DBNAME = shift @ARGV || Usage();
+my $DBPORT = shift @ARGV || Usage();
+my $YEAR   = shift @ARGV || Usage();
+my $path   = shift @ARGV || Usage();
+
+my $DATE   = `date +%Y%m%d`;
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $path);
+
+die "ERROR: could not find any files to load\n" unless scalar @files;
+
+createDB();
+
+mysystem("shp2pgsql -s 4326 -p -g the_geom -D -t 2D -W LATIN1 -N skip '$files[0]' data.streets | psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME ");
+
+for my $x (sort @files) {
+    mysystem("shp2pgsql -s 4326 -a -g the_geom -D -t 2D -W LATIN1 -N skip '$x' data.streets | psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME ");
+}
+
+exit;
+
+
+sub wanted {
+    /^Streets\.shp\z/s &&
+    push @files, $name;
+}
+
+sub createDB {
+    my $dbexist = `psql -U $DBUSER -h $DBHOST -p $DBPORT -l | grep -w $DBNAME`;
+    die "ERROR: database already exists drop it first!\n"
+        if $dbexist =~ /$DBNAME/;
+
+    mysystem("createdb -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME");
+    mysystem("psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME -c 'create extension postgis' ");
+    mysystem("psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME -c 'create extension address_standardizer' ");
+    mysystem("psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME -c 'create extension fuzzystrmatch' ");
+    mysystem("psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME -c 'create schema data' ");
+    mysystem("psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME -c 'alter database $DBNAME set search_path to data, public' ");
+    mysystem("psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME -c \"COMMENT ON DATABASE $DBNAME IS 'iMaptools Tiger Geocoder
+Copyright iMaptools and Stephen Woodbridge, ALL RIGHTS RESERVED.
+Contact: info\@imaptools.com or woodbri\@swoodbridge.com
+Data: Tiger $YEAR
+Database Created: $DATE'\" ");
+}
+
+
+sub mysystem {
+    print join(" ", @_), "\n" if $DRYRUN || $VERBOSE;
+    if ( ! $DRYRUN ) {
+        my $rc = 0xffff & system(@_);
+        if ($rc == 0xff00) {
+            die "Command Failed: '" .  join(" ", @_) . "'\n";
+        }
+        elsif (($rc & 0xff) == 0) {
+            $rc >>= 8;
+            die "Command '" .  join(" ", @_) . "' Returned ($rc)\n"
+                unless $rc == 0;
+        }
+        else {
+            die "Command Failed: '" .  join(" ", @_) . "' with signal $rc\n";
+        }
+    }
+}
+

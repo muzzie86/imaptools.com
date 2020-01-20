@@ -1,0 +1,89 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+use Cwd 'chdir';
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: mk-nt-map-tindex <data-dir>\n";
+}
+
+my $datadir = shift @ARGV || Usage();
+
+my @files = ();
+
+chdir $datadir;
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, '.');
+
+my @types = qw(
+Adminbndy3
+Adminbndy4
+Adminbndy5
+Islands
+Landmark
+LandUseA
+LandUseB
+MajHwys
+NamedPlc
+Oceans
+RailRds
+SecHwys
+CartoCountry
+Streets-Maj
+Streets-Min
+Streets
+Streets-Tun
+WaterPoly
+WaterSeg
+AutoSvc
+BordCross
+Business
+CommSvc
+EduInsts
+Entertn
+FinInsts
+Golf
+Hospital
+MiscCategories
+ParkRec
+Parking
+Restrnts
+Shopping
+TransHubs
+TravDest
+);
+
+for my $x (@types) {
+    my @f = grep(/$x\.shp/, grep(!/tidx-/, @files));
+    $x =~ s/\.shp$//;
+    open(OUT, ">tidx-$x.in") || die "Failed to create file $datadir/tidx-$x.in : $!\n";
+    print OUT join("\n", @f) . "\n";
+    close(OUT);
+    system("tile4ms tidx-$x.in tidx-$x ");
+}
+
+#system("find . -name \\*.shp -exec shptree {} \\; ");
+
+exit;
+
+
+sub wanted {
+    /^.*\.shp\z/s &&
+    push @files, $name;
+}
+

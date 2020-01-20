@@ -1,0 +1,409 @@
+SYMBOLSET
+
+# Symbols for Tiger 2011 Maps using mapserver 6.02+
+
+SYMBOL
+NAME 'circle'
+TYPE ELLIPSE
+POINTS 1 1 END
+END
+
+SYMBOL
+NAME 'circle-filled'
+TYPE ELLIPSE
+FILLED TRUE
+POINTS 1 1 END
+END
+
+SYMBOL
+NAME 'triangle'
+TYPE VECTOR
+FILLED TRUE
+POINTS -1 2 1 2 0 0 -1 2 END
+END
+
+SYMBOL
+NAME "Country_Border_Patern"
+TYPE PIXMAP
+IMAGE "icons2/city/Country_Border_Patern.png"
+END
+
+SYMBOL
+NAME "city_1"
+TYPE PIXMAP
+IMAGE "icons2/city/city_1.png"
+END
+
+SYMBOL
+NAME "city_2"
+TYPE PIXMAP
+IMAGE "icons2/city/city_2.png"
+END
+
+SYMBOL
+NAME "city_3"
+TYPE PIXMAP
+IMAGE "icons2/city/city_3.png"
+END
+
+SYMBOL
+NAME "city_4"
+TYPE PIXMAP
+IMAGE "icons2/city/city_4.png"
+END
+
+SYMBOL
+NAME "city_5"
+TYPE PIXMAP
+IMAGE "icons2/city/city_5.png"
+END
+
+SYMBOL
+NAME "city_6"
+TYPE PIXMAP
+IMAGE "icons2/city/city_6.png"
+END
+
+SYMBOL
+NAME "I"
+TYPE SVG
+IMAGE "svg/hwy/I-blank.svg"
+END
+
+SYMBOL
+NAME "U"
+TYPE SVG
+IMAGE "svg/hwy/U-blank.svg"
+END
+
+SYMBOL
+NAME "S"
+TYPE SVG
+IMAGE "svg/hwy/S-blank.svg"
+END
+
+SYMBOL
+  NAME "airport"
+  TYPE SVG
+  IMAGE "svg/poi/airport.svg"
+END
+
+SYMBOL
+  NAME "building"
+  TYPE SVG
+  IMAGE "svg/poi/building.svg"
+END
+
+SYMBOL
+  NAME "bus-station"
+  TYPE SVG
+  IMAGE "svg/poi/bus-station.svg"
+END
+
+SYMBOL
+  NAME "cabin"
+  TYPE SVG
+  IMAGE "svg/poi/cabin.svg"
+END
+
+SYMBOL
+  NAME "camping"
+  TYPE SVG
+  IMAGE "svg/poi/camping.svg"
+END
+
+SYMBOL
+  NAME "cemetery-bug"
+  TYPE SVG
+  IMAGE "svg/poi/cemetery-bug.svg"
+END
+
+SYMBOL
+  NAME "cemetery"
+  TYPE SVG
+  IMAGE "svg/poi/cemetery.svg"
+END
+
+SYMBOL
+  NAME "church"
+  TYPE SVG
+  IMAGE "svg/poi/church.svg"
+END
+
+SYMBOL
+  NAME "circus"
+  TYPE SVG
+  IMAGE "svg/poi/circus.svg"
+END
+
+SYMBOL
+  NAME "college"
+  TYPE SVG
+  IMAGE "svg/poi/college.svg"
+END
+
+SYMBOL
+  NAME "ferriswheel"
+  TYPE SVG
+  IMAGE "svg/poi/ferriswheel.svg"
+END
+
+SYMBOL
+  NAME "fire-station"
+  TYPE SVG
+  IMAGE "svg/poi/fire-station.svg"
+END
+
+SYMBOL
+  NAME "fish"
+  TYPE SVG
+  IMAGE "svg/poi/fish.svg"
+END
+
+SYMBOL
+  NAME "gate"
+  TYPE SVG
+  IMAGE "svg/poi/gate.svg"
+END
+
+SYMBOL
+  NAME "golf"
+  TYPE SVG
+  IMAGE "svg/poi/golf.svg"
+END
+
+SYMBOL
+  NAME "government"
+  TYPE SVG
+  IMAGE "svg/poi/government.svg"
+END
+
+SYMBOL
+  NAME "guesthouse"
+  TYPE SVG
+  IMAGE "svg/poi/guesthouse.svg"
+END
+
+SYMBOL
+  NAME "hiking"
+  TYPE SVG
+  IMAGE "svg/poi/hiking.svg"
+END
+
+SYMBOL
+  NAME "hospital"
+  TYPE SVG
+  IMAGE "svg/poi/hospital.svg"
+END
+
+SYMBOL
+  NAME "industrial"
+  TYPE SVG
+  IMAGE "svg/poi/industrial.svg"
+END
+
+SYMBOL
+  NAME "information"
+  TYPE SVG
+  IMAGE "svg/poi/information.svg"
+END
+
+SYMBOL
+  NAME "library"
+  TYPE SVG
+  IMAGE "svg/poi/library.svg"
+END
+
+SYMBOL
+  NAME "lighthouse"
+  TYPE SVG
+  IMAGE "svg/poi/lighthouse.svg"
+END
+
+SYMBOL
+  NAME "military"
+  TYPE SVG
+  IMAGE "svg/poi/military.svg"
+END
+
+SYMBOL
+  NAME "mine"
+  TYPE SVG
+  IMAGE "svg/poi/mine.svg"
+END
+
+SYMBOL
+  NAME "monument"
+  TYPE SVG
+  IMAGE "svg/poi/monument.svg"
+END
+
+SYMBOL
+  NAME "museum"
+  TYPE SVG
+  IMAGE "svg/poi/museum.svg"
+END
+
+SYMBOL
+  NAME "park2"
+  TYPE SVG
+  IMAGE "svg/poi/park2.svg"
+END
+
+SYMBOL
+  NAME "park-bug"
+  TYPE SVG
+  IMAGE "svg/poi/park-bug.svg"
+END
+
+SYMBOL
+  NAME "park"
+  TYPE SVG
+  IMAGE "svg/poi/park.svg"
+END
+
+SYMBOL
+  NAME "peak"
+  TYPE SVG
+  IMAGE "svg/poi/peak.svg"
+END
+
+SYMBOL
+  NAME "picnic"
+  TYPE SVG
+  IMAGE "svg/poi/picnic.svg"
+END
+
+SYMBOL
+  NAME "police"
+  TYPE SVG
+  IMAGE "svg/poi/police.svg"
+END
+
+SYMBOL
+  NAME "port"
+  TYPE SVG
+  IMAGE "svg/poi/port.svg"
+END
+
+SYMBOL
+  NAME "postoffice"
+  TYPE SVG
+  IMAGE "svg/poi/postoffice.svg"
+END
+
+SYMBOL
+  NAME "prison"
+  TYPE SVG
+  IMAGE "svg/poi/prison.svg"
+END
+
+SYMBOL
+  NAME "public-building"
+  TYPE SVG
+  IMAGE "svg/poi/public-building.svg"
+END
+
+SYMBOL
+  NAME "rail-station"
+  TYPE SVG
+  IMAGE "svg/poi/rail-station.svg"
+END
+
+SYMBOL
+  NAME "ranger-station"
+  TYPE SVG
+  IMAGE "svg/poi/ranger-station.svg"
+END
+
+SYMBOL
+  NAME "ranger"
+  TYPE SVG
+  IMAGE "svg/poi/ranger.svg"
+END
+
+SYMBOL
+  NAME "ruin"
+  TYPE SVG
+  IMAGE "svg/poi/ruin.svg"
+END
+
+SYMBOL
+  NAME "scenic-area"
+  TYPE SVG
+  IMAGE "svg/poi/scenic-area.svg"
+END
+
+SYMBOL
+  NAME "school"
+  TYPE SVG
+  IMAGE "svg/poi/school.svg"
+END
+
+SYMBOL
+  NAME "shelter"
+  TYPE SVG
+  IMAGE "svg/poi/shelter.svg"
+END
+
+SYMBOL
+  NAME "shopping"
+  TYPE SVG
+  IMAGE "svg/poi/shopping.svg"
+END
+
+SYMBOL
+  NAME "skiing"
+  TYPE SVG
+  IMAGE "svg/poi/skiing.svg"
+END
+
+SYMBOL
+  NAME "tower-lookout"
+  TYPE SVG
+  IMAGE "svg/poi/tower-lookout.svg"
+END
+
+SYMBOL
+  NAME "tower"
+  TYPE SVG
+  IMAGE "svg/poi/tower.svg"
+END
+
+SYMBOL
+  NAME "tower-water"
+  TYPE SVG
+  IMAGE "svg/poi/tower-water.svg"
+END
+
+SYMBOL
+  NAME "transportation"
+  TYPE SVG
+  IMAGE "svg/poi/transportation.svg"
+END
+
+SYMBOL
+  NAME "vista"
+  TYPE SVG
+  IMAGE "svg/poi/vista.svg"
+END
+
+SYMBOL
+  NAME "windmill"
+  TYPE SVG
+  IMAGE "svg/poi/windmill.svg"
+END
+
+SYMBOL
+  NAME "winery"
+  TYPE SVG
+  IMAGE "svg/poi/winery.svg"
+END
+
+SYMBOL
+  NAME "zoo"
+  TYPE SVG
+  IMAGE "svg/poi/zoo.svg"
+END
+
+END #Symbolset

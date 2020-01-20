@@ -1,0 +1,422 @@
+SYMBOLSET
+
+SYMBOL
+  NAME 'dash'
+  TYPE SIMPLE
+  PATTERN 5 5 END
+END
+
+SYMBOL
+  NAME "dashed10"
+  TYPE SIMPLE
+  PATTERN 10 10 END
+END
+
+SYMBOL
+  NAME 'airport'
+  TYPE PIXMAP
+  IMAGE "icons/Airport.gif"
+END
+
+SYMBOL
+  NAME 'bay'
+  TYPE PIXMAP
+  IMAGE "icons/Bay.gif"
+  #TRANSPARENT 0
+END
+
+SYMBOL
+  NAME 'building'
+  TYPE PIXMAP
+  IMAGE "icons/building.gif"
+  TRANSPARENT 0
+END
+
+SYMBOL
+  NAME 'canal'
+  TYPE PIXMAP
+  IMAGE "icons/Canal.gif"
+END
+
+SYMBOL
+  NAME 'cape'
+  TYPE PIXMAP
+  IMAGE "icons/Cape.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'cemetery'
+  TYPE PIXMAP
+  IMAGE "icons/Cemetery.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'church'
+  TYPE PIXMAP
+  IMAGE "icons/church.gif"
+  TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'civil'
+  TYPE PIXMAP
+  IMAGE "icons/Civil.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'crossing'
+  TYPE PIXMAP
+  IMAGE "icons/Crossing.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'dam'
+  TYPE PIXMAP
+  IMAGE "icons/Dam.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'flat'
+  TYPE PIXMAP
+  IMAGE "icons/Flat.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'hospital'
+  TYPE PIXMAP
+  IMAGE "icons/Hospital.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'island'
+  TYPE PIXMAP
+  IMAGE "icons/Island.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'lake'
+  TYPE PIXMAP
+  IMAGE "icons/Lake.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'locale'
+  TYPE PIXMAP
+  IMAGE "icons/Locale.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'mine'
+  TYPE PIXMAP
+  IMAGE "icons/Mine.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'park'
+  TYPE PIXMAP
+  IMAGE "icons/Park.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'populated place'
+  TYPE PIXMAP
+  IMAGE "icons/Populated_Place.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'post office'
+  TYPE PIXMAP
+  IMAGE "icons/PostOffice.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'reservoir'
+  TYPE PIXMAP
+  IMAGE "icons/Reservoir.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'ridge'
+  TYPE PIXMAP
+  IMAGE "icons/Ridge.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'school'
+  TYPE PIXMAP
+  IMAGE "icons/School.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'spring'
+  TYPE PIXMAP
+  IMAGE "icons/Spring.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'stream'
+  TYPE PIXMAP
+  IMAGE "icons/Stream.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'summit'
+  TYPE PIXMAP
+  IMAGE "icons/Summit.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'tower'
+  TYPE PIXMAP
+  IMAGE "icons/Tower.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'trail'
+  TYPE PIXMAP
+  IMAGE "icons/Trail.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'valley'
+  TYPE PIXMAP
+  IMAGE "icons/Valley.gif"
+  #TRANSPARENT 0  
+END
+
+SYMBOL
+  NAME 'well'
+  TYPE PIXMAP
+  IMAGE "icons/Well.gif"
+  #TRANSPARENT 0  
+END
+
+Symbol
+Name 'tent'
+Type VECTOR
+Filled TRUE
+Points
+0 1
+.5 0
+1 1
+.75 1
+.5 .5
+.25 1
+0 1
+END
+END 
+
+Symbol
+Name 'star'
+Type VECTOR
+Filled TRUE
+Points
+0 .375
+.35 .375
+.5 0
+.65 .375
+1 .375
+.75 .625
+.875 1
+.5 .75
+.125 1
+.25 .625
+END
+END 
+
+Symbol
+Name 'triangle'
+Type VECTOR
+Filled TRUE
+Points
+0 1
+.5 0
+1 1
+0 1
+END
+END 
+
+Symbol
+Name 'square'
+Type VECTOR
+Filled TRUE
+Points
+0 1
+0 0
+1 0
+1 1
+0 1
+END
+END 
+
+Symbol
+Name 'plus'
+Type VECTOR
+Points
+.5 0
+.5 1
+-99 -99
+0 .5
+1 .5
+END
+END 
+
+Symbol
+Name 'cross'
+Type VECTOR
+Points
+0 0
+1 1
+-99 -99
+0 1
+1 0
+END
+END
+
+Symbol
+Name 'circle'
+Type ELLIPSE
+Filled TRUE
+Points
+1 1
+END
+END 
+
+
+Symbol
+Type VECTOR
+TRANSPARENT 0
+Points
+0 1
+1 1
+END
+END 
+
+Symbol
+Type VECTOR
+TRANSPARENT 0
+Points
+1 0
+1 1
+END
+END 
+
+Symbol
+Type VECTOR
+TRANSPARENT 0
+Points
+0 0
+1 1
+END
+END 
+
+Symbol
+Type VECTOR
+TRANSPARENT 0
+Points
+0 1
+1 0
+END
+END 
+
+Symbol
+Type VECTOR
+Points
+0 1
+1 0
+-99 -99
+0 0
+1 1
+END
+END 
+
+Symbol
+Type ELLIPSE
+Filled TRUE
+Points
+1 1
+END
+END 
+
+SYMBOL
+NAME "Country_Border_Patern"
+TYPE PIXMAP
+IMAGE "icons2/city/Country_Border_Patern.png"
+END
+
+SYMBOL
+NAME "city_1"
+TYPE PIXMAP
+IMAGE "icons2/city/city_1.png"
+END
+
+SYMBOL
+NAME "city_2"
+TYPE PIXMAP
+IMAGE "icons2/city/city_2.png"
+END
+
+SYMBOL
+NAME "city_3"
+TYPE PIXMAP
+IMAGE "icons2/city/city_3.png"
+END
+
+SYMBOL
+NAME "city_4"
+TYPE PIXMAP
+IMAGE "icons2/city/city_4.png"
+END
+
+SYMBOL
+NAME "city_5"
+TYPE PIXMAP
+IMAGE "icons2/city/city_5.png"
+END
+
+SYMBOL
+NAME "city_6"
+TYPE PIXMAP
+IMAGE "icons2/city/city_6.png"
+END
+
+SYMBOL
+NAME "dashed3"
+TYPE SIMPLE
+STYLE 3 5 END
+END
+
+SYMBOL
+NAME "dashed5"
+TYPE SIMPLE
+STYLE 5 5 END
+END
+
+SYMBOL
+NAME "hatch"
+TYPE HATCH
+END
+
+END #Symbolset

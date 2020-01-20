@@ -1,0 +1,87 @@
+# Map server benchmark map file
+MAP
+  IMAGETYPE      PNG
+  EXTENT         -180 -90 180 90
+  SIZE           400 300
+  SHAPEPATH      "/opt/data"
+  IMAGECOLOR     255 255 255
+
+  IMAGETYPE      jpeg  
+
+  PROJECTION
+      "+init=epsg:4326"
+  END
+  
+  # Debug
+  CONFIG  "MS_ERRORFILE" "stderr"
+  #CONFIG  "MS_NONSQUARE" "OFF"
+  #DEBUG   2
+
+  # WMS and WFS metadata
+  WEB
+    METADATA
+      "wms_title"           "WMS Demo Server"
+      "ows_onlineresource"   "http://192.168.0.3/cgi-bin/mapserv?MAP=/opt/benchmarking/mapserver/raster.map"
+      "wms_srs"             "EPSG:4326"
+    END
+  END
+
+  # Topography (ECW)
+  LAYER 
+    NAME         topo_ecw
+    DATA         "world-topo-bathy-200409-3x86400x43200.ecw"
+    TYPE         RASTER
+    #PROCESSING   "RESAMPLE=AVERAGE"
+    #PROCESSING   "RESAMPLE=BILINEAR"
+    
+    METADATA
+      "wms_title"    "World Topography/Bathymetry (ECW)"
+      "wms_extent" "-180 -90 180 90"
+    END
+
+    # Projection
+    PROJECTION
+      "+init=epsg:4326"
+    END
+  END 
+
+  # Topography (BigTIFF)
+  LAYER 
+    NAME         topo_bigtiff
+    DATA         "world-topo-bathy-200409-3x86400x43200.tif"
+    TYPE         RASTER
+    #PROCESSING   "RESAMPLE=AVERAGE"
+    #PROCESSING   "RESAMPLE=BILINEAR"
+    
+    METADATA
+      "wms_title"    "World Topography/Bathymetry (BigTIFF)"
+      "wms_extent" "-180 -90 180 90"
+    END
+
+    # Projection
+    PROJECTION
+      "+init=epsg:4326"
+    END
+  END 
+  
+  # Topography (Tiled TIFF)
+  LAYER 
+    NAME         topo_tiledtiff
+    TILEINDEX    "bluemarble_512/index.shp"
+    TYPE         RASTER
+    #PROCESSING   "RESAMPLE=AVERAGE"
+    #PROCESSING   "RESAMPLE=BILINEAR"
+    
+    METADATA
+      "wms_title"    "World Topography/Bathymetry (Tiled TIFF)"
+      "wms_extent" "-180 -90 180 90"
+    END
+
+    # Projection
+    PROJECTION
+      "+init=epsg:4326"
+    END
+  END 
+  
+# End of map file
+END 

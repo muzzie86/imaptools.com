@@ -1,0 +1,12 @@
+#
+# process-shopping
+# find all the pointlm files and search them for "shopping" 
+# in the name and change those records mtfcc to T3081
+#
+echo "shopping	T3081" > rgex-shopping.txt
+echo " mall$	T3081" >> rgex-shopping.txt
+echo " campground$	T3082" >> rgex-shopping.txt
+echo "country club$	K2561" >> rgex-shopping.txt
+echo " golf course$	K2561" >> rgex-shopping.txt
+echo " industrial (area|park?|complex|center|development|site)( (north|south))?$	T3083" >> rgex-shopping.txt
+find POINTLM -name \*_pointlm.dbf -exec dbfxlate -i -s MTFCC -r rgex-shopping.txt {} FULLNAME \;

@@ -1,0 +1,33 @@
+ starticle |  cnt   
+-----------+--------
+ None      | 423943
+ des       |  13208
+ du        |  12664
+ de la     |   6381
+ de        |   4936
+ de l'     |   2825
+ d'        |    616
+ à        |     87
+ The       |     23
+ La        |     22
+ De        |     18
+ au        |     13
+ Des       |     13
+ les       |     12
+ De La     |      9
+ d'en      |      6
+ Du        |      5
+ chez      |      5
+ De L'     |      4
+ D'        |      4
+ L'        |      4
+ le        |      4
+ Le        |      3
+ aux       |      3
+ à la     |      2
+ l'        |      2
+ sur       |      1
+ sur la    |      1
+ sur le    |      1
+(29 rows)
+

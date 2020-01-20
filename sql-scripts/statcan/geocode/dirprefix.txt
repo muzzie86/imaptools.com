@@ -1,0 +1,13 @@
+ dirprefix | count  
+-----------+--------
+ East      |    429
+ None      | 462972
+ North     |    471
+ Northeast |      1
+ Northwest |      6
+ South     |    432
+ Southeast |      4
+ Southwest |     12
+ West      |    488
+(9 rows)
+

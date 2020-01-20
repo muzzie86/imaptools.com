@@ -1,0 +1,65 @@
+MAP
+  NAME "RGEOCODER"
+  STATUS ON
+  EXTENT -180.0 -14.8 -51.75 113.4 
+
+  SHAPEPATH "/u/data/nt-rgeo/"
+  UNITS DD
+
+#Filename:   data/NA/Streets.dbf
+#Version: 0x03 (ver. 3)
+#Num of records: 155086
+#Header length:  769
+#Record length:  508
+#Last change:    1995/7/26
+#Num fields: 23
+#Field info:
+#Num Name    Type Len    Decimal
+#1.  LINK_ID         N       10      0
+#2.  NAME            C       80      0
+#3.  ADDR_TYPE       C       1       0
+#4.  L_REFADDR       C       10      0
+#5.  L_NREFADDR      C       10      0
+#6.  L_ADDRSCH       C       1       0
+#7.  L_ADDRFORM      C       1       0
+#8.  R_REFADDR       C       10      0
+#9.  R_NREFADDR      C       10      0
+#10. R_ADDRSCH       C       1       0
+#11. R_ADDRFORM      C       1       0
+#12. L_AC5           C       35      0
+#13. L_AC4           C       35      0
+#14. L_AC3           C       35      0
+#15. L_AC2           C       35      0
+#16. L_AC1           C       35      0
+#17. R_AC5           C       35      0
+#18. R_AC4           C       35      0
+#19. R_AC3           C       35      0
+#20. R_AC2           C       35      0
+#21. R_AC1           C       35      0
+#22. L_POSTCODE      C       11      0
+#23. R_POSTCODE      C       11      0
+#
+
+  LAYER
+    NAME "streets"
+    TYPE QUERY
+    STATUS ON
+    CONNECTIONTYPE postgis
+    CONNECTION "user=postgres host=localhost dbname=rgeo"
+    DATA "the_geom from rgeo.streets using srid=4326 using unique gid"
+    TOLERANCE 150
+    TOLERANCEUNITS FEET
+    CLASS
+      TEMPLATE "dummy"
+    END
+    METADATA
+      "DESCRIPTION"    "Streets"
+      "RESULT_FIELDS"    "link_id name addr_type l_refaddr l_nrefaddr l_addrsch l_addrform r_refaddr r_nrefaddr r_addrsch r_addrform l_ac5 l_ac4 l_ac3 l_ac2 l_ac1 r_ac5 r_ac4 r_ac3 r_ac2 r_ac1 l_postcode r_postcode"
+      "INTERPOLATE_ADDRESS" "l_refaddr l_nrefaddr r_refaddr r_nrefaddr"
+      "STREET_NAME" "name"
+      "SEARCH_MAX"       "2400"
+      "CROSS_STREET_NAME" "name"
+    END
+  END
+
+END

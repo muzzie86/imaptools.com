@@ -1,0 +1,27 @@
+# map-RAILS.inc
+  CLASS
+    MAXSCALEDENOM 300000
+    MINSCALEDENOM  20000
+    STYLE
+      COLOR "#A0A0A0"
+      WIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 20000
+    STYLE
+      WIDTH 3
+      OUTLINECOLOR "#C0C0C0"
+      OUTLINEWIDTH 0.5
+    END
+    STYLE
+      WIDTH 3
+      COLOR "#ffffff"
+    END
+    STYLE
+      COLOR "#C0C0C0"
+      WIDTH 3
+      PATTERN 10 10 END
+    END
+  END
+

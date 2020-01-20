@@ -1,0 +1,274 @@
+# map-ROADS.inc
+
+# S1100,    20533, primary
+# S1200,   325140, secondary
+# S1400, 16320345, local
+# S1500,   374859, 4wd trail
+# S1630,   176149, ramp
+# S1640,   176415, service along highway
+# S1710,    17033, walkway
+# S1720,      241, stairway
+# S1730,    72743, alley
+# S1740,  2255679, private
+# S1750,   434084, census use
+# S1780,    10645, parking lot
+# S1820,     2893, bike path
+# S1830,       12, bridle path
+
+  MAXSCALEDENOM 500000
+  CLASSITEM "RTTYP"
+  LABELITEM "FULLNAME"
+  SIZEUNITS METERS
+  CLASS
+    EXPRESSION ('[MTFCC]' = 'S1100')
+    STYLE
+      COLOR "#FFC95B"
+      WIDTH 20
+      MAXWIDTH 16
+      OUTLINECOLOR "#E9B352"
+      OUTLINEWIDTH 1.5
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 18
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#3C0800"
+      OUTLINECOLOR "#FFC95B"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      EXPRESSION ('[RTTYP]' = 'I' && '[RTENUM]' ~ '.')
+      TEXT '[RTENUM]'
+      STYLE
+        #GEOMTRANSFORM 'labelpnt'
+        SYMBOL "I"
+        MINSIZE 22
+        MAXSIZE 22
+      END
+      SIZE TINY
+      POSITION CC
+      #OFFSET 1 0
+      MINDISTANCE 100
+      COLOR "#ffffff"
+      PARTIALS FALSE
+      PRIORITY 7
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      EXPRESSION ('[RTTYP]' = 'U' && '[RTENUM]' ~ '.')
+      TEXT '[RTENUM]'
+      STYLE
+        #GEOMTRANSFORM 'labelpnt'
+        SYMBOL "U"
+        MINSIZE 20
+        MAXSIZE 20
+      END
+      SIZE TINY
+      POSITION CC
+      #OFFSET 1 0
+      MINDISTANCE 100
+      COLOR "#000000"
+      PARTIALS FALSE
+      PRIORITY 7
+    END
+  END
+  CLASS
+    EXPRESSION ('[MTFCC]' = 'S1200')
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 20
+      MAXWIDTH 16
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 1.2
+    END
+    LABEL
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 16
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#816C34"
+      OUTLINECOLOR "#FFFB89"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      EXPRESSION ('[RTTYP]' = 'I' && '[RTENUM]' ~ '.')
+      TEXT '[RTENUM]'
+      STYLE
+        #GEOMTRANSFORM 'labelpnt'
+        SYMBOL "I"
+        MINSIZE 22
+        MAXSIZE 22
+      END
+      SIZE TINY
+      POSITION CC
+      #OFFSET 1 0
+      MINDISTANCE 100
+      COLOR "#ffffff"
+      PARTIALS FALSE
+      PRIORITY 7
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      EXPRESSION ('[RTTYP]' = 'U' && '[RTENUM]' ~ '.')
+      TEXT '[RTENUM]'
+      STYLE
+        #GEOMTRANSFORM 'labelpnt'
+        SYMBOL "U"
+        MINSIZE 20
+        MAXSIZE 20
+      END
+      SIZE TINY
+      POSITION CC
+      #OFFSET 1 0
+      MINDISTANCE 100
+      COLOR "#000000"
+      PARTIALS FALSE
+      PRIORITY 7
+    END
+  END
+  CLASS
+    EXPRESSION /^[USC]/
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 18
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 1
+    END
+    LABEL
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 16
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#816C34"
+      OUTLINECOLOR "#FFFB89"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+    LABEL
+      MAXSCALEDENOM 200000
+      EXPRESSION ('[RTTYP]' = 'U' && '[RTENUM]' ~ '.')
+      TEXT '[RTENUM]'
+      STYLE
+        #GEOMTRANSFORM 'labelpnt'
+        SYMBOL "U"
+        MINSIZE 20
+        MAXSIZE 20
+      END
+      SIZE TINY
+      POSITION CC
+      #OFFSET 1 0
+      MINDISTANCE 100
+      COLOR "#000000"
+      PARTIALS FALSE
+      PRIORITY 7
+    END
+    LABEL
+      MAXSCALEDENOM 200000
+      EXPRESSION ('[RTTYP]' = 'S' && '[RTENUM]' ~ '.')
+      TEXT '[RTENUM]'
+      STYLE
+        SYMBOL "S"
+        SIZE 20
+        MINSIZE 20
+        MAXSIZE 20
+      END
+      SIZE TINY
+      POSITION CC
+      MINDISTANCE 100
+      COLOR "#000000"
+      PARTIALS FALSE
+      PRIORITY 7
+    END
+  END
+  CLASS
+    MINSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1400')
+    STYLE
+      COLOR "#c1c1a1"
+      WIDTH 6
+      MINWIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1400')
+    STYLE
+      COLOR "#FFFFFF"
+      WIDTH 18
+      #MINWIDTH 10
+      MAXWIDTH 10
+      OUTLINECOLOR "#D8D4C8"
+      OUTLINEWIDTH 1.0
+    END
+    LABEL
+      MAXSCALEDENOM 20000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 18
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#645C58"
+      OUTLINECOLOR "#FFFFFF"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1630')
+    STYLE
+      COLOR "#FFFFAF"
+      WIDTH 10
+      MAXWIDTH 12
+      OUTLINECOLOR "#C8C4B8"
+      OUTLINEWIDTH 0.75
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1640' || '[MTFCC]' = 'S1730' || '[MTFCC]' = 'S1740')
+    STYLE
+      COLOR "#FFFFFF"
+      WIDTH 10
+      MAXWIDTH 12
+      OUTLINECOLOR "#D8D4C8"
+      OUTLINEWIDTH 0.75
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 1
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 0.75
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 0.5
+    END
+  END
+

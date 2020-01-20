@@ -1,0 +1,14 @@
+S1100,    20533, primary
+S1200,   325140, secondary
+S1400, 16320345, local
+S1500,   374859, 4wd trail
+S1630,   176149, ramp
+S1640,   176415, service along highway
+S1710,    17033, walkway
+S1720,      241, stairway
+S1730,    72743, alley
+S1740,  2255679, private
+S1750,   434084, census use
+S1780,    10645, parking lot
+S1820,     2893, bike path
+S1830,       12, bridle path

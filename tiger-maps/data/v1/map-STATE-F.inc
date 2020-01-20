@@ -1,0 +1,59 @@
+  # map-STATE.inc
+  CLASS
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  50000000
+    TEXT ('[STUSPS]')
+    STYLE
+      COLOR "#f2efe9"
+    END
+    LABEL
+      COLOR "#675844"
+      FONT "arial"
+      TYPE TRUETYPE
+      SIZE 6
+      POSITION CC
+      PARTIALS FALSE
+      BUFFER 2
+      MINDISTANCE 100
+    END
+  END
+  CLASS
+    MAXSCALEDENOM  50000000
+    MINSCALEDENOM  20000000
+    TEXT ('[NAME]')
+    STYLE
+      COLOR "#f2efe9"
+    END
+    LABEL
+      COLOR "#675844"
+      FONT "sans-bold"
+      TYPE TRUETYPE
+      SIZE 7
+      POSITION CC
+      PARTIALS FALSE
+      WRAP ' '
+      ALIGN CENTER
+      BUFFER 2
+      MINDISTANCE 100
+    END
+  END
+  CLASS
+    MAXSCALEDENOM  20000000
+    MINSCALEDENOM   5000000
+    TEXT ('[NAME]')
+    STYLE
+      COLOR "#f2efe9"
+    END
+    LABEL
+      COLOR "#675844"
+      FONT "sans-bold"
+      TYPE TRUETYPE
+      SIZE 8
+      POSITION CC
+      PARTIALS FALSE
+      WRAP ' '
+      ALIGN CENTER
+      BUFFER 2
+      MINDISTANCE 100
+    END
+  END

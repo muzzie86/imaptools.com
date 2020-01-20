@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w
+use strict;
+use Encode;
+
+my @files = (
+    '/u/data/tiger2017-rgeo/72/72099/Streets.dbf',
+    '/u/data/tiger2017-rgeo/72/72037/Streets.dbf',
+    '/u/data/tiger2017-rgeo/72/72031/Streets.dbf',
+    '/u/data/tiger2017-rgeo/72/72019/Streets.dbf',
+    );
+
+my $tmp = "tmp-latin1-$$";
+
+mkdir $tmp, 0777;
+
+for my $f (sort @files) {
+    $f =~ /\/(\d{5})\//;
+    system("dbfdump $f > $tmp/a$1.txt");
+    open(IN, "$tmp/a$1.txt") || die "Failed to open $tmp/a$1.txt : $!\n";
+    my $cnt = 0;
+    while (my $x = <IN>) {
+        $cnt++;
+        my $test;
+        eval "\$test = decode( 'utf8', \$x, Encode::FB_CROAK )";
+        if ( $@ ) {
+            print "$f : $cnt\t$x";
+        }
+    }
+    close(IN);
+}
+
+system("rm -rf $tmp/a.txt");

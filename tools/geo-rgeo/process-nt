@@ -1,0 +1,32 @@
+#
+if [[ $1 = '' || $2 = '' ]] ; then
+        echo "Usage: process-nt nt-raw nt-qtr [split-num]"
+        exit
+fi
+
+if [[ ! -d $1 ]] ; then
+        echo "ERROR: $1 does not exist as a directory."
+        exit
+fi
+
+for X in $1/* ; do
+        F=`basename $X`
+        echo $F
+        if [[ -d $2/$F ]] ; then
+                echo "Exists: $2/$F - skipping"
+        else
+                mkdir -p $2/$F
+                rm -rf tmp-$$
+                mkdir tmp-$$
+                tar -C tmp-$$ -xzf $1/$F/$F.tar.gz
+                nt2rgeo-sqlite tmp-$$ $2/$F $3
+        fi
+done
+
+rm -rf tmp-$$
+
+cd $2
+find . -name Streets.shp -print > nt-tidx.in
+tile4ms nt-tidx.in nt-tidx
+find . -name \*.shp -exec shptree {} \;
+

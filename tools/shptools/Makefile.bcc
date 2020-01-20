@@ -1,0 +1,27 @@
+
+INCLUDE = -I.;"../include"
+CFLAGS = -Q -VM -v -DWIN32 $(INCLUDE)
+
+LIBDIRS = /L.;"../lib"
+LFLAGS = -lap -lc -M -ls $(LIBDIRS) 
+LIBS = libshp.lib getopt.lib
+
+
+all :    shpcpy.exe shp2tile.exe
+
+shpcpy.exe :    shpcpy.obj
+    $(CC) $(CFLAGS) $(LFLAGS) -eshpcpy.exe shpcpy.obj $(LIBS)
+
+shp2tile.exe :	shp2tile.obj
+    $(CC) $(CFLAGS) $(LFLAGS) -eshp2tile.exe shp2tile.obj $(LIBS)
+
+
+install:    shpcpy.exe shp2tile.exe
+    cp shpcpy.exe e:/home/woodbri/bin/
+    cp shp2tile.exe e:/home/woodbri/bin/
+
+
+clean:
+	rm -f *.obj *.exe
+	
+

@@ -1,0 +1,12 @@
+arial                           fonts/arial.ttf
+sans                            fonts/Vera.ttf
+sans-bold                       fonts/VeraBd.ttf
+sans-italic                     fonts/VeraIt.ttf
+sans-bold-italic                fonts/VeraBi.ttf
+serif                           fonts/VeraSe.ttf
+serif-bold                      fonts/VeraSeBd.ttf
+mono                            fonts/VeraMono.ttf
+mono-bold                       fonts/VeraMoBd.ttf
+mono-italic                     fonts/VeraMoIt.ttf
+mono-bold-italic                fonts/VeraMoBi.ttf
+

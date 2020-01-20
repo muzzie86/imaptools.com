@@ -1,0 +1,91 @@
+#! /usr/bin/perl -w
+    eval 'myexec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+my $VERBOSE = 1;
+my $DRYRUN  = 0;
+
+my $dbhost = 'localhost';
+my $dbuser = 'postgres';
+my $dbport = 5438;
+
+# the //IGNORE will ignore and non-utf8 chars
+my $cpg    = 'UTF-8//IGNORE';
+
+my $tbname = 'streets';
+my $scname = 'data';
+#my $tbname = 'streets_us3';
+#my $scname = 'rawdata';
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    #die "Usage: rgeo2pg dbname <path/timeznp020.shp> [<path to files>|.]\n";
+    die "Usage: rgeo2pg dbname [<path to files>|.]\n";
+}
+
+my $restart = '';
+
+
+my $dbname = shift @ARGV || Usage();
+#my $tzfile = shift @ARGV || Usage();
+my $dir = shift @ARGV || '.';
+
+my @files = ();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $dir);
+
+Usage() unless @files;
+
+if (! $restart) {
+    myexec( "dropdb -p $dbport -h $dbhost -U $dbuser $dbname" );
+    myexec( "createdb -p $dbport -h $dbhost -U $dbuser $dbname" );
+    myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'create extension postgis;'" );
+    myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'create schema $scname;'" );
+    myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'alter database $dbname set search_path to $scname, public, pg_catalog;'" );
+
+    #myexec( "shp2pgsql -c -i -W $cpg -s 4326 -N skip $tzfile $scname.timezones | psql -q -p $dbport -h $dbhost -U $dbuser $dbname" );
+
+    myexec( "shp2pgsql -p -i -W $cpg -s 4326 -g the_geom -N skip $files[0] $scname.$tbname | psql -q -p $dbport -h $dbhost -U $dbuser $dbname" );
+    myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'alter table $tbname alter column the_geom set not null;'" );
+}
+
+for my $x (sort @files) {
+    if ($restart) {
+        if ($x =~ /\b$restart\b/) {
+            $restart = '';
+        }
+        else {
+            next;
+        }
+    }
+    myexec( "shp2pgsql -a -i -W $cpg -s 4326 -g the_geom -N skip $x $scname.$tbname | grep -v \"^ANALYZE \" | psql -q -p $dbport -h $dbhost -U $dbuser $dbname" );
+}
+
+myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'create index ${tbname}_gidx on $scname.$tbname using gist (the_geom);'" );
+myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'alter table $tbname cluster on ${tbname}_gidx;'" );
+myexec( "psql -q -p $dbport -h $dbhost -U $dbuser $dbname -c 'vacuum analyze;'" );
+
+
+exit;
+
+sub myexec {
+    print @_, "\n" if $VERBOSE || $DRYRUN;
+    system( @_ ) unless $DRYRUN;
+}
+
+sub wanted {
+    /^Streets\.shp\z/s &&
+    push @files, $name;
+}
+

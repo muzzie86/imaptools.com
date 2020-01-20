@@ -1,0 +1,97 @@
+    strtypre     | count  
+-----------------+--------
+ 1               |      1
+ Access          |      3
+ Allée          |    706
+ Ancienne Route  |     12
+ Autoroute       |    321
+ Avenue          |   9194
+ Baseline        |      4
+ Boulevard       |   1401
+ Branch          |      9
+ Carré          |    192
+ Centre          |      5
+ Cercle          |     30
+ Chemin          |  22012
+ Circle          |     12
+ Close           |      1
+ Club            |      1
+ Concession      |    410
+ Concession Road |    285
+ Côte           |    270
+ County Road     |    799
+ Cour            |      3
+ Cours           |     14
+ Court           |      8
+ Crescent        |     50
+ Crest           |      1
+ Crois           |      1
+ Croissant       |    625
+ Descente        |      9
+ Domaine         |     11
+ Drive           |     26
+ Esplanade       |      1
+ Fairway         |      3
+ Farm            |      1
+ Field           |      1
+ Fire Route      |   1041
+ Front           |      1
+ Glade           |      1
+ Glen            |      5
+ Harbour         |      1
+ Haven           |      1
+ Highway         |   2275
+ Impasse         |    522
+ Island          |      1
+ Lake            |     14
+ Lane            |   2530
+ Laneway         |     98
+ Lieu habité    |     23
+ Line            |     95
+ Meadow          |      2
+ Montée         |   1005
+ Mount           |     28
+ None            | 328341
+ Parc            |      2
+ Parkway         |      1
+ Passage         |      6
+ Path            |      1
+ Place           |   2301
+ Plateau         |      2
+ Point           |      4
+ Pointe          |      4
+ Private         |      6
+ Promenade       |     99
+ Ramp            |      1
+ Rang            |   3963
+ Range           |      5
+ Range Road      |   4817
+ Regional Road   |    316
+ Ridge           |      1
+ River           |      4
+ Road            |    617
+ Route           |   4209
+ Rue             |  70557
+ Ruelle          |    248
+ Sentier         |    118
+ Service         |     44
+ Shore           |      7
+ Sideline        |     16
+ Sideroad        |    423
+ Spur            |     10
+ Square          |      2
+ Street          |    166
+ Subdivision     |      1
+ Terrasse        |    347
+ Townline        |     39
+ Township Road   |   3962
+ Trail           |     16
+ Trait-Carré    |      5
+ Traverse        |     38
+ Vale            |      1
+ Via             |     40
+ Vista           |      5
+ Way             |      2
+ Wood            |      3
+(93 rows)
+

@@ -1,0 +1,16 @@
+         province          | count  
+---------------------------+--------
+ Alberta                   |  47398
+ British Columbia          |  64371
+ Manitoba                  |  14701
+ New Brunswick             |  22156
+ Newfoundland and Labrador |  11343
+ Northwest Territories     |    679
+ Nova Scotia               |  32931
+ Nunavut                   |    231
+ Ontario                   | 148286
+ Prince Edward Island      |   6461
+ Québec                   | 115249
+ Yukon Territory           |   1009
+(12 rows)
+

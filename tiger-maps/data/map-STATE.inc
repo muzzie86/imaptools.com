@@ -1,0 +1,23 @@
+  # map-STATE.inc
+  MAXSCALEDENOM   5000000
+  CLASS
+    TEXT ('[NAME]')
+    STYLE
+      COLOR "#f2efe9"
+      OUTLINECOLOR "#999999"
+      WIDTH 1.0
+      PATTERN 10 3 END
+    END
+    LABEL
+      MINSCALEDENOM 1000000
+      COLOR "#675844"
+      FONT "sans-bold"
+      TYPE TRUETYPE
+      SIZE 8
+      POSITION AUTO
+      PARTIALS FALSE
+      WRAP ' '
+      ALIGN CENTER
+      BUFFER 2
+    END
+  END

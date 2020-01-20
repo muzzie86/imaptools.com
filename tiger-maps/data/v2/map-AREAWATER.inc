@@ -1,0 +1,45 @@
+  # map-AREAWATER.inc
+  MAXSCALEDENOM 500000
+  LABELITEM "FULLNAME"
+  CLASS # water
+    MINSCALEDENOM 60000
+    STYLE
+      COLOR "#a5bfdd"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans-italic"
+      SIZE 8
+      COLOR "#627A9D"
+      OUTLINECOLOR "#B3C9E2"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION CC
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 60000
+    STYLE
+      COLOR "#a5bfdd"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans-italic"
+      SIZE 6
+      COLOR "#627A9D"
+      OUTLINECOLOR "#B3C9E2"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION CC
+      PRIORITY 3
+      WRAP " "
+      ALIGN CENTER
+    END
+  END

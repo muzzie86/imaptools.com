@@ -1,0 +1,140 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+
+my $DRYRUN  = 0;
+my $VERBOSE = 1;
+
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+sub Usage {
+    die "Usage: process-tgr [-mtfcc] /path/to/srcdir /path/to/dstdir /path/to/usps-actual.db\n" .
+        "       -mtfcc  - do NOT include mtfcc column\n";
+}
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+my $t0 = time;
+
+my $restart;  # use this if not restarting otherwise
+#my $restart = qr/tl_2017_72021_edges.zip$/; # out the zipfile to restart with
+
+sub wanted;
+my @zips = ();
+
+my $mtfcc = '-mtfcc';
+if (@ARGV && $ARGV[0] eq '-mtfcc') {
+    $mtfcc = '';
+    shift @ARGV;
+}
+
+my $src = shift @ARGV || Usage();
+my $dst = shift @ARGV || Usage();
+my $usps = shift @ARGV || Usage();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, "$src/EDGES");
+
+my $tmp = "tmp-tgr-$$";
+mkdir $tmp, 0777 || die "Failed to create $tmp working dir!\n";
+mkdir "$tmp/SAVE", 0777 || die "Failed to create $tmp/SAVE working dir!\n";
+chdir $tmp       || die "Could not chdir to $tmp working dir!\n";
+
+# get the STATE and COUNTY files and unzip them
+$zips[0] =~ m/_(\d\d)(\d\d)_(\d\d)(\d{3})_edges/;
+my $z = "$1$2";
+my $y = "$src/STATE/tl_${z}_us_state.zip";
+mysystem("unzip -d SAVE $y");
+$y = "$src/COUNTY/tl_${z}_us_county.zip";
+mysystem("unzip -d SAVE $y");
+
+
+# Process the files
+for my $x (sort @zips) {
+    if (!$restart) {
+        # nop
+    }
+    elsif ($x =~ m/$restart/) {
+        $restart = undef;
+    }
+    else {
+        next;
+    }
+    mysystem("rm -f ../$tmp/*");
+    mysystem("unzip $x");
+
+    $x =~ m/_(\d\d)(\d\d)_(\d\d)(\d{3})_edges/;
+    my $YR = "$1$2";
+    my $yr = $2;
+    my $ss = $3;
+    my $ssccc = "$3$4";
+
+    my $y = "$src/ADDR/tl_${YR}_${ssccc}_addr.zip";
+    mysystem("unzip $y");
+
+    $y = "$src/ADDRFN/tl_${YR}_${ssccc}_addrfn.zip";;
+    mysystem("unzip $y");
+
+    $y = "$src/FEATNAMES/tl_${YR}_${ssccc}_featnames.zip";;
+    mysystem("unzip $y");
+
+    $y = "$src/FACES/tl_${YR}_${ssccc}_faces.zip";;
+    mysystem("unzip $y");
+
+    $y = "$src/COUSUB/tl_${YR}_${ss}_cousub.zip";;
+    mysystem("unzip $y");
+
+    $y = "$src/PLACE/tl_${YR}_${ss}_place.zip";;
+    mysystem("unzip $y");
+
+    $x =~ m/\/([^\/]+)$/;
+    my $edges = $1;
+    $edges =~ s/zip$/dbf/;
+    mysystem("mkdir -p $dst/$ss/$ssccc");
+    mysystem("tgr2rgeo-sqlite $mtfcc ./$edges $dst/$ss/$ssccc/ $usps ");
+}
+
+my $t1 = time;
+
+chdir ".."       || die "Could not chdir to .. from $tmp working dir!\n";
+mysystem("rm -rf \"$tmp\"");
+
+#chdir $dst       || die "Could not chdir to $dst!\n";
+#mysystem("find . -name \\*.shp > Streets-tidx.in");
+#mysystem("tile4ms Streets-tidx.in Streets-tidx");
+#mysystem("find . -name \\*.shp -exec shptree {} \\; ");
+
+my $t2 = time;
+
+print "Time to process files: " . ($t1-$t0) . " sec\n";
+print "Time to create indexes: " . ($t2-$t1) . " sec\n";
+print "Total time: " . ($t2-$t0) . " sec\n";
+
+exit;
+
+
+sub wanted {
+    /^.*edges\.zip\z/s
+    && push @zips, $name;
+}
+
+sub mysystem {
+    print join(" ", @_) . "\n"
+        if $DRYRUN || $VERBOSE;
+    if (!$DRYRUN) {
+        return system(@_);
+    }
+    else {
+        return 0;
+    }
+}

@@ -1,0 +1,108 @@
+#!/usr/bin/perl -w
+use strict;
+
+sub Usage {
+    die "Usage: txt2rules [-s] rules.in [rules.out]\n";
+}
+
+my $sql;
+$sql = shift @ARGV if @ARGV && $ARGV[0] eq '-s';
+my $in = shift @ARGV || Usage();
+my $out = shift @ARGV;
+
+open(IN, $in) || die "Failed to open '$in' for read : $!\n";
+
+my $OUT = *stdout;
+if ($out) {
+    open($OUT, ">$out") || die "Failed to create '$out' : $!\n";
+}
+
+my %tokens = (
+    STOP        => -1,
+                        # clause/class/numbers
+    MACRO_C     => 0,
+    MICRO_C     => 1,
+    ARC_C       => 2,
+    CIVIC_C     => 3,
+    EXTRA_C     => 4,
+    MAX_CL      => 5,
+                        # input tokens
+    NUMBER      => 0,
+    WORD        => 1,
+    TYPE        => 2,
+
+    ROAD        => 6,
+    STOPWORD    => 7,
+
+    DASH        => 9,
+
+    AMPERS      => 13,
+
+    ORD         => 15,
+
+    SINGLE      => 18,
+    BUILDH      => 19,
+    MILE        => 20,
+    DOUBLE      => 21,
+    DIRECT      => 22,
+    MIXED       => 23,
+    BUILDT      => 24,
+    FRACT       => 25,
+    PCT         => 26,
+    PCH         => 27,
+    QUINT       => 28,
+    QUAD        => 29,
+    MAXINSYM    => 30,
+                        # output tokens
+	BLDNG		=> 0,
+	HOUSE		=> 1,
+	PREDIR		=> 2,
+	QUALIF		=> 3,
+	PRETYP		=> 4,
+	STREET		=> 5,
+	SUFTYP		=> 6,
+	SUFDIR		=> 7,
+	RR		    => 8,
+	UNKNWN		=> 9,
+	CITY		=> 10,
+	PROV		=> 11,
+	NATION		=> 12,
+	POSTAL		=> 13,
+	BOXH		=> 14,
+	BOXT		=> 15,
+	UNITH		=> 16,
+	UNITT		=> 17,
+	MAXOUTSYM	=> 18,
+	NEEDHEAD	=> 17,
+
+);
+
+if ($sql) {
+    print $OUT <<EOF
+drop table if exists rules cascade;
+create table rules (
+    id serial not null primary key,
+    rule text
+);
+copy rules (rule) from stdin;
+EOF
+}
+
+my $x;
+while ($x = <IN>) {
+    next unless $x =~ /^\w+/;
+    my @words = split(/ /, $x);
+    my $rank = pop @words;
+    if ($rank =~ /^STOP\s*$/) {
+        print $OUT "-1\n";
+    }
+    else {
+        my @nums = map {$tokens{$_}} @words;
+        print $OUT join(" ", @nums) . " $rank";
+    }
+}
+
+print $OUT "\\.\n" if $sql;
+
+close(IN);
+close($OUT) if $out;

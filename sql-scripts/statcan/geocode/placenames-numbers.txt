@@ -1,0 +1,420 @@
+                   placename                   
+-----------------------------------------------
+ 100 Mile House
+ 103 Mile House
+ 105 Mile House
+ 108 Mile House
+ 108 Mile Ranch
+ 141 Mile House
+ 150 Mile House
+ 70 Mile House
+ 93 Mile House
+ Acadia No. 34, M.D. of
+ Agency 1
+ Akwesasne 59
+ Alexander # 134A
+ Alexander #134
+ Alexis #133
+ Allison Bay #219
+ Amber River #211
+ Barrhead No. 11, County of
+ Bear River 6
+ Bear River 6A
+ Beaver Lake #131
+ Beaver Ranch #163
+ Belmont Lot 16
+ Berens River 13
+ Big Grassy River 35g
+ Big Horn #144A
+ Bighorn No. 8, M.D. of
+ Birdtail Creek 57
+ Black River 9
+ Blood #148
+ Blood #148A
+ Bloodvein 12
+ Bonnyville No. 87, M.D. of
+ Boyer #164
+ Brochet 197
+ Brokenhead 4
+ Buck Lake #133C
+ Buffalo Point 36
+ Bushe River #207
+ Calder No. 241
+ Canupawakpa Dakota First Nation (Oak Lake 59)
+ Carcross 4
+ Cat Lake 63c
+ Central Lot 16
+ Champagne Landing 10
+ Chapel Island 5
+ Chapleau 74a
+ Chemawawin 2
+ Chemawawin 3
+ Chief's Point 28
+ Child Lake #164A
+ Chippewas Of Georgina Island First Nation 33a
+ Chippewas Of The Thames First Nation 42
+ Christian Island 30
+ Christian Island 30a
+ Churchbridge No. 211
+ Clearwater #175
+ Cold Lake #149
+ Cold Lake #149A
+ Cold Lake #149B
+ Constance Lake 92
+ Cote No. 271
+ Couchiching 16a
+ Crane River 51
+ Cross Lake 19
+ Cross Lake 19A
+ Cross Lake 19E
+ Curve Lake First Nation 35
+ Dakota Plains 6A
+ Dakota Tipi 1
+ Dauphin River 48A
+ Division No. 1, Subd. A
+ Division No. 1, Subd. B
+ Division No. 1, Subd. C
+ Division No. 1, Subd. D
+ Division No. 1, Subd. E
+ Division No. 1, Subd. F
+ Division No. 1, Subd. G
+ Division No. 1, Subd. H
+ Division No. 1, Subd. I
+ Division No. 1, Subd. K
+ Division No. 1, Subd. L
+ Division No. 1, Subd. M
+ Division No. 1, Subd. N
+ Division No. 1, Subd. O
+ Division No. 1, Subd. R
+ Division No. 1, Subd. U
+ Division No. 1, Subd. V
+ Division No. 1, Subd. W
+ Division No. 1, Subd. X
+ Division No. 1, Subd. Y
+ Division No. 1, Unorganized
+ Division No. 10, Subd. A
+ Division No. 10, Subd. B
+ Division No. 10, Subd. C
+ Division No. 10, Subd. D
+ Division No. 17, Unorganized
+ Division No. 18, Unorganized, East Part
+ Division No. 18, Unorganized, West Part
+ Division No. 19, Unorganized
+ Division No. 2, Subd. C
+ Division No. 2, Subd. D
+ Division No. 2, Subd. E
+ Division No. 2, Subd. F
+ Division No. 2, Subd. G
+ Division No. 2, Subd. H
+ Division No. 2, Subd. I
+ Division No. 2, Subd. J
+ Division No. 2, Subd. K
+ Division No. 2, Subd. L
+ Division No. 20, Unorganized, North Part
+ Division No. 20, Unorganized, South Part
+ Division No. 21, Unorganized
+ Division No. 22, Unorganized
+ Division No. 23, Unorganized
+ Division No. 3, Subd. A
+ Division No. 3, Subd. B
+ Division No. 3, Subd. C
+ Division No. 3, Subd. D
+ Division No. 3, Subd. F
+ Division No. 3, Subd. H
+ Division No. 3, Subd. J
+ Division No. 4, Subd. A
+ Division No. 4, Subd. B
+ Division No. 4, Subd. C
+ Division No. 4, Subd. D
+ Division No. 4, Subd. E
+ Division No. 5, Subd. A
+ Division No. 5, Subd. C
+ Division No. 5, Subd. D
+ Division No. 5, Subd. E
+ Division No. 5, Subd. F
+ Division No. 5, Subd. G
+ Division No. 6, Subd. A
+ Division No. 6, Subd. C
+ Division No. 6, Subd. D
+ Division No. 6, Subd. E
+ Division No. 7, Subd. A
+ Division No. 7, Subd. B
+ Division No. 7, Subd. D
+ Division No. 7, Subd. E
+ Division No. 7, Subd. F
+ Division No. 7, Subd. G
+ Division No. 7, Subd. I
+ Division No. 7, Subd. J
+ Division No. 7, Subd. K
+ Division No. 7, Subd. L
+ Division No. 7, Subd. M
+ Division No. 7, Subd. N
+ Division No. 8, Subd. A
+ Division No. 8, Subd. C
+ Division No. 8, Subd. D
+ Division No. 8, Subd. E
+ Division No. 8, Subd. F
+ Division No. 8, Subd. G
+ Division No. 8, Subd. H
+ Division No. 8, Subd. I
+ Division No. 8, Subd. L
+ Division No. 8, Subd. M
+ Division No. 8, Subd. O
+ Division No. 8, Subd. P
+ Division No. 9, Subd. A
+ Division No. 9, Subd. C
+ Division No. 9, Subd. D
+ Division No. 9, Subd. F
+ Division No. 9, Subd. G
+ Division No. 9, Subd. H
+ Dog Creek 46
+ Dog Head #218
+ Dokis 9
+ Driftpile River #150
+ Duncan's #151A
+ Eagle Lake 27
+ Ebb and Flow 52
+ Eden Valley #216
+ Ermineskin #138
+ Eskasoni 3
+ Eskasoni 3A
+ Factory Island 1
+ Fairford (Part) 50
+ Fairview No. 136, M.D. of
+ Fisher's Grant 24
+ Fisher River 44
+ Fisher River 44A
+ Foothills No. 31, M.D. of
+ Fort Albany 67
+ Fort Alexander 3
+ Fort George No 2
+ Fort Severn 89
+ Fort William 52
+ Forty Mile No. 8, County of
+ Freeman #150B
+ French River 13
+ Gambler 63 (Part)
+ Garden River 14
+ Glooscap 35
+ God's Lake 23
+ God's River 86A
+ Gold River 21
+ Goulais Bay 15a
+ Grand Rapids 33
+ Grande Prairie No. 1, County of
+ Greenview No. 16, M.D. of
+ Gregoire Lake #176
+ Gregoire Lake #176A
+ Gros Cap 49
+ Hay Lake #209
+ Hay River Dene No. 1
+ Heart Lake #167
+ Henvey Inlet 2
+ Hiawatha First Nation 36
+ Hole or Hollow Water 10
+ Horse Lake #152B
+ I.D. No. 12 Jasper Park
+ I.D. No. 13 Elk Island
+ I.D. No. 24 Wood Buffalo
+ I.D. NO. 349
+ I.D. No. 4 Waterton
+ I.D. No. 9 Banff
+ Indian Brook 14
+ Jackhead 43
+ Janvier #194
+ Jean Baptiste Gambler #183
+ John d'Or Prairie #215
+ Keeseekoowenin 61
+ Kehewin #123
+ Kenora 38b
+ Kettle Point 44
+ Kingfisher 3a
+ Kingfisher Lake 1
+ Kitchenuhmaykoosib Aaki 84
+ Lac Seul 28
+ Lake Laberge 1
+ Langenburg No. 181
+ Lesser Slave River No. 124, M.D. of
+ Little Grand Rapids 14
+ Little Saskatchewan 48
+ Livingston No. 331
+ Long Lake 58
+ Long Plain (Part) 6
+ Loon Lake # 235
+ Louis Bull #138B
+ M'chigeeng 22
+ Makaoo #120
+ Malagawatch 4
+ Manitou Rapids 11
+ Maryfield No. 91
+ Matachewan 72
+ Medway River 11
+ Membertou 28B
+ Millbrook 27
+ Minburn No 27, County of
+ Mississagi River 8
+ Mnjikaning First Nation 32
+ Montana #139
+ Moose Lake 31A
+ Moose Point 79
+ Moosomin No. 121
+ Moravian 47
+ Munsee-Delaware Nation 1
+ Natuashish 2
+ Nelson House 170
+ Newell No. 4, County of
+ Nipissing 10
+ Norway House 17
+ O'Chiese #203
+ Oneida 41
+ Opaskwayak Cree Nation 21A
+ Opaskwayak Cree Nation 21B
+ Opaskwayak Cree Nation 21C
+ Opaskwayak Cree Nation 21E
+ Opaskwayak Cree Nation 21I
+ Opportunity No. 17, M.D. of
+ Oxford House 24
+ Paintearth No. 18, County of
+ Pakashan #150D
+ Paqtnkek-Niktuek 23
+ Pays Plat 51
+ Peace No. 135, M.D. of
+ Peace Point #222
+ Peguis 1B
+ Peigan #147
+ Peigan (Timber Limit) #147B
+ Pennal 19
+ Pic River 50
+ Pigeon Lake #138A
+ Pincher Creek No. 9, M.D. of
+ Pine Creek 66A
+ Point Grondine 3
+ Ponhook Lake 10
+ Provost No. 52, M.D. of
+ Pukatawagan 198
+ Puskiakiwenin #122
+ Rainy Lake 17a
+ Rainy Lake 17b
+ Rainy Lake 18c
+ Ranchland No. 66, M.D. of
+ Rankin Location 15d
+ Red Sucker Lake 1976
+ Rocky Bay 1
+ Rolling River 67
+ Rolling River 67B
+ Roseau Rapids 2A
+ Roseau River 2
+ Saddle Lake #125
+ Samson #137
+ Samson #137A
+ Sandy Bay 5
+ Sarnia 45
+ Saugeen 29
+ Sawridge #150G
+ Sawridge #150H
+ Serpent River 7
+ Shamattawa 1
+ Shawanaga 17
+ Sheguiandah 24
+ Sheshatshiu 3
+ Shoal Lake 39a
+ Shoal River Indian Reserve 65A
+ Siksika #146
+ Six Nations 40
+ Smoky River No. 130, M.D. of
+ Southwest Lot 16
+ Special Area 2
+ Special Area 3
+ Special Area 4
+ Spirit River No. 133, M.D. of
+ Split Lake (Part) 171
+ St. Paul No. 19, County of
+ St. Philips No. 301
+ Stettler No. 6, County of
+ Stone IR 1A
+ Stoney #142
+ Stoney #142B
+ Stoney #143
+ Stoney #144
+ Stony Plain #135
+ Storthoaks No. 31
+ Sturgeon Falls 23
+ Sturgeon Lake #154
+ Sturgeon Lake #154A
+ Sucker Creek #150A
+ Sucker Creek 23
+ Sunchild #202
+ Swampy Lake #236
+ Swan Lake 65C
+ Swan Lake 7
+ Swan River #150E
+ Tallcree #173
+ Tallcree #173A
+ Teslin Post 13
+ Thabacha Nare #196A
+ The Bathi #196
+ The Dalles 38c
+ The Narrows 49
+ Thessalon 12
+ Thorhild No. 7, County of
+ Tsuu T'ina #145
+ Tthe Jere Ghaili #196B
+ Two Hills No. 21, County of
+ Unipouheos #121
+ Upper Hay River #212
+ Utikoomak Lake #155
+ Utikoomak Lake #155A
+ Valley River 63A
+ Wabamun #133A
+ Wabamun #133B
+ Wabasca #166
+ Wabasca #166A
+ Wabasca #166B
+ Wabasca #166C
+ Wabasca #166D
+ Wabauskang 21
+ Wabigoon Lake 27
+ Wagmatcook 1
+ Wainwright No. 61, M.D. of
+ Walpole Island 46
+ Wapekeka Reserve 2
+ Warner No. 5, County of
+ Waterhen 45
+ Weagamow Lake 87
+ Welnek 38
+ Wetaskiwin No. 10, County of
+ Whitefish Bay 32a
+ Whitefish Lake #128
+ Whitefish Lake 6
+ Whycocomagh 2
+ Wikwemikong Unceded 26
+ Wildcat 12
+ William Mckenzie #151K
+ Willow Creek No. 26, M.D. of
+ Woodland Cree #226
+ Woodland Cree #228
+ Wunnumin 1
+ Yarmouth 33
+(395 rows)
+
+                   placename                   
+-----------------------------------------------
+ Canupawakpa Dakota First Nation (Oak Lake 59)
+ Charlottetown (Labrador)
+ Fairford (Part) 50
+ Flin Flon (Part)
+ Fogo Island Region (Part)
+ Gambler 63 (Part)
+ Gift Lake (Metis Settlement)
+ Kikino (Metis Settlement)
+ Long Plain (Part) 6
+ Marshes (West Bay)
+ Mountain (North)
+ Mountain (South)
+ Paddle Prairie (Metis Settlement)
+ Park (South)
+ Peigan (Timber Limit) #147B
+ Seal Cove (Fortune Bay)
+ Split Lake (Part) 171
+(17 rows)
+

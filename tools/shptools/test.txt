@@ -1,0 +1,9 @@
+# This is a sample input file for txt2shp
+ID	I	10	0
+NAME	S	100	0
+STATE	S	2	0
+FNUM	D	11	6
+__END__
+# comments MUST start with # in column 1
+42.0102	-74.000	10001	This the text data	MA	-123.456789
+40.555	-73.99345	10002	Blah blah blah	HH	0

@@ -1,0 +1,48 @@
+#!/usr/bin/perl -w
+use strict;
+
+my %poi = (
+    AutoSvc         => 'AutoSvc',
+    BordCross       => 'BordCross',
+    Business        => 'Business',
+    CommSvc         => 'CommSvc',
+    EduInsts        => 'EduInsts',
+    Entertn         => 'Entertn',
+    FinInsts        => 'FinInsts',
+    Golf            => 'Golf',
+    Hospital        => 'Hospital',
+    MiscCategories  => 'MiscCategories',
+    Parking         => 'Parking',
+    ParkRec         => 'ParkRec',
+    Restrnts        => 'Restrnts',
+    Shopping        => 'Shopping',
+    TransHubs       => 'TransHubs',
+    TravDest        => 'TravDest',
+    );
+
+for my $x (sort keys %poi) {
+    print "
+  LAYER
+    NAME \"$x\"
+    GROUP \"poi\"
+    TILEINDEX \"tidx-$x\"
+    TYPE ANNOTATION
+    MAXSCALEDENOM 17000
+    LABELITEM \"POI_NAME\"
+    CLASS
+      STYLE
+        SYMBOL \"$x\"
+      END
+      LABEL
+        ENCODING \"UTF8\"
+        TYPE TRUETYPE
+        POSITION CC
+        FONT \"arial\"
+        SIZE 8
+        COLOR \"#000000\"
+        PARTIALS FALSE
+      END
+    END
+  END
+";
+}

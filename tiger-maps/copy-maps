@@ -1,0 +1,16 @@
+#
+if [[ a$1 == a || a$2 == a ]] ; then
+  echo "Usage: copy-maps YYYY todir [ZZZZ]"
+  exit 1
+fi
+
+
+cp tiger${1}-tmp.map $2
+for x in tigerYYYY-6.2.map tigerYYYY.map tigerYYYY-mc.map tigerYYYY.html ; do
+  y=`echo -n $x | sed -e "s/YYYY/${1}/"`
+  if [[ a$3 == a ]] ; then
+    cat $x | sed -e "s/YYYY/${1}/g" | sed -e "s@ZZZZ@@g" > $2/$y
+  else
+    cat $x | sed -e "s/YYYY/${1}/g" | sed -e "s@ZZZZ@${3}/@g" > $2/$y
+  fi
+done

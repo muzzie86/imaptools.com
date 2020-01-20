@@ -1,0 +1,62 @@
+# -1 label with a circle symbol
+# -2 label with no symbol
+# -3 do not label
+#
+C3022,   63490,   -1, Mountain Peak or Summit
+C3023,       6,   -1, Island
+C3026,       7,   -1, Quarry (not waterfilled), Open Pit Mine or Mine
+C3027,       5,   -1, Dam
+C3061,  264080,   -3, Cul-de-sac
+C3062,    3275,   -1, Traffic Circle
+C3066,     733,   -1, Gate
+C3067,       4,   -1, Toll Booth
+C3070,      22,   -1, Tower/Beacon
+C3071,     140,   -1, Lookout Tower
+C3072,       7,   -1, Transmission Tower including cell, radio and TV
+C3073,      13,   -1, Water Tower
+C3074,       1, 9715, Lighthouse Beacon
+C3075,      10,   -1, Tank/Tank Farm
+C3076,       3,   -1, Windmill Farm
+C3078,       7,   -1, Monument or Memorial
+C3080,       4,   -1, Survey Control Point
+C3081,  212815,   -2, Locality Point (e.g., crossroad, community, populated place or locale).
+C3085,     237,   -1, Alaska Native Village Official Point
+C3088,       3,   -1, Landfill
+K1225,     265, 4482, Crew-of-Vessel Location
+K1231,    2303, 8060, Hospital/Hospice/ Urgent Care Facility
+K1236,     242, 8231, Local Jail or Detention Center
+K1237,     220, 8231, Federal Penitentiary, State Prison, or Prison Farm
+K1239,      75, 8231, Convent, Monastery, Rectory, Other Religious Group Quarters
+K2110,     108, 8410, Military Installation
+K2146,       6, 9590, Community Center
+K2165,    2597, 9590, Government Center
+K2167,       1, 9590, Convention Center
+K2181,      71, 7522, National Park Service Land
+K2182,      45, 7522, National Forest or Other Federal Land Park
+K2184,     164, 7522, State Park, Forest, or Recreation Area
+K2185,       9, 7522, Regional Park, Forest, or Recreation Area
+K2186,      33, 7522, County Park, Forest, or Recreation Area
+K2187,       5, 7522, County Subdivision Park, Forest, or Recreation Area
+K2188,     127, 7522, Incorporated Place Park, Forest, or Recreation Area
+K2189,       9, 7522, Private Park, Forest, or Recreation Area
+K2190,    2215, 7522, Other Park, Forest, or Recreation Area
+K2191,     197, 9530, Post Office
+K2193,     636, 9993, Fire Department
+K2194,     163, 9993, Police Station
+K2195,     353, 9995, Library
+K2196,     159, 9590, City/Town Hall
+K2400,      22, 9593, Transportation Terminal
+K2451,   12455, 4581, Airport or Airfield
+K2452,     169, 4100, Train Station, Trolley or Mass Transit Rail Station
+K2453,      38, 4170, Bus Terminal
+K2454,     114, 4482, Marine Terminal
+K2455,       6, 4581, Seaplane Anchorage
+K2456,       1, 4581, Airport.Intermodal Transportation Hub/Terminal
+K2460,       1,   -1, Helicopter Landing Pad
+K2540,      10, 8200, University or College
+K2543,    9243, 8200, School or Academy
+K2545,      15, 9121, Museum, Visitor Center, Cultural Center, or Tourist Attraction
+K2561,    1185, 7992, Golf Course
+K2582,  104401, 9591, Cemetery
+K2586,       2, 9121, Zoo
+K3544,    2567, 9992, Place of Worship

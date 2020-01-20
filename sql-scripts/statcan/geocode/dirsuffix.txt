@@ -1,0 +1,22 @@
+ dirsuffix  | count  
+------------+--------
+ Central    |      1
+ East       |   3779
+ Est        |   1519
+ None       | 445077
+ Nord       |    983
+ Nord-est   |      7
+ Nord-ouest |      4
+ North      |   2982
+ Northeast  |    262
+ Northwest  |    211
+ Ouest      |   1582
+ South      |   2899
+ Southeast  |    221
+ Southwest  |    231
+ Sud        |    905
+ Sud-est    |      2
+ Sud-ouest  |      6
+ West       |   4144
+(18 rows)
+

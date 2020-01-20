@@ -1,0 +1,21 @@
+
+INCLUDE = -I.
+CFLAGS = -c -v -w-8012 -DWIN32 $(INCLUDE)
+
+
+OBJS = strtools.obj double_metaphone.obj index.obj states.obj rgxtools.obj
+
+all:    strtools.lib
+
+strtools.lib :: $(OBJS)
+    rm -f strtools.lib
+    tlib /a strtools.lib $(OBJS)
+
+clean :
+    rm -f *.obj strtools.lib
+
+install :
+    mkdir -p ../include/strtools
+    cp *.h ../include/strtools
+    cp strtools.lib ../lib
+

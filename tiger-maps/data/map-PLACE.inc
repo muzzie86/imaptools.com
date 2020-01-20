@@ -1,0 +1,21 @@
+  # map-PLACE.inc
+  LABELITEM "NAME"
+  MAXSCALEDENOM 1000000
+  CLASS
+    STYLE
+      COLOR "#EFEBE2"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      PRIORITY 4
+      POSITION AUTO
+      WRAP " "
+      ALIGN CENTER
+      BUFFER 4
+      COLOR "#291509"
+      OUTLINECOLOR "#ffffff"
+      PARTIALS FALSE
+    END
+  END

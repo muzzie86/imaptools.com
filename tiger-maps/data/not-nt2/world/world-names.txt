@@ -1,0 +1,26 @@
+## comments
+#column_name1<tab>type<tab>width<tab>decimals<nl>
+#column_name2<tab>type<tab>width<tab>decimals<nl>
+#column_nameN<tab>type<tab>width<tab>decimals<nl>
+#__END__
+#latitude<tab>longitude<tab>col1<tab>col2<tab>colN<nl>
+#latitude<tab>longitude<tab>col1<tab>col2<tab>colN<nl>
+#latitude<tab>longitude<tab>col1<tab>col2<tab>colN<nl>
+#
+#
+#
+NAME	S	50	0
+TYPE	S	1	0
+LEVEL	S	3	0
+__END__
+37.0	-43.0	Atlantic Ocean	O	1
+-15.0	77.0	Indian Ocean	O	1
+5.0	-132.0	Pacific Ocean	O	1
+28.0	155.0	Pacific Ocean	O	1
+55.0	86.0	Asia	C	1
+10.0	18.0	Africa	C	1
+-11.0	-60.0	South America	C	1
+53.0	-105.0	North America	C	1
+-78.0	41.0	Antarctica	C	1
+-26.0	135.0	Australia	C	1
+49.361	13.2	Europe	C	1

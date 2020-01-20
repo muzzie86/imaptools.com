@@ -1,0 +1,16 @@
+
+
+# process Tiger data for geo
+## see README-tiger-geo
+
+# proces Tiger data for rgeo
+# edit ./tgr2rgeo-sqlite.c and change YEAR
+make all install
+./process-tgr-2011 [-mtfcc] /path/to/srcdir /path/to/dstdir /path/to/usps-actual.db
+./rgeo2pg
+
+# process Tiger data for maps
+cd tiger-maps
+## see README.txt
+
+

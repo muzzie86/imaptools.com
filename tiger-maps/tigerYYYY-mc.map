@@ -1,0 +1,2267 @@
+MAP
+#
+# NOTE: This mapfile works with Mapserver 6.0
+# The EXPRESSIONs need to be modified for Mapserver 5.6
+#
+    NAME "Tiger_YYYY"
+    STATUS ON
+    SIZE 950 600
+    EXTENT -180 -90 180 90 # the globe
+    UNITS DD
+    SHAPEPATH "/u/data/tigerYYYY-maps"
+    IMAGECOLOR "#a5bfdd"
+    FONTSET "etc/fonts.txt"
+    SYMBOLSET "etc/symbols.txt"
+    IMAGETYPE agg_qn
+    MAXSIZE 2100 # round(2048 + 2*20)
+
+    CONFIG ON_MISSING_DATA "IGNORE"
+    CONFIG MS_ERRORFILE "stderr"
+#    DEBUG 10
+
+    OUTPUTFORMAT
+        NAME "agg_qn"
+        DRIVER "AGG/PNG"
+        EXTENSION "png"
+        MIMETYPE "image/png"
+        IMAGEMODE RGB
+        FORMATOPTION "INTERLACE=false"
+        FORMATOPTION "QUANTIZE_NEW=ON"
+        FORMATOPTION "QUANTIZE_FORCE=ON"
+        FORMATOPTION "QUANTIZE_DITHER=OFF"
+        FORMATOPTION "QUANTIZE_COLORS=256"
+        #TRANSPARENT ON
+        #FORMATOPTION "TRANSPARENT=ON"
+    END
+
+    OUTPUTFORMAT
+        NAME aggpng24
+        DRIVER AGG/PNG
+        MIMETYPE "image/png"
+        IMAGEMODE RGB
+        EXTENSION "png"
+    END
+
+    WEB
+        METADATA
+            labelcache_map_edge_buffer "-20"
+            "ows_title"     "iMaptools Tiger YYYY Mapping"
+            "ows_onlineresource"    "http://imaptools.com:8080/cgi-bin/mapserv?MAP=/u/data/maps/tigerYYYY-mc.map"
+            "ows_srs"       "EPSG:4269 EPSG:4326 EPSG:900913 EPSG:3857 EPSG:26915 EPSG:200068"
+            "ows_abstract"  "This WMS is iMaptools Tiger YYYY Mapping demo service. It is using Tiger YYYY shapefile data."
+            "ows_contactperson"     "Stephen Woodbridge"
+            "ows_contactorganization" "iMaptools.com"
+            "ows_contactposition"   "Owner"
+            "ows_contactelectronicmailaddress" "info@imaptools.com"
+            "ows_attribution_title"   "U.S. Census Bureau YYYY TIGER/Line® Shapefiles"
+            "ows_attribution_onlineresource" "http://www.census.gov/geo/www/tiger/tgrshpYYYY/tgrshpYYYY.html"
+            "ows_enable_request" "GetMap"
+        END
+    END
+
+    PROJECTION
+        "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+    END
+
+    #INCLUDE "map-WORLD.inc"
+  # map-WORLD.inc
+  LAYER
+    NAME "World Z0"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    DATA "ZZZZnot-nt2/110m-admin-0-countries"
+    PROJECTION "init=epsg:4326" END
+    MINSCALEDENOM 100000000
+    LABELITEM "NAME1"
+    CLASS
+      MINSCALEDENOM 200000000
+      STYLE
+        COLOR "#f2efe9"
+        #OUTLINECOLOR "#d5d1cc"
+      END
+    END
+    CLASS
+      MAXSCALEDENOM 200000000
+      STYLE
+        COLOR "#f2efe9"
+        #OUTLINECOLOR "#d5d1cc"
+        WIDTH 2.0
+      END
+      LABEL
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION AUTO PRIORITY 3 # MINDISTANCE 250
+        MINFEATURESIZE 30
+      END
+    END
+  END
+  LAYER
+    NAME "World Z1"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    DATA "ZZZZnot-nt2/50m-admin-0-countries"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  50000000
+    LABELITEM "COUNTRY"
+    CLASS
+      STYLE
+        COLOR "#f2efe9"
+      END
+      LABEL
+        MINSCALEDENOM 10000000
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION AUTO PRIORITY 5 MINDISTANCE 250
+        MINFEATURESIZE 40
+      END
+    END
+  END
+  LAYER
+    NAME "World Z2"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    DATA "ZZZZnot-nt2/10m-admin-0-countries"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM  50000000
+    #MINSCALEDENOM    200000
+    LABELITEM "COUNTRY"
+    LABELMINSCALEDENOM 60000
+    CLASS
+      STYLE
+        COLOR "#f2efe9"
+        #OUTLINECOLOR "#d5d1cc"
+      END
+      LABEL
+        MINSCALEDENOM 10000000
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 10 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION AUTO PRIORITY 5 MINDISTANCE 250
+        MINFEATURESIZE 10
+      END
+    END
+  END
+
+  #INCLUDE "map-FOREST.inc"
+  # map-FOREST.inc
+  LAYER
+    NAME "Forest"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    TILEINDEX "ZZZZnot-nt2/tidx-ForestBoundary"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM 200000000
+    LABELITEM "NAME"
+    CLASS
+      STYLE
+        COLOR "#C9DFAF"
+      END
+      LABEL
+        MAXSCALEDENOM 10000000
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#24481C"
+        PARTIALS FALSE OUTLINECOLOR "#F4F3F0" OUTLINEWIDTH 1
+        BUFFER 4 POSITION AUTO PRIORITY 3 # MINDISTANCE 250
+        MINFEATURESIZE 30 WRAP ' ' ALIGN CENTER
+      END
+    END
+  END
+
+  #INCLUDE "map-LAKES.inc"
+  # map-LAKES.inc
+  LAYER
+    NAME "Lakes Z0"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    DATA "ZZZZnot-nt2/110m-lakes"
+    PROJECTION "init=epsg:4326" END
+    MINSCALEDENOM 100000000
+    CLASS
+      STYLE
+        COLOR "#a5bfdd"
+      END
+    END
+  END
+  LAYER
+    NAME "Lakes Z1"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    DATA "ZZZZnot-nt2/50m-lakes"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  20000000
+    CLASS
+      STYLE
+        COLOR "#a5bfdd"
+      END
+    END
+  END
+  LAYER
+    NAME "Lakes Z2"
+    GROUP "cb"
+    STATUS ON
+    TYPE POLYGON
+    DATA "ZZZZnot-nt2/10m-lakes"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM  20000000
+    #MINSCALEDENOM   1000000
+    CLASS
+      STYLE
+        COLOR "#a5bfdd"
+      END
+    END
+  END
+
+
+  LAYER
+    NAME "World Boundaries Z1"
+    GROUP "cb"
+    STATUS ON
+    TYPE LINE
+    DATA "ZZZZnot-nt2/50m-admin-0-boundary-lines-land"
+    PROJECTION "init=epsg:4326" END
+    FILTERITEM 'FEATURECLA'
+    FILTER 'Treaty'
+    MAXSCALEDENOM 120000000
+    #MINSCALEDENOM  50000000
+    CLASS
+      STYLE
+        SYMBOL "Country_Border_Patern"
+        WIDTH 1.5
+      END
+    END
+  END
+  LAYER
+    NAME "World Admin-1 Z1"
+    GROUP "cb"
+    STATUS ON
+    TYPE LINE
+    DATA "ZZZZnot-nt2/10m-admin-1-states-provinces-lines-shp"
+    PROJECTION "init=epsg:4326" END
+    FILTER ([LEN] > 60000)
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  20000000
+    CLASS
+      STYLE
+        COLOR "#bbbbbb"
+        WIDTH 0.75
+        PATTERN 5 3 END
+      END
+    END
+  END
+  LAYER
+    NAME "World Admin-1 Z2"
+    GROUP "cb"
+    STATUS ON
+    TYPE LINE
+    DATA "ZZZZnot-nt2/10m-admin-1-states-provinces-lines-shp"
+    PROJECTION "init=epsg:4326" END
+    MAXSCALEDENOM  20000000
+    MINSCALEDENOM   5000000
+    CLASS
+      STYLE
+        COLOR "#999999"
+        WIDTH 1.0
+        PATTERN 10 3 END
+      END
+    END
+  END
+
+    #INCLUDE "map-WORLDNAMES.inc"
+  # map-WORLDNAMES.inc
+  LAYER
+    NAME "World Names Z0"
+    GROUP "cb"
+    STATUS ON
+    TYPE POINT
+    DATA "ZZZZnot-nt2/world/world-names"
+    PROJECTION "init=epsg:4326" END
+    LABELITEM "NAME"
+    CLASS
+      MINSCALEDENOM 200000000
+      LABEL
+          STYLE
+            COLOR "#212121"
+          END
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 10 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION UC MINDISTANCE 250 MINFEATURESIZE 10
+        PRIORITY 4 WRAP " " ALIGN CENTER
+      END
+    END
+    CLASS
+      MAXSCALEDENOM 200000000
+      MINSCALEDENOM   4000000
+      LABEL
+          STYLE
+            COLOR "#212121"
+          END
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 12 COLOR "#212121"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 3
+        BUFFER 4 POSITION UC MINDISTANCE 250 MINFEATURESIZE 10
+        PRIORITY 4 WRAP " " ALIGN CENTER
+      END
+    END
+  END
+  LAYER
+    NAME "World Names Z1"
+    GROUP "cb"
+    STATUS ON
+    TYPE POINT
+    DATA "ZZZZnot-nt2/110m-populated-places"
+    PROJECTION "init=epsg:4326" END
+    FILTERITEM "FEATURECLA"
+    FILTER /^Admin-0 capital$/
+    LABELITEM "NAME_TOWN"
+    CLASS
+      MAXSCALEDENOM  50000000
+      MINSCALEDENOM  20000000
+      LABEL
+          STYLE
+            SYMBOL "city_3"
+          END
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#291509"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 1
+        BUFFER 4 POSITION UC PRIORITY 5 
+      END
+    END
+  END
+  LAYER
+    NAME "World Names Z2"
+    GROUP "cb"
+    STATUS ON
+    TYPE POINT
+    DATA "ZZZZnot-nt2/10m-populated-places"
+    PROJECTION "init=epsg:4326" END
+    CLASSITEM "FEATURECLA"
+    LABELITEM "NAME_TOWN"
+    MAXSCALEDENOM  20000000
+    MINSCALEDENOM   4000000
+    CLASS
+      EXPRESSION /^Admin-0 capital$/
+      LABEL
+          STYLE
+            SYMBOL "city_2"
+          END
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#291509"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 1
+        BUFFER 4 POSITION UC PRIORITY 5 
+      END
+    END
+    CLASS
+      EXPRESSION /^\s*$/
+      LABEL
+          STYLE
+            SYMBOL "city_5"
+          END
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#5D4D45"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 1
+        BUFFER 6 POSITION UC PRIORITY 3 
+      END
+    END
+    CLASS
+      LABEL
+          STYLE
+            SYMBOL "city_4"
+          END
+        ENCODING "UTF8"
+        TYPE TRUETYPE FONT "arial" SIZE 8 COLOR "#5D4D45"
+        PARTIALS FALSE OUTLINECOLOR "#ffffff" OUTLINEWIDTH 1
+        BUFFER 4 POSITION UC PRIORITY 4
+      END
+    END
+  END
+
+  LAYER
+    NAME "US_Places"
+    STATUS ON
+    DATA "ZZZZnot-nt2/us/placenames2"
+    TYPE POINT
+    FILTER ([POP] >= 5000)
+    CLASSITEM "POP"
+    MAXSCALEDENOM 4000000
+    MINSCALEDENOM 1000000
+    LABELITEM "NAME"
+    CLASS
+      NAME "Mega Cities"
+      EXPRESSION ([POP] > 100000)
+      LABEL
+        STYLE
+          SYMBOL "city_2"
+          COLOR 0 0 0
+        END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 5
+        POSITION AUTO
+        BUFFER 5
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS
+      NAME "Major Cities"
+      EXPRESSION ([POP] >= 25000 && [POP] < 99999)
+      LABEL
+        STYLE
+          SYMBOL "city_3"
+          COLOR 0 0 0
+        END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 7
+        PRIORITY 4
+        POSITION AUTO
+        BUFFER 5
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS
+      NAME "Cities"
+      EXPRESSION ([POP] >= 5000 && [POP] < 24999)
+      LABEL
+        STYLE
+          SYMBOL "city_5"
+          COLOR 255 255 255
+          OUTLINECOLOR 0 0 0
+          SIZE 5
+        END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 7
+        PRIORITY 3
+        POSITION AUTO
+        BUFFER 5
+        COLOR "#5D4D45"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+  END
+
+  LAYER
+    NAME "US_State_Capitals"
+    STATUS ON
+    DATA "ZZZZnot-nt2/us/state_caps"
+    TYPE POINT
+    MAXSCALEDENOM 4000000
+    MINSCALEDENOM 1000000
+    LABELITEM "NAME"
+    CLASS
+      NAME "State Capitals"
+      LABEL
+        STYLE
+          SYMBOL "city_2"
+          COLOR 0 0 0
+        END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 5
+        POSITION AUTO
+        BUFFER 5
+        COLOR 51 51 0
+        OUTLINECOLOR 230 230 230
+        PARTIALS FALSE
+      END
+    END
+  END
+
+
+
+    #INCLUDE "map-EQUATOR.inc"
+  # map-EQUATOR.inc
+  LAYER
+    NAME "Equator"
+    GROUP "cd"
+    STATUS ON
+    TYPE LINE
+    PROJECTION "init=epsg:4326" END
+    MINSCALEDENOM 50000000
+    FEATURE
+      POINTS -180 0 180 0 END
+    END
+    CLASS
+      STYLE
+        COLOR "#212121"
+        PATTERN 3 5 END
+      END
+    END
+  END
+
+    LAYER
+        NAME "state_far"
+        METADATA
+            "ows_title"     "State polygons"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "State polygon features from the U.S. Census STATE data layer."
+        END
+        TYPE POINT
+        DATA "ZZZZSTATE/tl_YYYY_us_state_pt"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-STATE-F.inc"
+  # map-STATE.inc
+  CLASS
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM  50000000
+    TEXT ('[STUSPS]')
+    STYLE
+      COLOR "#f2efe9"
+    END
+    LABEL
+      COLOR "#675844"
+      FONT "arial"
+      TYPE TRUETYPE
+      SIZE 6
+      POSITION CC
+      PARTIALS FALSE
+      BUFFER 2
+      MINDISTANCE 100
+    END
+  END
+  CLASS
+    MAXSCALEDENOM  50000000
+    MINSCALEDENOM  20000000
+    TEXT ('[NAME]')
+    STYLE
+      COLOR "#f2efe9"
+    END
+    LABEL
+      COLOR "#675844"
+      FONT "sans-bold"
+      TYPE TRUETYPE
+      SIZE 7
+      POSITION CC
+      PARTIALS FALSE
+      WRAP ' '
+      ALIGN CENTER
+      BUFFER 2
+      MINDISTANCE 100
+    END
+  END
+  CLASS
+    MAXSCALEDENOM  20000000
+    MINSCALEDENOM   5000000
+    TEXT ('[NAME]')
+    STYLE
+      COLOR "#f2efe9"
+    END
+    LABEL
+      COLOR "#675844"
+      FONT "sans-bold"
+      TYPE TRUETYPE
+      SIZE 8
+      POSITION CC
+      PARTIALS FALSE
+      WRAP ' '
+      ALIGN CENTER
+      BUFFER 2
+      MINDISTANCE 100
+    END
+  END
+    END
+
+    LAYER
+        NAME "state"
+        METADATA
+            "ows_title"     "State polygons"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "State polygon features from the U.S. Census STATE data layer."
+        END
+        TYPE POLYGON
+        DATA "ZZZZSTATE/tl_YYYY_us_state"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-STATE.inc"
+  # map-STATE.inc
+  MAXSCALEDENOM   5000000
+  CLASS
+    TEXT ('[NAME]')
+    STYLE
+      COLOR "#f2efe9"
+      OUTLINECOLOR "#999999"
+      WIDTH 1.0
+      PATTERN 10 3 END
+    END
+    LABEL
+      MINSCALEDENOM 1000000
+      COLOR "#675844"
+      FONT "sans-bold"
+      TYPE TRUETYPE
+      SIZE 8
+      POSITION AUTO
+      PARTIALS FALSE
+      WRAP ' '
+      ALIGN CENTER
+      BUFFER 2
+    END
+  END
+    END
+
+    LAYER
+        NAME "place"
+        METADATA
+            "ows_title"     "Place polygons"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Place polygon features from the U.S. Census PLACE data layer."
+        END
+        TYPE POLYGON
+        TILEINDEX "ZZZZtidx-PLACE"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-PLACE.inc"
+  # map-PLACE.inc
+  LABELITEM "NAME"
+  MAXSCALEDENOM 1000000
+  CLASS
+    STYLE
+      COLOR "#EFEBE2"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      PRIORITY 4
+      POSITION AUTO
+      WRAP " "
+      ALIGN CENTER
+      BUFFER 4
+      COLOR "#291509"
+      OUTLINECOLOR "#ffffff"
+      PARTIALS FALSE
+    END
+  END
+    END
+
+    LAYER
+        NAME "area_landmarks_far"
+        METADATA
+            "ows_title"     "Landmark polygons far"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Landmark polygon features from the U.S. Census AREALM data layer."
+        END
+        TYPE POLYGON
+        TILEINDEX "ZZZZtidx-AREALM-L"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-AREALM-L.inc"
+  # map-AREALM-L.inc
+  MAXSCALEDENOM 5000000
+  MINSCALEDENOM 2500000
+  CLASSITEM "MTFCC"
+  LABELITEM "FULLNAME"
+  CLASS
+    EXPRESSION "C3023" # Islands
+    STYLE
+      COLOR "#F4F3F0"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      PRIORITY 5
+      POSITION CC
+      BUFFER 5
+      COLOR "#291509"
+      OUTLINECOLOR "#ffffff"
+      WRAP " "
+      ALIGN CENTER
+      MAXLENGTH 7
+      PARTIALS FALSE
+    END
+  END
+  CLASS
+    EXPRESSION "K1231" # Hospital
+    STYLE
+      COLOR "#EBD2CF"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/8060.png"
+#      END
+      MAXSCALEDENOM 10000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      COLOR "#655949"
+      OUTLINECOLOR "#F3EFEF"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION /^K2561/ # Golf
+    STYLE
+      COLOR "#C9DFAF"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/7921.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#24471C"
+      OUTLINECOLOR "#E5F0D8"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION /^K2(18.|190)/ # Parks
+    STYLE
+      COLOR "#C9DFAF"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/7522.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#24471C"
+      OUTLINECOLOR "#E5F0D8"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2361" # Shopping
+    STYLE
+      COLOR "#DEDAD2"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/9987.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DAD9D6"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2459" # Runway
+    STYLE
+      COLOR "#D3DDBD"
+    END
+  END
+  CLASS
+    EXPRESSION /^K254[03]/ # University, School
+    STYLE
+      COLOR "#E8DDBD"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/8200.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DAD9D6"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K1121" # Buildings
+    STYLE
+      COLOR "#ECEBE8"
+      OUTLINECOLOR "#DAD9D6"
+      OUTLINEWIDTH 0.5
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/xxxx.png"
+#      END
+      MAXSCALEDENOM 5000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2582" # Cemetery
+    STYLE
+      COLOR "#DFDBD4"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/9591.png"
+#      END
+      MAXSCALEDENOM 5000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2362" # Industrial
+    STYLE
+      COLOR "#E7E0D9"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/9991.png"
+#      END
+      MAXSCALEDENOM 30000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 3
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    STYLE
+      COLOR "#DFDBD4" # everything else
+    END
+    LABEL
+      MAXSCALEDENOM 30000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 3
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+    END
+
+    LAYER
+        NAME "area_landmarks"
+        METADATA
+            "ows_title"     "Landmark polygons"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Landmark polygon features from the U.S. Census AREALM data layer."
+        END
+        TYPE POLYGON
+        TILEINDEX "ZZZZtidx-AREALM"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-AREALM.inc"
+  # map-AREALM.inc
+  MAXSCALEDENOM 2500000
+  CLASSITEM "MTFCC"
+  LABELITEM "FULLNAME"
+  CLASS
+    EXPRESSION "C3023" # Islands
+    STYLE
+      COLOR "#F4F3F0"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      PRIORITY 5
+      POSITION CC
+      BUFFER 5
+      COLOR "#291509"
+      OUTLINECOLOR "#ffffff"
+      WRAP " "
+      ALIGN CENTER
+      MAXLENGTH 7
+      PARTIALS FALSE
+    END
+  END
+  CLASS
+    EXPRESSION "K1231" # Hospital
+    STYLE
+      COLOR "#EBD2CF"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/8060.png"
+#      END
+      MAXSCALEDENOM 10000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      COLOR "#655949"
+      OUTLINECOLOR "#F3EFEF"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION /^K2561/ # Golf
+    STYLE
+      COLOR "#C9DFAF"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/7921.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#24471C"
+      OUTLINECOLOR "#E5F0D8"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION /^K2(18.|190)/ # Parks
+    STYLE
+      COLOR "#C9DFAF"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/7522.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#24471C"
+      OUTLINECOLOR "#E5F0D8"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2361" # Shopping
+    STYLE
+      COLOR "#DEDAD2"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/9987.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DAD9D6"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2459" # Runway
+    STYLE
+      COLOR "#D3DDBD"
+    END
+  END
+  CLASS
+    EXPRESSION /^K254[03]/ # University, School
+    STYLE
+      COLOR "#E8DDBD"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/8200.png"
+#      END
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DAD9D6"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K1121" # Buildings
+    STYLE
+      COLOR "#ECEBE8"
+      OUTLINECOLOR "#DAD9D6"
+      OUTLINEWIDTH 0.5
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/xxxx.png"
+#      END
+      MAXSCALEDENOM 5000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2582" # Cemetery
+    STYLE
+      COLOR "#DFDBD4"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/9591.png"
+#      END
+      MAXSCALEDENOM 5000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    EXPRESSION "K2362" # Industrial
+    STYLE
+      COLOR "#E7E0D9"
+    END
+    LABEL
+#      STYLE
+#        GEOMTRANSFORM 'labelpnt'
+#        SYMBOL "etc/icons2/poi/9991.png"
+#      END
+      MAXSCALEDENOM 30000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 3
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    STYLE
+      COLOR "#DFDBD4" # everything else
+    END
+    LABEL
+      MAXSCALEDENOM 30000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 7
+      COLOR "#665A49"
+      OUTLINECOLOR "#DFDBD4"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION AUTO
+      PRIORITY 3
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+    END
+
+    LAYER
+        NAME "military"
+        METADATA
+            "ows_title"     "Military polygons"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Military polygon features from the U.S. Census MIL data layer."
+        END
+        TYPE POLYGON
+        DATA "ZZZZMIL/tl_YYYY_us_mil"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-MIL.inc"
+  # map-MIL.inc
+  MAXSCALEDENOM 5000000
+  CLASS # Military
+    STYLE
+      COLOR "#E7E5E3"
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      TYPE TRUETYPE
+      FONT "sans"
+      SIZE 8
+      COLOR "#655949"
+      OUTLINECOLOR "#F3F3F0"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+    END
+
+    LAYER
+        NAME "area_water_far"
+        METADATA
+            "ows_title"     "Area Water Far"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Area Water features from the U.S. Census AREAWATER data layer."
+        END
+        TYPE POLYGON
+        TILEINDEX "ZZZZtidx-AREAWATER-L"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-AREAWATER-L.inc"
+  # map-AREAWATER-L.inc
+  MAXSCALEDENOM 7000000
+  MINSCALEDENOM  500000
+  LABELITEM "FULLNAME"
+  CLASS # water
+    STYLE
+      COLOR "#a5bfdd"
+    END
+#    LABEL
+#      MAXSCALEDENOM 200000
+#      TYPE TRUETYPE
+#      FONT "sans-italic"
+#      SIZE 8
+#      COLOR "#627A9D"
+#      OUTLINECOLOR "#B3C9E2"
+#      PARTIALS FALSE
+#      MINDISTANCE 250
+#      MINFEATURESIZE 10
+#      BUFFER 4
+#      POSITION CC
+#      PRIORITY 4
+#      WRAP " "
+#      ALIGN CENTER
+#    END
+  END
+    END
+
+    LAYER
+        NAME "area_water"
+        METADATA
+            "ows_title"     "Area Water"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Area Water features from the U.S. Census AREAWATER data layer."
+        END
+        TYPE POLYGON
+        TILEINDEX "ZZZZtidx-AREAWATER"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-AREAWATER.inc"
+  # map-AREAWATER.inc
+  MAXSCALEDENOM 500000
+  LABELITEM "FULLNAME"
+  CLASS # water
+    MINSCALEDENOM 60000
+    STYLE
+      COLOR "#a5bfdd"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans-italic"
+      SIZE 8
+      COLOR "#627A9D"
+      OUTLINECOLOR "#B3C9E2"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION CC
+      PRIORITY 4
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 60000
+    STYLE
+      COLOR "#a5bfdd"
+    END
+    LABEL
+      TYPE TRUETYPE
+      FONT "sans-italic"
+      SIZE 6
+      COLOR "#627A9D"
+      OUTLINECOLOR "#B3C9E2"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      POSITION CC
+      PRIORITY 3
+      WRAP " "
+      ALIGN CENTER
+    END
+  END
+    END
+
+    LAYER
+        NAME "linear_water"
+        METADATA
+            "ows_title"     "Streams and Rivers"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Streams and Rivers from the U.S. Census LINEARWATER data layer."
+        END
+        TYPE LINE
+        TILEINDEX "ZZZZtidx-LINEARWATER"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-LINEARWATER.inc"
+  # map-LINEARWATER.inc
+  MAXSCALEDENOM 15000
+  CLASS  # water
+    STYLE
+      COLOR "#a5bfdd"
+      WIDTH 1.0
+    END
+    LABEL
+      MAXSCALEDENOM 10000
+      TYPE TRUETYPE
+      FONT "sans-italic"
+      SIZE 8
+      COLOR "#627A9D"
+      OUTLINECOLOR "#B3C9E2"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+    END
+
+    LAYER
+        NAME "primary_roads"
+        GROUP "streets"
+        METADATA
+            "ows_title"     "Primary Road features"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Primary Road features from the U.S. Census PRIMARYROADS data layer."
+        END
+        TYPE LINE
+        DATA "ZZZZPRIMARYROADS/tl_YYYY_us_primaryroads-s"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-PRIMARYROADS.inc"
+  # map-PRIMARYROADS.inc
+  CLASS
+    MAXSCALEDENOM 20000000
+    MINSCALEDENOM 10000000
+    EXPRESSION ('[RTTYP]' = 'I')
+    STYLE
+      COLOR "#FFC95B"
+      WIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 10000000
+    MINSCALEDENOM  5000000
+    EXPRESSION ('[RTTYP]' = 'I')
+    STYLE
+      COLOR "#FFC95B"
+      WIDTH 0.75
+    END
+  END
+    END
+
+    LAYER
+        NAME "pri_sec_roads"
+        GROUP "streets"
+        METADATA
+            "ows_title"     "Primary and Secondary Roadway features"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Primary and Secondary Roadway features from the U.S. Census PRISECROADS data layer."
+        END
+        TYPE LINE
+        TILEINDEX "ZZZZtidx-PRISECROADS-S"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-PRISECROADS.inc"
+  # map-PRISECROADS.inc
+  MAXSCALEDENOM 5000000
+  MINSCALEDENOM  500000
+  CLASS
+    MAXSCALEDENOM 5000000
+    MINSCALEDENOM  300000
+    EXPRESSION ('[RTTYP]' = 'I')
+    #EXPRESSION ('[MTFCC]' = 'S1100')
+    STYLE
+      COLOR "#FFC95B"
+      WIDTH 1.5
+      OUTLINECOLOR "#E9B352"
+      OUTLINEWIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 5000000
+    MINSCALEDENOM  300000
+    EXPRESSION ('[RTTYP]' = 'U')
+    STYLE
+      COLOR "#F3E999"
+      WIDTH 0.5
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 1000000
+    MINSCALEDENOM  300000
+    EXPRESSION ('[MTFCC]' = 'S1100')
+    STYLE
+      COLOR "#FFC95B"
+      WIDTH 1.5
+      OUTLINECOLOR "#E9B352"
+      OUTLINEWIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 1000000
+    MINSCALEDENOM  300000
+    EXPRESSION ('[MTFCC]' = 'S1200')
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 0.75
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 0.5
+    END
+  END
+    END
+
+    LAYER
+        NAME "rails"
+        METADATA
+            "ows_title"     "Railway features"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Railway features from the U.S. Census RAILS data layer."
+        END
+        TYPE LINE
+        DATA "ZZZZRAILS/tl_YYYY_us_rails"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-RAILS.inc"
+# map-RAILS.inc
+  CLASS
+    MAXSCALEDENOM 300000
+    MINSCALEDENOM  20000
+    STYLE
+      COLOR "#A0A0A0"
+      WIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 20000
+    STYLE
+      WIDTH 3
+      OUTLINECOLOR "#C0C0C0"
+      OUTLINEWIDTH 0.5
+    END
+    STYLE
+      WIDTH 3
+      COLOR "#ffffff"
+    END
+    STYLE
+      COLOR "#C0C0C0"
+      WIDTH 3
+      PATTERN 10 10 END
+    END
+  END
+
+    END
+
+    LAYER
+        NAME "roads"
+        GROUP "streets"
+        METADATA
+            "ows_title"     "Roadway features"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Road way features from the U.S. Census ROADS data layer."
+        END
+        TYPE LINE
+        TILEINDEX "ZZZZtidx-ROADS"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        #INCLUDE "map-ROADS.inc"
+# map-ROADS.inc
+
+# S1100,    20533, primary
+# S1200,   325140, secondary
+# S1400, 16320345, local
+# S1500,   374859, 4wd trail
+# S1630,   176149, ramp
+# S1640,   176415, service along highway
+# S1710,    17033, walkway
+# S1720,      241, stairway
+# S1730,    72743, alley
+# S1740,  2255679, private
+# S1750,   434084, census use
+# S1780,    10645, parking lot
+# S1820,     2893, bike path
+# S1830,       12, bridle path
+
+  MAXSCALEDENOM 500000
+  CLASSITEM "RTTYP"
+  LABELITEM "FULLNAME"
+  SIZEUNITS METERS
+  CLASS
+    EXPRESSION ('[MTFCC]' = 'S1100')
+    STYLE
+      COLOR "#FFC95B"
+      WIDTH 20
+      MAXWIDTH 16
+      OUTLINECOLOR "#E9B352"
+      OUTLINEWIDTH 1.5
+    END
+    LABEL
+      MAXSCALEDENOM 300000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 18
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#3C0800"
+      OUTLINECOLOR "#FFC95B"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+  CLASS
+    EXPRESSION ('[MTFCC]' = 'S1200')
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 20
+      MAXWIDTH 16
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 1.2
+    END
+    LABEL
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 16
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#816C34"
+      OUTLINECOLOR "#FFFB89"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+  CLASS
+    EXPRESSION /^[USC]/
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 18
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 1
+    END
+    LABEL
+      MAXSCALEDENOM 200000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 16
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#816C34"
+      OUTLINECOLOR "#FFFB89"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+  CLASS
+    MINSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1400')
+    STYLE
+      COLOR "#c1c1a1"
+      WIDTH 6
+      MINWIDTH 0.5
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1400')
+    STYLE
+      COLOR "#FFFFFF"
+      WIDTH 18
+      #MINWIDTH 10
+      MAXWIDTH 10
+      OUTLINECOLOR "#D8D4C8"
+      OUTLINEWIDTH 1.0
+    END
+    LABEL
+      MAXSCALEDENOM 20000
+      TYPE TRUETYPE
+      FONT "arial"
+      SIZE 18
+      MAXSIZE 10
+      MINSIZE 8
+      COLOR "#645C58"
+      OUTLINECOLOR "#FFFFFF"
+      PARTIALS FALSE
+      MINDISTANCE 250
+      MINFEATURESIZE 10
+      BUFFER 4
+      ANGLE FOLLOW
+      PRIORITY 4
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1630')
+    STYLE
+      COLOR "#FFFFAF"
+      WIDTH 10
+      MAXWIDTH 12
+      OUTLINECOLOR "#C8C4B8"
+      OUTLINEWIDTH 0.75
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 30000
+    EXPRESSION ('[MTFCC]' = 'S1640' || '[MTFCC]' = 'S1730' || '[MTFCC]' = 'S1740')
+    STYLE
+      COLOR "#FFFFFF"
+      WIDTH 10
+      MAXWIDTH 12
+      OUTLINECOLOR "#D8D4C8"
+      OUTLINEWIDTH 0.75
+    END
+  END
+  CLASS
+    MAXSCALEDENOM 1
+    STYLE
+      COLOR "#FFFB89"
+      WIDTH 0.75
+      OUTLINECOLOR "#ECD390"
+      OUTLINEWIDTH 0.5
+    END
+  END
+
+    END
+
+    LAYER
+        NAME "point_landmarks"
+        METADATA
+            "ows_title"     "Landmark Points"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Point landmarks from the U.S. Census POINTLM data layer."
+        END
+        TYPE POINT
+        TILEINDEX "ZZZZtidx-POINTLM"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+#MAXSCALEDENOM 1
+        #INCLUDE "map-POINTLM.inc"
+#map-POINTLM.inc
+    MAXSCALEDENOM 15000
+    LABELITEM "FULLNAME"
+    CLASSITEM "MTFCC"
+    FILTER ('[MTFCC]' ne 'C3061')
+#    CLASS # 264080
+#      EXPRESSION /C3061/
+#      LABEL
+#        STYLE
+#          SYMBOL "etc/icons2/poi/-3.png"
+#        END
+#        TYPE TRUETYPE
+#        FONT "sans"
+#        SIZE 8
+#        PRIORITY 4
+#        POSITION AUTO
+#        WRAP " "
+#        ALIGN CENTER
+#        BUFFER 4
+#        COLOR "#291509"
+#        OUTLINECOLOR "#ffffff"
+#        PARTIALS FALSE
+#      END
+#    END
+    CLASS # 212815
+      EXPRESSION /C3081/
+      LABEL
+          STYLE
+            SYMBOL "city_5"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 104401
+      EXPRESSION /K2582/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9591.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 67967
+      EXPRESSION /C3022|C3023|C3026|C3027|C3062|C3066|C3067|C3070|C3071|C3072|C3073|C3075|C3076|C3078|C3080|C3085|C3088|K2460/
+      LABEL
+          STYLE
+            SYMBOL "circle-filled"
+            COLOR "#818181"
+            SIZE 5
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 12462
+      EXPRESSION /K2451|K2455|K2456/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/4581.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 9253
+      EXPRESSION /K2540|K2543/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/8200.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 2763
+      EXPRESSION /K2146|K2165|K2167|K2196/
+          STYLE
+            SYMBOL "etc/icons2/poi/9590.png"
+          END
+      LABEL
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 2678
+      EXPRESSION /K2181|K2182|K2184|K2185|K2186|K2187|K2188|K2189|K2190/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/7522.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 2567
+      EXPRESSION /K3544/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9992.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 2303
+      EXPRESSION /K1231/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/8060.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 1185
+      EXPRESSION /K2561/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/7992.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 799
+      EXPRESSION /K2193|K2194/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9993.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 537
+      EXPRESSION /K1236|K1237|K1239/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/8231.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 379
+      EXPRESSION /K1225|K2454/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/4482.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 353
+      EXPRESSION /K2195/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9995.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 197
+      EXPRESSION /K2191/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9530.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 169
+      EXPRESSION /K2452/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/4100.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 108
+      EXPRESSION /K2110/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/8410.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 38
+      EXPRESSION /K2453/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/4170.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 22
+      EXPRESSION /K2400/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9593.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 17
+      EXPRESSION /K2545|K2586/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9121.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    CLASS # 1
+      EXPRESSION /C3074/
+      LABEL
+          STYLE
+            SYMBOL "etc/icons2/poi/9715.png"
+          END
+        TYPE TRUETYPE
+        FONT "sans"
+        SIZE 8
+        PRIORITY 4
+        POSITION AUTO
+        WRAP " "
+        ALIGN CENTER
+        BUFFER 4
+        COLOR "#291509"
+        OUTLINECOLOR "#ffffff"
+        PARTIALS FALSE
+      END
+    END
+    END
+
+    #INCLUDE "map-HWYSHIELDS.inc"
+    LAYER
+        NAME "hwyshieldsfar"
+        GROUP "streets"
+        METADATA
+            "ows_title"     "Hwy Shields Far"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Hwy Shields for the U.S. Census ROADS data layer."
+        END
+        TYPE POINT
+        TILEINDEX "ZZZZtidx-PRISECROADS-S"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        MAXSCALEDENOM 5000000
+        MINSCALEDENOM  300000
+        FILTER ('[MTFCC]'='S1100' && length('[RTENUM]')>0 && ('[RTTYP]'='I' || '[RTTYP]'='U'))
+        CLASSITEM "RTTYP"
+        LABELITEM "RTENUM"
+        CLASS
+          EXPRESSION "I"
+          LABEL
+              STYLE
+                SYMBOL "I"
+              END
+            SIZE TINY
+            POSITION CC
+            OFFSET 1 0
+            MINDISTANCE 100
+            COLOR "#ffffff"
+            PARTIALS FALSE
+            PRIORITY 7
+          END
+        END
+        CLASS
+          EXPRESSION "U"
+          LABEL
+              STYLE
+                SYMBOL "U"
+              END
+            SIZE TINY
+            POSITION CC
+            OFFSET 1 0
+            MINDISTANCE 100
+            COLOR "#000000"
+            PARTIALS FALSE
+            PRIORITY 7
+          END
+        END
+    END
+
+    LAYER
+        NAME "hwyshieldsnear"
+        GROUP "streets"
+        METADATA
+            "ows_title"     "Hwy Shields Near"
+            "ows_srs"       "EPSG:4269 EPSG:4326"
+            "ows_abstract"  "Hwy Shields for the U.S. Census ROADS data layer."
+        END
+        TYPE POINT
+        TILEINDEX "ZZZZtidx-ROADS"
+        PROJECTION
+            "+proj=longlat +ellps=GRS80 +datum=NAD83" #EPSG: 4269
+        END
+        MAXSCALEDENOM  300000
+        FILTER (length('[RTENUM]')>0 && '[RTTYP]' ~ '^(I|U|S)$')
+        CLASSITEM "RTTYP"
+        LABELITEM "RTENUM"
+        CLASS
+          EXPRESSION "I"
+          LABEL
+              STYLE
+                SYMBOL "I"
+              END
+            SIZE TINY
+            POSITION CC
+            OFFSET 1 0
+            MINDISTANCE 100
+            COLOR "#ffffff"
+            PARTIALS FALSE
+            PRIORITY 7
+          END
+        END
+        CLASS
+          EXPRESSION "U"
+          LABEL
+              STYLE
+                SYMBOL "U"
+              END
+            SIZE TINY
+            POSITION CC
+            OFFSET 1 0
+            MINDISTANCE 100
+            COLOR "#000000"
+            PARTIALS FALSE
+            PRIORITY 7
+          END
+        END
+        CLASS
+          EXPRESSION "S"
+          LABEL
+              STYLE
+                SYMBOL "circle-filled"
+                COLOR "#FFFFFF"
+                OUTLINECOLOR "#000000"
+                SIZE 19
+              END
+            SIZE TINY
+            POSITION CC
+            MINDISTANCE 100
+            COLOR "#000000"
+            PARTIALS FALSE
+            PRIORITY 7
+          END
+        END
+    END
+
+
+END

@@ -1,0 +1,5 @@
+#
+for x in " Mine$" " Golf Course$" " Cabins?$" " House$" " Lodge$" " Camp$" " Ski" " Trailhead$" " (Roadhouse|Road House)$" " Shelter$" " Windmill$" " Scenic Area$" " Recreation (Area|Site)$" " Picnic (Area|Grounds)$" " Ranger (Station|Office)" " (Penal|Prison|Jail) Farm$" "Correctional" "Visitor" " (Fair|Show)grounds$" "Lighthouse" "Vista" "Overlook|Viewpoint|Observation Point" "Hatchery" " Community (Center|Hall)$" " Forest Service" "Fire Control" "Fire Tower" "Lookout" "Historical Site" "Monument" "(Winery|Vineyards)$" " Parking$"; do
+echo -n "$x: "
+egrep "$x" < pointlm-names.txt | wc -l
+done
