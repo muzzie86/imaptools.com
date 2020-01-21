@@ -61,7 +61,7 @@
 #include "dbf2sqlite.h"
 
 #define YEAR2017
-#define YEAR "2018"
+#define YEAR "2019"
 
 #define DATABASE "tgr2rgeo-sqlite.db"
 #define POSTALCODES "usps-actual.db"
