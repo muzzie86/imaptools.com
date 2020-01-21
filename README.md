@@ -70,6 +70,7 @@ mkdir /u/srcdata /u/data
 cd /path/to/imaptools.com
 
 # fetch all the Census Tiger data for 2019 - PATIENCE takes hours
+# this took 28 hours to run on my comcast connection
 tiger-maps/wget-tiger 2019
 ```
 This leaves a log file which may contain errors in the download. It is safe to run the script multiple times as it will only download missing files.
@@ -82,6 +83,38 @@ This leaves a log file which may contain errors in the download. It is safe to r
 * load the processed data into postgres database
 * compute the instersections table
 * test it
+
+```
+# process the downloaded data for geo/rgeo
+cd /path/to/imaptools.com/tools/geo-rgeo
+
+# edit ./tgr2rgeo-sqlite.c and change #define YEAR to be "2019" 
+vi ./tgr2rgeo-sqlite.c
+make && make install && make clean
+
+# process the data
+# path for usps-actual.db needs to be absolute not relative
+./process-tgr-2011 /u/srcdata/TIGER2019 /u/data/tiger2019-rgeo /path/to/imaptools.com/tools/geo-rgeo/usps-actual.db &> /u/data/tiger2019-rgeo.log
+
+# drop and recreate the databasee and install the rgeo schema and functions
+dropdb -U postgres -h localhost tiger2019_rgeo
+creatdb -U postgres -h localhost tiger2019_rgeo
+psql -U postgres -h localhost tiger2019_rgeo <<EOF
+create extension postgis;
+create schema rawdata;
+create schema data;
+alter database tiger2019_rgeo set search_path to data, public;
+EOF
+
+
+
+# load the processed data into postgres database
+
+# compute the instersections table
+
+# test it
+
+```
 
 ### Prepare Tiger for Mapping
 
@@ -180,7 +213,7 @@ ogr2ogr -f PostgreSQL PG:"dbname=statcan2019 user=postgres host=localhost" \
     -lco DIM=2 \
     -lco GEOMETRY_NAME=geom \
     -lco FID=gid \
-    -nln rawdata.streets \
+    -nln rawdata.roadseg \
     -t_srs EPSG:4326 \
     data/lrnf000r19a_e.shp
 
@@ -195,6 +228,16 @@ ogr2ogr -f PostgreSQL PG:"dbname=statcan2019 user=postgres host=localhost" \
     -nlt PROMOTE_TO_MULTI \
     data/lcsd000a19a_e.shp
 
+cd /path/to/imaptools.com/sql-scripts
+
+# load the reverse geocoder functions and types
+psql -U postgres -h localhost statcan2019 -f rgeo/imt-rgeo-pgis-2.0.sql
+
+# prep the statcan data
+psql -U postgres -h localhost statcan2019 -f statcan/rgeo/statcan/rgeo/statcan-rgeo-prep.sql
+
+# finish the data prep with
+psql -U postgres -h localhost statcan2019 -f rgeo/imt-rgeo-pgis-2.0-part2.sql
 
 ``
 
