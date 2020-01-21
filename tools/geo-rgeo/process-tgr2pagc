@@ -1,0 +1,155 @@
+#!/bin/sh
+ulimit -c unlimited
+exec /usr/bin/perl -x -w -S $0 ${1+"$@"}
+#!/usr/bin/perl -w
+#line 6
+
+use strict;
+use File::chdir;
+use File::Find ();
+
+my $DRYRUN  = 0;
+my $VERBOSE = 1;
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+sub wanted;
+
+sub Usage {
+    die "Usage: process-tgr2pagc [-D] [-append|-r ssccc] dest-dir source-dir data-dir\n" .
+        "       where dest-dir is where to build the pagc instance\n" .
+        "             src-dir  is where the tiger zipfile can be found\n" .
+        "             data-dir is where usps-actual.db and pagc/*.csv are.\n" .
+        "             -D dryrun\n" .
+        "             -a append to existing pagc instance\n" .
+        "             -r ssccc restart on county ssccc\n" .
+        "";
+}
+
+if (@ARGV && $ARGV[0] =~ /^-D$/) {
+    $DRYRUN = 1;
+    shift @ARGV;
+}
+
+my $append = 0;
+if (@ARGV && $ARGV[0] =~ /^-a(ppend)?$/i) {
+    $append = 1;
+    shift @ARGV;
+}
+my $ssccc;
+my $skipping = 0;
+if (@ARGV && $ARGV[0] eq '-r') {
+    $append = 1;
+    $skipping = 1;
+    shift @ARGV;
+    $ssccc = shift @ARGV || Usage();
+}
+my $indest = shift @ARGV || Usage();
+my $insrc  = shift @ARGV || Usage();
+my $indata = shift @ARGV || Usage();
+
+my @files = ();
+
+# find the absolute paths to the dirs we are concerned about
+my $dirstart = $CWD;
+$CWD = $indest;
+my $dest  = $CWD;
+$CWD = $dirstart;
+$CWD = $insrc;
+my $src = $CWD;
+$CWD = $dirstart;
+$CWD = $indata;
+my $data = $CWD;
+$CWD = $dirstart;
+
+my $tmpdir = "$dirstart/tmp-$$";
+
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+die "Error: No files found to process!\n" unless scalar @files;
+
+mysystem( "mkdir -p $dest/standard $dest/streets" );
+mysystem( "$data/txt2dbf $data/tgr2pagc-single.txt $dest/standard/tgr2pagc-single.dbf" );
+mysystem( "cp -fp $data/pagc/*.csv $dest/standard/." );
+
+mysystem( "mkdir -p $tmpdir" );
+
+my $first = $append?0:1;
+for my $x (sort @files) {
+    next if $skipping && $x !~ m/\/$ssccc\//;
+    $skipping = 0;
+    mysystem( "rm -f $tmpdir/* $dest/streets/Streets.{shp,shx,dbf}" );
+    my $z = $x;
+    $z =~ s/[^\/]+$//;
+    $x =~ m/\/tl_20(..)_(..)\d\d\d_edges\./ || die "File names have changed!\n";
+    my $yr = $1;
+    my $st = $2;
+    my $YR = "20$yr";
+    my $fplace = 0;
+    for my $zz ("${z}/../tl_${YR}_place.zip",
+               "${z}/../$st/tl_${YR}_${st}_place$yr.zip",
+               "$src/PLACE/tl_${YR}_${st}_place.zip" ) {
+        print "# Looking for $zz\n";
+        if ( -f $zz ) {
+            mysystem( "unzip -j -d $tmpdir $zz" );
+            $fplace = 1;
+            last;
+        }
+    }
+    die "Can't fine file for tl_*_place*.zip!\n" unless $fplace;
+
+    my $yopt = '';
+    $yopt = "-y $yr" if $yr >= 10;
+
+    $x =~ s/_edges.zip$/_/;
+    for my $y (qw( edges addr addrfn cousub faces featnames )) {
+        my $yy = $y;
+        if ($y eq 'cousub' && -f "$x$y$yr.zip") {
+            $yy = "$y$yr";
+        }
+        my $f = "$x$yy.zip";
+        die "Can't find file $f!\n" unless -f $f;
+        mysystem( "unzip -j -d $tmpdir $f" );
+    }
+    mysystem( "$data/tgr2pagc-sqlite $tmpdir/*_edges.dbf $dest/streets $data/usps-actual.db" );
+    if ( $first ) {
+        mysystem( "pagc_build_schema -r $dest/streets/Streets -s $dest/standard/tgr2pagc-single.dbf -p -l" );
+        $first = 0;
+    }
+    else {
+#$DRYRUN = 1;
+        mysystem( "pagc_build_schema -r $dest/streets/Streets -a $dest/streets/Streets -p -l" );
+        mysystem( "cat $dest/streets/last_append_log.err >> $dest/streets/build_log.err " )
+            if -f "$dest/streets/last_append_log.err";
+    }
+}
+mysystem( "rm -rf $tmpdir  $dest/streets/Streets.{shp,shx,dbf} tgr2pagc-sqlite.db" );
+
+sub wanted {
+    /^.*_edges\.zip\z/s &&
+    push @files, $name;
+}
+
+sub mysystem {
+    print join(" ", @_), "\n" if $DRYRUN || $VERBOSE;
+    if ( ! $DRYRUN ) {
+        my $rc = 0xffff & system(@_);
+        if ($rc == 0xff00) {
+            die "Command Failed: '" .  join(" ", @_) . "'\n";
+        }
+        elsif (($rc & 0xff) == 0) {
+            $rc >>= 8;
+            die "Command '" .  join(" ", @_) . "' Returned ($rc)\n"
+                unless $rc == 0;
+        }
+        else {
+            die "Command Failed: '" .  join(" ", @_) . "' with signal $rc\n";
+        }
+    }
+}

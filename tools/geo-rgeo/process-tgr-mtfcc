@@ -1,0 +1,119 @@
+#! /usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if 0; #$running_under_some_shell
+
+use strict;
+use File::Find ();
+
+
+my $DRYRUN  = 0;
+my $VERBOSE = 1;
+
+
+# Set the variable $File::Find::dont_use_nlink if you're using AFS,
+# since AFS cheats.
+
+sub Usage {
+    die "Usage: process-tgr /path/to/srcdir /path/to/dstdir path/to/usps-actual.db\n";
+}
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
+my $t0 = time;
+
+sub wanted;
+my @zips = ();
+
+my $src = shift @ARGV || Usage();
+my $dst = shift @ARGV || Usage();
+my $usps = shift @ARGV || Usage();
+
+# Traverse desired filesystems
+File::Find::find({wanted => \&wanted}, $src);
+
+my $tmp = "tmp-tgr-$$";
+mkdir $tmp, 0777 || die "Failed to create $tmp working dir!\n";
+chdir $tmp       || die "Could not chdir to $tmp working dir!\n";
+
+# Process the files
+for my $x (sort @zips) {
+    mysystem("rm -f ../$tmp/*");
+    mysystem("unzip $x");
+
+    my $y = $x;
+    $y =~ s/_edges\b/_addr/;
+    mysystem("unzip $y");
+
+    $y = $x;
+    $y =~ s/_edges\b/_addrfn/;
+    mysystem("unzip $y");
+
+    $y = $x;
+    $y =~ s/_edges\b/_featnames/;
+    mysystem("unzip $y");
+
+    $y = $x;
+    $y =~ s/_edges\b/_faces/;
+    mysystem("unzip $y");
+
+    $y = $x;
+    $y =~ s/_edges\b/_cousub/;
+    mysystem("unzip $y");
+
+    my @dd = split(/\//, $x);
+    my $ff = pop @dd;
+    pop @dd;
+    push @dd, $ff;
+    $y = join("/", @dd);
+    $y =~ s/\d{3}_edges\b/_place/;
+    mysystem("unzip $y");
+
+    $x =~ m/_(\d\d)(\d{3})_edges/;
+    my $ss = $1;
+    my $ssccc = "$1$2";
+    $x =~ m/\/([^\/]+)$/;
+    my $edges = $1;
+    $edges =~ s/zip$/dbf/;
+    mysystem("mkdir -p $dst/$ss/$ssccc");
+    mysystem("tgr2rgeo-sqlite -mtfcc ./$edges $dst/$ss/$ssccc/ $usps ");
+    ##exit;
+}
+
+my $t1 = time;
+
+chdir ".."       || die "Could not chdir to .. from $tmp working dir!\n";
+mysystem("rm -rf \"$tmp\"");
+
+#chdir $dst       || die "Could not chdir to $dst!\n";
+#mysystem("find . -name \\*.shp > Streets-tidx.in");
+#mysystem("tile4ms Streets-tidx.in Streets-tidx");
+#mysystem("find . -name \\*.shp -exec shptree {} \\; ");
+
+my $t2 = time;
+
+print "Time to process files: " . ($t1-$t0) . " sec\n";
+print "Time to create indexes: " . ($t2-$t1) . " sec\n";
+print "Total time: " . ($t2-$t0) . " sec\n";
+
+exit;
+
+
+sub wanted {
+    /^.*edges\.zip\z/s
+    && push @zips, $name;
+}
+
+sub mysystem {
+    print join(" ", @_) . "\n"
+        if $DRYRUN || $VERBOSE;
+    if (!$DRYRUN) {
+        return system(@_);
+    }
+    else {
+        return 0;
+    }
+}
