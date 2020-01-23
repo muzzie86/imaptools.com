@@ -10,18 +10,20 @@ There is a ``wget-tiger`` for downloading the Census tiger data.
 
 I recommend using the above directory structure, you can use symlinks. Feel free to move things around and edit the scripts as needed for your own use.
 
+**You WILL need to update the PATHs below for you environment**
+
 ```
 #!/bin/sh
 
 # set the year you are processing
-YEAR=2018
+YEAR=2019
 
 ./wget-tiger $YEAR
 ./prep-tiger-maps $YEAR
 ./prep-tiger-maps-2 $YEAR
 cp tiger$YEAR-tmp.map /u/data/tiger$YEAR-maps/.
 ./copy-maps $YEAR /u/data/tiger$YEAR-maps/
-(cd data ; for x in map-*.inc ; do ln -sf ~/work/tiger-maps/data/$x /u/data/tiger$YEAR-maps/$x ; done )
+(cd data ; cp map-*.inc /u/data/tiger$YEAR-maps/ )
 rsync -a data/etc /u/data/tiger$YEAR-maps/.
 rsync -a data/not-nt2 /u/data/tiger$YEAR-maps/.
 cd /u/data/tiger$YEAR-maps

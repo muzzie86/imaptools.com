@@ -48,8 +48,8 @@ endif
 
 DATE=`date +%Y%m%d`
 
-CFLAGS+=-g -DUNIX $(UNICODE_CFLAGS)
-debug : CFLAGS+=-g -DUNIX $(UNICODE_CFLAGS) $(DMALLOC_CFLAGS)
+CFLAGS+=-g -DUNIX -DDEBIAN_LIBSHP $(UNICODE_CFLAGS)
+debug : CFLAGS+=-g -DUNIX -DDEBIAN_LIBSHP $(UNICODE_CFLAGS) $(DMALLOC_CFLAGS)
 
 INCLUDE=-I. -I.. -I /usr/include/libshp -I$(HOME)/include -I/usr/local/include
 
@@ -58,8 +58,8 @@ debug : LIBS=-lshp $(DMALLOC_LIBS) -lm
 
 LIBDIRS=-L. -L~/lib -L/usr/lib -L/usr/lib/x86_64-linux-gnu/ -L/usr/local/lib
 
-EXE=doNtPolygons doNtMisc doNtHwys doNtStreets doTgrRoads
-OBJS=doNtPolygons.o doNtMisc.o doNtUtils.o doNtHwys.o doNtStreets.o doTgrRoads.o
+EXE=doNtPolygons doNtMisc doNtHwys doNtStreets doTgrRoads dbficonv dbflike dbfxlate
+OBJS=doNtPolygons.o doNtMisc.o doNtUtils.o doNtHwys.o doNtStreets.o doTgrRoads.o dbficonv.o dbflike.o dbfxlate.o
 
 all:   $(EXE)
 opt:   $(EXE)
@@ -88,6 +88,18 @@ doNtUtils.o:	doNtUtils.c doNtUtils.h
 doTgrRoads:     doTgrRoads.o
 	$(CC) $(CFLAGS) -o doTgrRoads doTgrRoads.o ~/lib/strtools.a $(INCLUDE) $(LIBDIRS) -lpcre $(LIBS)
 
+dbficonv:	dbficonv.o ../strtools/rgxtools.o
+	$(CC) $(CFLAGS) -o dbficonv dbficonv.o ../strtools/rgxtools.o \
+              $(INCLUDE) $(LIBDIRS) $(LIBS) 
+
+dbfxlate:	dbfxlate.o ../strtools/rgxtools.o
+	$(CC) $(CFLAGS) -o dbfxlate dbfxlate.o ../strtools/rgxtools.o \
+              $(INCLUDE) $(LIBDIRS) $(LIBS) 
+
+dbflike:  dbflike.o
+	$(CC) $(CFLAGS) -o dbflike dbflike.o \
+              $(INCLUDE) $(LIBDIRS) $(LIBS) 
+
 tar:	inventory.txt Makefile *.c *.h
 	mkdir -p imt-navteq-domaps-$(DATE)
 	cat inventory.txt | xargs --replace={} cp -fp {} imt-navteq-domaps-$(DATE)/.
@@ -99,4 +111,4 @@ clean:
 	rm -f *.o $(EXE)
 	
 install:
-	cp $(EXE) install-poi mk-nt-maps-tindex mk-poi-mapfile process-nt-maps ~/bin
+	cp -fp $(EXE) install-poi mk-nt-maps-tindex mk-poi-mapfile process-nt-maps ~/bin

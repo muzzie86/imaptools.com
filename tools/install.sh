@@ -1,12 +1,17 @@
 #!/bin/sh
 
-(cd ~ ; mkdir bin include lib)
-cd tools/strtools
-make && make install && make clean
-cd ../shptools
-make && make install && make clean
-cd ../geo-rgeo
-make && make install && make clean
-cd ..
-cp -fp dbfdump ~/bin
+(cd ~ ; mkdir -p bin include lib)
+
+# compile and install tools
+for x in strtools shptools geo-rgeo maps ; do
+    (cd $x && make && make install)
+done
+
+# after all is done clean up
+for x in strtools shptools geo-rgeo maps ; do
+    (cd $x && make clean)
+done
+
+# copy other scripts
+cp -fp bin/*  ~/bin/.
 

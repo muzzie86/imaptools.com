@@ -1,0 +1,19 @@
+#!/usr/bin/perl -w
+use strict;
+
+sub Usage {
+    die "Usage: shprename old_base new_base\n";
+}
+
+my $f = shift @ARGV || Usage();
+my $t = shift @ARGV || Usage();
+
+Usage() unless -f "$f.shp";
+
+my @files = split(/\n/, `ls "$f."*`);
+
+for my $x (@files) {
+    my $b = $x;
+    $b =~ s/(\....(\.xml)?)$//;
+    print "mv \"$x\" \"$t$1\"\n";
+}

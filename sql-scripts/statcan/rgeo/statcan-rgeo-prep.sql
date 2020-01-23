@@ -43,10 +43,42 @@ WITH (
   OIDS=FALSE
 );
 
+/*
+statcan2019=# \d roadseg
+                                       Table "rawdata.roadseg"
+  Column   |           Type            | Collation | Nullable |               Default
+-----------+---------------------------+-----------+----------+--------------------------------------
+ gid       | integer                   |           | not null | nextval('roadseg_gid_seq'::regclass)
+ ngd_uid   | character varying         |           |          |
+ name      | character varying         |           |          |
+ type      | character varying         |           |          |
+ dir       | character varying         |           |          |
+ afl_val   | character varying         |           |          |
+ atl_val   | character varying         |           |          |
+ afr_val   | character varying         |           |          |
+ atr_val   | character varying         |           |          |
+ csduid_l  | character varying         |           |          |
+ csdname_l | character varying         |           |          |
+ csdtype_l | character varying         |           |          |
+ csduid_r  | character varying         |           |          |
+ csdname_r | character varying         |           |          |
+ csdtype_r | character varying         |           |          |
+ pruid_l   | character varying         |           |          |
+ prname_l  | character varying         |           |          |
+ pruid_r   | character varying         |           |          |
+ prname_r  | character varying         |           |          |
+ rank      | character varying         |           |          |
+ class     | character varying         |           |          |
+ geom      | geometry(LineString,4326) |           |          |
+Indexes:
+    "roadseg_pkey" PRIMARY KEY, btree (gid)
+    "roadseg_geom_geom_idx" gist (geom)
+*/
+
 insert into data.streets (link_id, name, l_refaddr, l_nrefaddr, r_refaddr, r_nrefaddr,
                           l_ac4, r_ac4, l_ac2, r_ac2, l_ac1, r_ac1, mtfcc, the_geom)
 select
-    b.id as link_id,
+    b.ngd_uid::numeric as link_id,
     coalesce(nullif(nullif(l_stname_c, 'None'), 'Unknown'),
              nullif(nullif(r_stname_c, 'None'),  'Unknown'),
              nullif(nullif(l_stname_c, 'None'), 'Unknown'),

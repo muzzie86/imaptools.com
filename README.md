@@ -33,7 +33,17 @@ A lot of my scripts rely on executables the I have written in ``strtools`` and `
 On Ubuntu 18.04, you will need to install the following packages:
 
 ```
-sudo apt install build-essential libshp-dev libsqlite3-dev libpcre3-dev libgeos-dev libdbd-xbase-perl
+sudo apt install build-essential libshp-dev libsqlite3-dev libpcre3-dev libgeos-dev libdbd-xbase-perl libicu-dev
+
+# we mapserver-bin to get tile4ms if you are building maps
+# you can ignore libapache2-mod-mapcache mapcache-tools if you do not
+# plan to setup and test mapcache
+
+sudo apt install mapserver-bin
+
+sudo apt install apache2 libapache2-mod-php php php-cli php-pgsql libapache2-mod-mapcache mapcache-tools
+sudo a2enmod cgi
+sudo systemctl restart apache2
 
 # optionally sqlite3 if you want to inspect any of the sqlite databases
 sudo apt install sqlite3
@@ -86,33 +96,38 @@ This leaves a log file which may contain errors in the download. It is safe to r
 
 ```
 # process the downloaded data for geo/rgeo
+
 cd /path/to/imaptools.com/tools/geo-rgeo
 
 # edit ./tgr2rgeo-sqlite.c and change #define YEAR to be "2019" 
+
 vi ./tgr2rgeo-sqlite.c
 make && make install && make clean
 
-# process the data
+# process the data (~7hr)
 # path for usps-actual.db needs to be absolute not relative
+
 ./process-tgr-2011 /u/srcdata/TIGER2019 /u/data/tiger2019-rgeo /path/to/imaptools.com/tools/geo-rgeo/usps-actual.db &> /u/data/tiger2019-rgeo.log
 
-# drop and recreate the databasee and install the rgeo schema and functions
-dropdb -U postgres -h localhost tiger2019_rgeo
-creatdb -U postgres -h localhost tiger2019_rgeo
-psql -U postgres -h localhost tiger2019_rgeo <<EOF
-create extension postgis;
-create schema rawdata;
-create schema data;
-alter database tiger2019_rgeo set search_path to data, public;
-EOF
+# drop and recreate the databasee and
+# load the processed data into postgres database (~1 hr)
+
+rgeo2pg tiger2019_rgeo /u/data/tiger2019-rgeo/
+
+# install the RGeo functions
+
+psql -U postgres -h localhost tiger2019_rgeo -f /path/to/imaptools.com/sql-scripts/rgeo/imt-rgeo-pgis-2.0.sql
 
 
+# compute the instersections table and run some trivial tests
+# which output some "NOTICE: NNN out of MMM edges processed"
+# it is normal for NNN to exceed MMM, this is just an indicator its working
+# (~7.5 hr)
 
-# load the processed data into postgres database
+psql -U postgres -h localhost tiger2019_rgeo -f /path/to/imaptools.com/sql-scripts/rgeo/imt-rgeo-pgis-2.0-part2.sql
 
-# compute the instersections table
+# Dump the database so youcan move it to another system
 
-# test it
 
 ```
 
@@ -120,6 +135,28 @@ EOF
 
 * download Tiger data as above or skip if done above
 * process the downloaded data for mapping
+
+```
+cd /path/to/imaptools.com/tiger-maps
+cat README.md
+
+./prep-tiger-maps 2019
+./prep-tiger-maps-2 2019
+cp tiger2019-tmp.map /u/data/tiger2019-maps/.
+./copy-maps 2019 /u/data/tiger2019-maps/
+(cd data ; cp map-*.inc /u/data/tiger2019-maps/ )
+rsync -a data/etc /u/data/tiger2019-maps/.
+rsync -a data/not-nt2 /u/data/tiger2019-maps/.
+cd /u/data/tiger2019-maps
+/path/to/impatools.com/sql-scripts/tiger-maps/process-state 2019
+/path/to/impatools.com/sql-scripts/tiger-maps/process-pointlm POINTLM/
+find . -name \*.shp -exec shptree {} \;
+
+```
+You should now be able to access a WMS service using mapserver at:
+http://localhost/cgi-bin/mapserv?map=/u/data/tiger2019-maps/tiger2019-mc.map
+
+
 * add your WMS service to OpenLayers or mapcache
 
 ### Prepare Tiger for Geocoder
