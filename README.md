@@ -30,7 +30,7 @@ A lot of my scripts rely on executables the I have written in ``strtools`` and `
 
 **NOTE** make sure ``~/bin`` is included in your path.
 
-On Ubuntu 18.04, you will need to install the following packages:
+### On Ubuntu 18.04, you will need to install the following packages:
 
 ```
 sudo apt install build-essential libshp-dev libsqlite3-dev libpcre3-dev libgeos-dev libdbd-xbase-perl libicu-dev
@@ -57,6 +57,36 @@ cd /path/to/imaptools.com/tools
 ./install.sh
 
 ```
+
+### On CentOS, these packages might work:
+
+I work and develop on Ubuntu, so ...
+
+```
+# basic dev tool environment
+yum groupinstall 'Development Tools'
+yum install shapelib-devel sqlite-devel pcre-devel geos-devel libicu-devel perl-DBD-XBase gdal
+
+# we need mapserver and related programs (tile4ms)
+# TODO
+
+# install apache
+yum install httpd
+
+# postgresql database and postgis
+# https://wiki.postgresql.org/wiki/YUM_Installation
+# https://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21CentOS6pgdg
+yum list postgresql*
+yum install postgresql??-server
+yum list postgis
+yum install ???
+
+# need Other stuff?
+
+```
+
+
+
 
 
 
