@@ -201,9 +201,11 @@ http://localhost/cgi-bin/mapserv?map=/u/data/tiger2019-maps/tiger2019-mc.map
 
 ## Working with StatCan Data for Canada
 
+**I Recommend that you read ALL the scripts and make adjustments to them as needed. Data and formats change from year to year and these scripts are what I actually executed in a prior year and may no longer be valid. Use them as a recipe for how you MIGHT be able to do it for the current year.**
+
 ### Download the Data
 
-There is also [geobase](https://open.canada.ca/data/en/dataset?keywords=GeoBase) and [CavVec](https://open.canada.ca/data/en/dataset?q=canvec&sort=&collection=fgp) data for Canada which includes StatCan and other Canada specific GIS resources. These resource can augment the road network and boundary files when making maps.
+There is also [geobase](https://open.canada.ca/data/en/dataset?keywords=GeoBase) and [CanVec](https://open.canada.ca/data/en/dataset?q=canvec&sort=&collection=fgp) data for Canada which includes StatCan and other Canada specific GIS resources. These resource can augment the road network and boundary files when making maps.
 
 * [StatCan Geography](https://www12.statcan.gc.ca/census-recensement/2016/geo/index-eng.cfm) which links to documentation and data.
 * download [2019 NRN street data](http://www12.statcan.gc.ca/census-recensement/2011/geo/RNF-FRR/files-fichiers/lrnf000r19a_e.zip)
@@ -211,7 +213,9 @@ There is also [geobase](https://open.canada.ca/data/en/dataset?keywords=GeoBase)
 
 ### Load Data into PostgreSQL
 
-If you download the individual NRN files for each province, then you can look at and probably use [load-statcan-data.sh](https://github.com/woodbri/imaptools.com/blob/master/sql-scripts/statcan/load-statcan-data.sh). The new data, 2019, comes in a single file like:
+If you download the individual NRN files for each province, then you can look at and probably use [load-statcan-data.sh](https://github.com/woodbri/imaptools.com/blob/master/sql-scripts/statcan/load-statcan-data.sh).
+
+The new data, 2019, comes in a single file like:
 ```
 woodbri@mappy:~/work/imaptools.com/sql-scripts$ unzip -l /u/srcdata/statcan-2019/lrnf000r19a_e.zip
 Archive:  /u/srcdata/statcan-2019/lrnf000r19a_e.zip
@@ -298,13 +302,37 @@ ogr2ogr -f PostgreSQL PG:"dbname=statcan2019 user=postgres host=localhost" \
 cd /path/to/imaptools.com/sql-scripts
 
 # load the reverse geocoder functions and types
-psql -U postgres -h localhost statcan2019 -f rgeo/imt-rgeo-pgis-2.0.sql
+psql -U postgres -h localhost statcan2019 -f rgeo/imt-rgeo-pgis-2.0-streets.sql
 
-# prep the statcan data
-psql -U postgres -h localhost statcan2019 -f statcan/rgeo/statcan/rgeo/statcan-rgeo-prep.sql
+# prep the statcan data 
+psql -U postgres -h localhost statcan2019 -f rgeo/statcan-rgeo-prep-2019.sql
+psql -U postgres -h localhost statcan2019 -f rgeo/fix-canada-rgeo-with-hn-formats.sql
+
 
 # finish the data prep with
 psql -U postgres -h localhost statcan2019 -f rgeo/imt-rgeo-pgis-2.0-part2.sql
+
+# run some test queries
+
+psql -U postgres -h localhost -a -A statcan2019 <<EOF
+-- 2nd AVE|Saskatoon|||Saskatchewan|CA||1.22208694|6076200
+select * from imt_reverse_geocode_flds(-106.663771,52.128759);
+
+-- 22nd ST, 2nd AVE|Saskatoon|||Saskatchewan|CA||2.9|35539
+select * from imt_rgeo_intersections_flds(-106.663771,52.128759);
+
+-- 1962 Lockhead RD|Ottawa|||Ontario|CA||263.91757826|2120803
+select * from imt_reverse_geocode_flds(-75.663771,45.128759);
+
+-- Third Line RD, Lockhead RD|Ottawa|||Ontario|CA||889.9|1273516
+select * from imt_rgeo_intersections_flds(-75.663771,45.128759);
+
+-- des Laurentides AUT|Montréal|||Quebec / Québec|CA||27.55289667|5492621
+select * from imt_reverse_geocode_flds(-73.663771,45.53);
+
+-- Deslauriers RUE, Wright RUE|Montréal|||Quebec / Québec|CA||46.1|1343364
+select * from imt_rgeo_intersections_flds(-73.663771,45.53);
+EOF
 
 ``
 
