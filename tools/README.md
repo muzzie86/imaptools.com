@@ -50,7 +50,7 @@ shp2pgsql -s 4326 -a -g the_geom -D -t 2D -W LATIN1 -N skip '/u/data/tiger2019-g
 # sql-scripts/geocoder/prep-tiger-geo-new.sql
 #
 # I do NOT reccommend blindly running the whole script
-# read it and copy and paster the commands or break it up into pieces
+# read it and copy and paste the commands or break it up into pieces
 # that can be run as a group.
 #
 ```

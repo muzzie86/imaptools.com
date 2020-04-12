@@ -19,7 +19,7 @@ Various tools developed at imaptools and being open sourced. This is being provi
 * tools/scripts - various scripts
 * tools/maps - Tools to process Navteq or Tiger data for maps
 * tools/shptools - C library to compile and install for tools
-* tools/geo-rgeo - tools for processing Navteq or Tiger data for rgeo
+* tools/geo-rgeo - tools for processing Navteq or Tiger data for rgeo and geocoder
 * tools/strtools - C library to compile and install for tools
 
 
