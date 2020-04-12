@@ -177,16 +177,22 @@ The first form takes the address as a single string and splits it into street pa
 
 You might notice that ``st`` has been standardized to ``STREET`` and ``ma`` has been standardized to ``MASSACHUSETTS``. This was done based on the mapping in lex and gaz tables that were passed to ``standardize_address``.
 
-## The Gazetteer Table
+## PAGC Gazetteer, Lexicon and Rules Tables
+
+I'm leaving this as TBD because while I have worked with them, I do not recommend making changes to to them as they are hard to understand and changes can really mess things up. In the ``scripts/`` directory are ``rules2txt`` and ``txt2rules`` that can be used to convert the rules into a human readable tokens and then convert them back to the rules format for the brave!
+
+I designed a new address standardizer that is write in C++ and is more user friendly. It can be found at https://github.com/woodbri/address-standardizer and can easily be integrated into the the geocoder instead of the PAGC address standardizer provided with PostGIS.
+
+### The Gazetteer Table
 TBD
 
-## The Lexicon Table
+### The Lexicon Table
 TBD
 
-## The Rules Table
+### The Rules Table
 TBD
 
-## Customizing the Address Standardizer
+### Customizing the Address Standardizer
 TBD
 
 ## Single Line Address Parsing
