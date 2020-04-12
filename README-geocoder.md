@@ -34,7 +34,9 @@ Geocoding is a matching problem. We have a reference data set in this case the N
 
 If you browse the database with something like pgAdmin3 you will notice that there are other functions that are not documented here. Some of these are internal utility functions that the geocoder is built on and some are for preparing the data in the database and others are for batch geocoding of a table. This later case has too many assumptions about column names to be made generic, but it might be helpful as a model if you need to do this. I do not recommend running any of the undocumented functions as some of them drop tables and might otherwise damage the working database.
 
-I``m also going to document the address_standardizer functions here because I wrote these also and they are used in the geocoder and you can use them to prepare your data for geocoding.
+I'm also going to document the address_standardizer functions here because I wrote these also and they are used in the geocoder and you can use them to prepare your data for geocoding.
+
+```
 tiger2019_geo=# \df data.
                                                                                       List of functions
  Schema |             Name             |    Result data type    |                                                Argument data types                                                 |  Type
