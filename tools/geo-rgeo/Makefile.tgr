@@ -131,4 +131,4 @@ clean:
 	rm -f *.o tgr2rgeo-sqlite dbf2sqlite core nt2rgeo-sqlite.db tgr2rgeo-sqlite.db 
 	
 install:
-	cp tgr2rgeo-sqlite dbf2sqlite  ~/bin
+	cp tgr2rgeo-sqlite dbf2sqlite rgeo2pg  ~/bin

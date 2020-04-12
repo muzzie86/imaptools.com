@@ -1,7 +1,7 @@
 ﻿/*
 iMaptools SQL Geocoder for Tiger data
 
-Copyright 2012, Stephen Woodbridge DBA iMaptools.com, All Rights Reserved.
+Copyright 2020, Stephen Woodbridge DBA iMaptools.com, All Rights Reserved.
 
 TODO:
 
@@ -82,7 +82,10 @@ commit;
 -- rollback;
 -- Query returned successfully with no result in 01:07:3649 hours. (tiger2016)
 -- Query returned successfully with no result in 01:06:3646 hours. tiger2017
+-- Query returned successfully with no result in 3947133.015 ms (01:05:47.133) tiger2019
 
+select count(*) from stdstreets;
+-- 46,359,705 tiger2019
 
 -- create indexes -----------------------------------------------------------------------------
 
@@ -90,16 +93,19 @@ create index stdstreets_name_city_state_idx on stdstreets using btree (name,stat
 -- Query returned successfully with no result in 1315409 ms.
 -- Query returned successfully with no result in 46:02 minutes.
 -- Query returned successfully with no result in 19:50 minutes.
+-- Time: 427112.830 ms (07:07.113) tiger2019
 
 create index stdstreets_name_postcode_idx on stdstreets using btree (name,postcode ASC NULLS LAST);
 -- Query returned successfully with no result in 722995 ms.
 -- Query returned successfully with no result in 34:36 minutes.
 -- Query returned successfully with no result in 15:19 minutes.
+-- Time: 347030.530 ms (05:47.031) tiger2019
 
 create index stdstreets_name_dmeta_city_state_idx on stdstreets using btree (name_dmeta,state,city ASC NULLS LAST);
 -- Query returned successfully with no result in 923967 ms.
 -- Query returned successfully with no result in 43:05 minutes.
 -- Query returned successfully with no result in 19:26 minutes.
+-- Time: 403574.386 ms (06:43.574) tiger2019
 
 create index stdstreets_name_dmeta_postcode_idx on stdstreets using btree (name_dmeta,postcode ASC NULLS LAST);
 -- Query returned successfully with no result in 759968 ms.
@@ -107,11 +113,13 @@ create index stdstreets_name_dmeta_postcode_idx on stdstreets using btree (name_
 -- Query returned successfully with no result in 14:45 minutes.
 
 -- Query returned successfully with no result in 02:26:7236 hours.
+-- Time: 333526.533 ms (05:33.527) tiger2019
 
 vacuum analyze verbose stdstreets;
 -- Query returned successfully with no result in 4893048 ms.
 -- Query returned successfully with no result in 37.8 secs.
 -- Query returned successfully with no result in 27.7 secs.
+-- Time: 31763.068 ms (00:31.763) tiger2019
 
 /*
 -- update null standardizations after updating lexicon or gazeteer
@@ -158,7 +166,7 @@ select count(*) as cnt,
  order by micro;
  -- Query returned successfully: 4420 rows affected, 13.5 secs execution time.
  -- Query returned successfully: 4293 rows affected, 57.4 secs execution time.
-
+ -- Query returned successfully: 4361 rows affected, 20491.565 ms (00:20.492) tiger2019
 
 /*
 
@@ -533,7 +541,7 @@ begin
 
     /* compute the offset from the center line if requested. aoff=0.0 is the trivial case */
     if aoff = 0.0 then 
-        pnt := ST_Line_Interpolate_Point(rec.the_geom, pos);
+        pnt := ST_LineInterpolatePoint(rec.the_geom, pos);
         x := st_x(pnt);
         y := st_y(pnt);
     else
@@ -1028,6 +1036,7 @@ select imt_make_intersections('streets', 0.000001, 'the_geom', 'gid');
 -- Total query runtime: 29103656 ms.
 -- Total query runtime: 05:10:18024 hours
 -- Total query runtime: 05:12:18052 hours
+-- Time: 17832238.370 ms (04:57:12.238) tiger2019
 
 DROP INDEX intersections_tmp_dcnt_idx;
 DROP INDEX intersections_tmp_id_idx;
@@ -1039,6 +1048,7 @@ update intersections_tmp as a set
 -- Query returned successfully: 20487647 rows affected, 12578580 ms execution time.
 -- Query returned successfully: 20694608 rows affected, 48:24 minutes execution time.
 -- Query returned successfully: 20755311 rows affected, 28:15 minutes execution time.
+-- Time: 1792491.790 ms (29:52.492) tiger2019
 
 CREATE INDEX intersections_tmp_dcnt_idx
   ON intersections_tmp
@@ -1055,11 +1065,13 @@ CREATE INDEX intersections_tmp_idx
   USING gist
   (the_geom);
 -- Query returned successfully with no result in 15:38 minutes.
+-- Query returned successfully with no result in 756714.018 ms (12:36.714)
 
 select count(*) from intersections_tmp where dcnt>1;
 -- 10,441,965
 -- 10,457,781 (tiger2016)
 -- 10 471 071 (tiger2017)
+-- 10,422,718 (tiger2019)
 
 begin;
 drop index if exists st_vert_tmp_gid_idx;
@@ -1067,16 +1079,18 @@ delete from st_vert_tmp where vid in (select id from intersections_tmp where dcn
 -- Query returned successfully: 29063468 rows affected, 62809203 ms execution time.
 -- Query returned successfully: 26440345 rows affected, 07:07 minutes execution time.
 -- Query returned successfully: 26276376 rows affected, 03:07 minutes execution time.
+-- DELETE 25750295 Time: 344797.598 ms (05:44.798) (tiger2019)
 
 CREATE INDEX st_vert_tmp_gid_idx ON st_vert_tmp USING btree (gid);
 -- Query returned successfully with no result in 03:15 minutes.
 -- Query returned successfully with no result in 02:35 minutes.
-
+-- Time: 168038.373 ms (02:48.038) (tiger2019)
 
 commit;
 
 vacuum analyze st_vert_tmp;
 -- Query returned successfully with no result in 03:13 minutes.
+-- Time: 1413179.901 ms (23:33.180)
 
 -- sample query to search for an intersection
 
@@ -1093,7 +1107,7 @@ select distinct st_x(e.the_geom), st_y(e.the_geom)
   from stdstreets a, st_vert_tmp b, stdstreets c, st_vert_tmp d, intersections_tmp e
  where a.id=b.gid and c.id=d.gid and b.vid=d.vid and b.vid=e.id
    and a.name='RADCLIFFE' and a.city='CHELMSFORD' and a.state='MASSACHUSETTS'
-   and c.name='CROOKED SPRING' and c.city='CHELMSFORD' and c.state='MASSACHUSETTS'
+   and c.name='CROOKED SPRING' and c.city='CHELMSFORD' and c.state='MASSACHUSETTS';
 
 select * from parse_address('radcliffe rd @ crooked spring rd, north chelmsford ma 01863');
 -- "";"radcliffe rd";"crooked spring rd";"";"north chelmsford";"MA";"01863";"";"US"

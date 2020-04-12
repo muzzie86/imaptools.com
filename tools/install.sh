@@ -14,4 +14,4 @@ done
 
 # copy other scripts
 cp -fp bin/*  ~/bin/.
-
+cp -fp scripts/* ~/bin/.

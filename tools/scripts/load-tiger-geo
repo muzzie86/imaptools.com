@@ -42,10 +42,10 @@ die "ERROR: could not find any files to load\n" unless scalar @files;
 
 createDB();
 
-mysystem("shp2pgsql -s 4326 -p -g the_geom -D -t 2D -W LATIN1 -N skip '$files[0]' data.streets | psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME ");
+mysystem("shp2pgsql -s 4326 -p -g the_geom -D -t 2D -W UTF-8 -N skip '$files[0]' data.streets | psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME ");
 
 for my $x (sort @files) {
-    mysystem("shp2pgsql -s 4326 -a -g the_geom -D -t 2D -W LATIN1 -N skip '$x' data.streets | psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME ");
+    mysystem("shp2pgsql -s 4326 -a -g the_geom -D -t 2D -W UTF-8 -N skip '$x' data.streets | psql -U $DBUSER -h $DBHOST -p $DBPORT $DBNAME ");
 }
 
 exit;

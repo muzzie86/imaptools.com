@@ -1,7 +1,7 @@
 
 
 # process Tiger data for geo
-## see README-tiger-geo
+## see ../README.md
 
 # proces Tiger data for rgeo
 # edit ./tgr2rgeo-sqlite.c and change YEAR

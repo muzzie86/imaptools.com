@@ -11,7 +11,7 @@ use File::Find ();
 my $DRYRUN  = 0;
 my $VERBOSE = 1;
 
-my $YEAR = "2017";
+my $YEAR = "2019";
 
 # for the convenience of &wanted calls, including -eval statements:
 use vars qw/*name *dir *prune/;
@@ -117,13 +117,13 @@ for my $x (sort @files) {
     mysystem( "mkdir -p \"$dest/$pssccc\" " );
 
 #####################################################
-print "$data/tgr2pagc-sqlite $tmpdir/*_edges.dbf \"$dest/$pssccc\" $data/tiger$YEAR-places.db $data/usps-actual.db\n";
+print "tgr2pagc-sqlite $tmpdir/*_edges.dbf \"$dest/$pssccc\" $data/tiger$YEAR-places.db $data/usps-actual.db\n";
 
 
 #exit;
 
 
-mysystem( "$data/tgr2pagc-sqlite $tmpdir/*_edges.dbf \"$dest/$pssccc\" $data/tiger$YEAR-places.db $data/usps-actual.db" );
+mysystem( "tgr2pagc-sqlite $tmpdir/*_edges.dbf \"$dest/$pssccc\" $data/tiger$YEAR-places.db $data/usps-actual.db" );
 }
 #mysystem( "rm -rf $tmpdir  tgr2pagc-sqlite.db" );
 
