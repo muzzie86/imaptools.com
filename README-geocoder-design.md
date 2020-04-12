@@ -1,4 +1,4 @@
-#Design and Construction of a Geocoder
+# Design and Construction of a Geocoder
 
 * Author: Stephen Woodbridge
 * Date: 2014, updated 2020.
